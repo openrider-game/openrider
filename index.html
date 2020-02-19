@@ -1,0 +1,27 @@
+<html lang="en">
+
+<head>
+    <title>Black Hat Rider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body style="overflow-y: scroll; cursor: default;">
+    <div id="content" class="container clearfix" style="margin-top: 42px;">
+        <canvas id="canvas_rider" width="700" height="400" style="position: static; border: 1px solid black; z-index: 2;"></canvas>
+        <img src="./img/toolbar-left.png" class="toolbar" id="toolbar1" style="top: 320px; left: 601px; display: block; z-index: 2;">
+        <img src="./img/toolbar-right.png" class="toolbar" id="toolbar2" style="top: 220px; left: 1279px; z-index: 2; display: block;">
+        <script type="module">
+            import BHR from "./unobfuscated_bhr.js";
+            // (BH.game || cr).ride('-18 1i 18 1i###BMX');
+            BHR.game.ride(decodeURIComponent(location.hash.substr(1)));
+            // crtrack = (BH.game || cr).ride(4753, [73645, 83945, 73593, 77768, 73627, 73592, 73656, 141051, 74973, 73714]);
+            // if (i !== -1) {
+            //     crtrack.watchGhost(window.location.href.substr(i + 1));
+            // }
+        </script>
+    </div>
+</body>
+
+</html>

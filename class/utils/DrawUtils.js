@@ -1,0 +1,10 @@
+export const fillRect = '_fillRect',
+    strokeRect = '_strokeRect',
+    arc = '_arc',
+    beginPath = '_beginPath',
+    stroke = '_stroke',
+    fill = '_fill',
+    moveTo = '_moveTo',
+    lineTo = '_lineTo',
+    fillStyle = '_fillStyle',
+    fillText = '_fillText';

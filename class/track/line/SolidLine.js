@@ -1,7 +1,6 @@
-import { Point } from "../Point.js";
+import { Point } from "../../Point.js";
 import { Line } from "./Line.js";
-import { proto } from "../../unobfuscated_bhr.js";
-import { floor } from "../utils/MathUtils.js";
+import { floor } from "../../utils/MathUtils.js";
 
 export class SolidLine extends Line {
     constructor(x1, y1, x2, y2, parent) {
@@ -58,6 +57,6 @@ export class SolidLine extends Line {
     }
 
     toJSON() {
-        return Line[proto].toJSON.call(this, 'SolidLine');
+        return super.toJSON('SolidLine');
     }
 }

@@ -1,6 +1,5 @@
 import { Line } from "./Line.js";
-import { proto } from "../../unobfuscated_bhr.js";
-import { floor } from "../utils/MathUtils.js";
+import { floor } from "../../utils/MathUtils.js";
 
 export class SceneryLine extends Line {
     constructor(x1, y1, x2, y2, parent) {
@@ -23,6 +22,6 @@ export class SceneryLine extends Line {
     }
 
     toJSON() {
-        return Line[proto].toJSON.call(this, 'SceneryLine');
+        return super.toJSON('SceneryLine');
     }
 }

@@ -1,9 +1,9 @@
-import { Point } from "../Point.js";
-import { BodyPart } from "./part/BodyPart.js";
-import { Joint } from "../Joint.js";
-import { context } from "../../unobfuscated_bhr.js";
-import { PI2, rand } from "../utils/MathUtils.js";
-import { beginPath, moveTo, lineTo, stroke, arc } from "../utils/DrawUtils.js";
+import { Point } from "../../Point.js";
+import { BodyPart } from "../part/BodyPart.js";
+import { Joint } from "../../Joint.js";
+import { context } from "../../../unobfuscated_bhr.js";
+import { PI2, rand } from "../../utils/MathUtils.js";
+import { beginPath, moveTo, lineTo, stroke, arc } from "../../utils/DrawUtils.js";
 
 export class DeadRider {
     constructor(guy, parent) {

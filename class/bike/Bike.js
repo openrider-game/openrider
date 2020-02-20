@@ -4,8 +4,10 @@ import { BodyPart } from "./part/BodyPart.js";
 import { Wheel } from "./part/Wheel.js";
 import { Joint } from "../Joint.js";
 import { Point } from "../Point.js";
-import { DeadBike } from "./DeadBike.js";
-import { SAVE_TARGET, MIN_TIME, left, right, up, down, SAVE_CHECKPOINT, Server, generateGhostString } from "../../unobfuscated_bhr.js";
+import { DeadBike } from "./dead/DeadBike.js";
+import { MIN_TIME, SAVE_TARGET, SAVE_CHECKPOINT } from "../constant/TrackConstants.js";
+import { left, right, up, down } from "../../unobfuscated_bhr.js";
+import { GhostString } from "../helper/GhostString.js";
 
 export class Bike extends Evts {
     constructor(parent) {
@@ -82,8 +84,7 @@ export class Bike extends Evts {
     }
 
     hitTarget() {
-        var track = this.parnt,
-            consts = this.$consts;
+        var track = this.parnt;
         this.emit('hitTarget');
         if (this.doSave & SAVE_TARGET) {
             this.emit('hitGoal');
@@ -114,10 +115,14 @@ export class Bike extends Evts {
             this.emit('hitCheckpoint');
             track.save();
             if (track.id && 0) {
-                Server.post('/ghost/checkpoint', 'k=' + generateGhostString(this.keys) +
-                    '&b=' + encodeURIComponent(JSON.stringify(bikeList)) + track.bike +
-                    '&g=' + (ghostList ? encodeURIComponent(JSON.stringify(ghostList) + track.ghost) : '0') +
-                    '&i=' + track.id).then(function() { console.log('saved'); });
+
+                fetch(new Request('/ghost/checkpoint', {
+                    method: 'POST',
+                    body: 'k=' + GhostString.generate(this.keys) +
+                        '&b=' + encodeURIComponent(JSON.stringify(bikeList)) + track.bike +
+                        '&g=' + (ghostList ? encodeURIComponent(JSON.stringify(ghostList) + track.ghost) : '0') +
+                        '&i=' + track.id
+                })).then(function() { console.log('saved'); });
             }
         }
         this.doSave = 0;

@@ -1,6 +1,7 @@
 import { Point } from "../Point.js";
 import { Bike } from "./Bike.js";
-import { mtbConstants, up, down, left, right, context } from "../../unobfuscated_bhr.js";
+import { up, down, left, right, context } from "../../unobfuscated_bhr.js";
+import { mtbConstants } from "../constant/TrackConstants.js";
 import { PI2, cos, sin } from "../utils/MathUtils.js";
 import { beginPath, arc, moveTo, stroke, fill, lineTo } from "../utils/DrawUtils.js";
 

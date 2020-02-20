@@ -1,5 +1,5 @@
 import { ReachableItem } from "./ReachableItem.js";
-import { SAVE_TARGET } from "../../unobfuscated_bhr.js";
+import { SAVE_TARGET } from "../constant/TrackConstants.js";
 
 export class Target extends ReachableItem {
     constructor(x, y, parent) {

@@ -10,7 +10,7 @@ export class Target extends ReachableItem {
     }
 
     onReach(part) {
-        var track = this.parnt;
+        let track = this.parnt;
         track.targetsReached++;
         if (track.numTargets && track.targetsReached === track.numTargets) {
             part.parnt.doSave |= SAVE_TARGET;

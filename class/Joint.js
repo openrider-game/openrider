@@ -16,21 +16,21 @@ export class Joint {
     }
 
     rotate(rad) {
-        var vector = this.b.pos.cloneSub(this.a.pos);
-        var DU = new Point(-vector.y / this.len, vector.x / this.len);
+        let vector = this.b.pos.cloneSub(this.a.pos);
+        let DU = new Point(-vector.y / this.len, vector.x / this.len);
         this.a.pos.selfAdd(DU.cloneScale(rad));
         this.b.pos.selfAdd(DU.cloneScale(-rad));
     }
 
     proceed() {
-        var vector = this.b.pos.cloneSub(this.a.pos);
-        var length = vector.getLength();
+        let vector = this.b.pos.cloneSub(this.a.pos);
+        let length = vector.getLength();
         if (length < 1) {
             return this;
         }
         vector = vector.cloneScale(1 / length);
-        var DD = vector.cloneScale((length - this.len) * this.BC);
-        var B6 = this.b.velocity.cloneSub(this.a.velocity).dot(vector) * this.BE;
+        let DD = vector.cloneScale((length - this.len) * this.BC);
+        let B6 = this.b.velocity.cloneSub(this.a.velocity).dot(vector) * this.BE;
         DD.selfAdd(vector.cloneScale(B6));
         this.b.velocity.selfAdd(DD.cloneScale(-1));
         this.a.velocity.selfAdd(DD);
@@ -38,7 +38,7 @@ export class Joint {
     }
 
     turn() {
-        var tmp = new Point();
+        let tmp = new Point();
         tmp.copy(this.a.pos);
         this.a.pos.copy(this.b.pos);
         this.b.pos.copy(tmp);
@@ -58,7 +58,7 @@ export class Joint {
     }
 
     clone() {
-        var clone = new Joint(this.a, this.b, this.parnt);
+        let clone = new Joint(this.a, this.b, this.parnt);
         clone.lengthTowards = this.lengthTowards;
         clone.len = this.len;
         clone.BE = this.BE;

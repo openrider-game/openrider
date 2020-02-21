@@ -10,7 +10,7 @@ export class ReachableItem extends Item {
     }
 
     draw() {
-        var track = this.parnt,
+        let track = this.parnt,
             pos = this.pos.toPixel(track);
         context.fillStyle = this.reached ? this.$reachedColor : this.$color;
         context.lineWidth = 2 * track.zoomFactor;

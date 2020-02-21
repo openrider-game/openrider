@@ -7,13 +7,13 @@ import { beginPath, moveTo, lineTo, fill, stroke } from "../utils/DrawUtils.js";
 export class DirectionalItem extends Item {
     constructor(x, y, rotation, parent) {
         super(x, y, parent);
-        var rad = rotation * Math.PI / 180;
+        let rad = rotation * Math.PI / 180;
         this.rotation = rotation;
         this.direction = new Point(-sin(rad), cos(rad));
     }
 
     draw() {
-        var track = this.parnt,
+        let track = this.parnt,
             pos = this.pos.toPixel(track);
         context.fillStyle = this.$color;
         context[beginPath]()

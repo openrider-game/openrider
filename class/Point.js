@@ -89,14 +89,14 @@ export class Point {
 
     /** @return {number} */
     distanceTo(point) {
-        var dx = this.x - point.x,
+        let dx = this.x - point.x,
             dy = this.y - point.y;
         return sqrt(dx * dx + dy * dy);
     }
 
     /** @return {number} */
     distanceToSquared(point) {
-        var dx = this.x - point.x,
+        let dx = this.x - point.x,
             dy = this.y - point.y;
         return dx * dx + dy * dy;
     }

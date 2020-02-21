@@ -12,16 +12,16 @@ export class GhostBike {
     }
 
     turn() {
-        var self = this;
+        let self = this;
         self.direction *= -1;
         self.frontToBack.turn();
-        var headToBack = self.joints[0].len;
+        let headToBack = self.joints[0].len;
         self.headToBack.len = self.joints[2].len;
         self.headToFront.len = headToBack;
     }
 
     proceed() {
-        var self = this,
+        let self = this,
             bikeTime = self.parnt.currentTime,
             i = 0;
         if (bikeTime > self.time) {
@@ -43,10 +43,10 @@ export class GhostBike {
             self.turn();
         }
         self.BS();
-        for (i = self.joints.$length - 1; i >= 0; i--) {
+        for (let i = self.joints.$length - 1; i >= 0; i--) {
             self.joints[i].proceed();
         }
-        for (i = self.points.$length - 1; i >= 0; i--) {
+        for (let i = self.points.$length - 1; i >= 0; i--) {
             self.points[i].proceed();
         }
         if (self.backWheel.driving && self.frontWheel.driving) {
@@ -54,10 +54,10 @@ export class GhostBike {
         }
         if (!self.slow) {
             self.BS();
-            for (i = self.joints.$length - 1; i >= 0; i--) {
+            for (let i = self.joints.$length - 1; i >= 0; i--) {
                 self.joints[i].proceed();
             }
-            for (i = self.points.$length - 1; i >= 0; i--) {
+            for (let i = self.points.$length - 1; i >= 0; i--) {
                 self.points[i].proceed();
             }
         }

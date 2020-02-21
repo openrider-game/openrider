@@ -19,9 +19,9 @@ export class Line {
     }
 
     checkDelete(eraserPoint) {
-        var C4 = eraserPoint.cloneSub(this.a);
-        var B8 = C4.dot(this.vector.cloneReciprocalScale(this.len));
-        var Bi = new Point(0, 0);
+        let C4 = eraserPoint.cloneSub(this.a);
+        let B8 = C4.dot(this.vector.cloneReciprocalScale(this.len));
+        let Bi = new Point(0, 0);
         if (B8 <= 0) {
             Bi.copy(this.a);
         } else if (B8 >= this.len) {
@@ -29,7 +29,7 @@ export class Line {
         } else {
             Bi.copy(this.a.cloneAdd(this.vector.cloneReciprocalScale(this.len).cloneScale(B8)));
         }
-        var DA = eraserPoint.cloneSub(Bi);
+        let DA = eraserPoint.cloneSub(Bi);
         if (DA.getLength() <= eraserSize) {
             this.remove();
             return this;

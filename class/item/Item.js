@@ -22,7 +22,7 @@ export class Item {
     }
 
     draw() {
-        var track = this.parnt,
+        let track = this.parnt,
             pos = this.pos.toPixel(track);
         context.fillStyle = this.$color;
         context[beginPath]()[moveTo](pos.x + 7 * track.zoomFactor, pos.y)[arc](pos.x, pos.y, 7 * track.zoomFactor, 0, PI2, true)[fill]()[stroke]();

@@ -35,7 +35,7 @@ export class Harley extends Bike {
             this.distance += this.backWheel.rotationSpeed / 5;
         }
         this.backWheel.downPressed = this.frontWheel.downPressed = down;
-        var rotate = left - right;
+        let rotate = left - right;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
         this.headToFront.lean(-rotate * 5 * this.direction, 5);
         this.frontToBack.rotate(rotate / 10);
@@ -46,13 +46,13 @@ export class Harley extends Bike {
     };
 
     draw() {
-        var track = this.parnt;
-        var backWheel = this.backWheel.pos.toPixel(track);
-        var pos = this.frontWheel.pos.toPixel(track);
-        var head = this.head.pos.toPixel(track);
-        var length = pos.cloneSub(backWheel);
-        var AC = new Point((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
-        var middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
+        let track = this.parnt;
+        let backWheel = this.backWheel.pos.toPixel(track);
+        let pos = this.frontWheel.pos.toPixel(track);
+        let head = this.head.pos.toPixel(track);
+        let length = pos.cloneSub(backWheel);
+        let AC = new Point((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
+        let middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         context[beginPath]();
         context.strokeStyle = '#000';
         context.lineWidth = 3.5 * track.zoomFactor;
@@ -101,7 +101,7 @@ export class Harley extends Bike {
         context.lineWidth = 3 * track.zoomFactor;
         context[moveTo](pos.x, pos.y);
         context[lineTo](backWheel.x + length.x * 0.56 + middle.x * 0.73, backWheel.y + length.y * 0.56 + middle.y * 0.73);
-        var Ap = new Point(6 * cos(this.distance) * track.zoomFactor, 6 * sin(this.distance) * track.zoomFactor);
+        let Ap = new Point(6 * cos(this.distance) * track.zoomFactor, 6 * sin(this.distance) * track.zoomFactor);
         context[lineTo](backWheel.x + length.x * 0.58 + middle.x * 0.77, backWheel.y + length.y * 0.58 + middle.y * 0.77);
         context[lineTo](backWheel.x + length.x * 0.55 + middle.x * 0.8, backWheel.y + length.y * 0.55 + middle.y * 0.8);
         context[stroke]();
@@ -109,20 +109,20 @@ export class Harley extends Bike {
             return;
         }
         AC = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
-        var crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25));
-        var B2 = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
-        var Bp = B2.cloneAdd(Ap);
-        var A6 = B2.cloneSub(Ap);
-        var A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
-        var AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
-        var Aa = Bp.cloneSub(AY);
+        let crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25));
+        let B2 = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
+        let Bp = B2.cloneAdd(Ap);
+        let A6 = B2.cloneSub(Ap);
+        let A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
+        let AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
+        let Aa = Bp.cloneSub(AY);
         middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
+        let CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         Aa = A6.cloneSub(AY);
         middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
+        let CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         context[beginPath]();
         context.lineWidth = 6 * track.zoomFactor;
         context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
@@ -136,15 +136,15 @@ export class Harley extends Bike {
         context[lineTo](CZ.x, CZ.y);
         context[lineTo](AY.x, AY.y);
         context[stroke]();
-        var BX = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.95));
+        let BX = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.95));
         context[beginPath]();
         context.lineWidth = 8 * track.zoomFactor;
         context[moveTo](AY.x, AY.y);
         context[lineTo](BX.x, BX.y);
         context[stroke]();
-        var Bl = crossFrameSaddle.cloneAdd(length.cloneScale(0.2)).cloneAdd(AC.cloneScale(1.09));
-        var CT = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15));
-        var Ce = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(1.05));
+        let Bl = crossFrameSaddle.cloneAdd(length.cloneScale(0.2)).cloneAdd(AC.cloneScale(1.09));
+        let CT = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15));
+        let Ce = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(1.05));
         context[beginPath]();
         context.lineWidth = 2 * track.zoomFactor;
         context[moveTo](Bl.x + 5 * track.zoomFactor, Bl.y);
@@ -154,14 +154,14 @@ export class Harley extends Bike {
         context[beginPath]();
         switch (this.cap) {
             case 'cap':
-                var Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15)),
+                let Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15)),
                     Cd = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(1.05));
                 context[moveTo](Ch.x, Ch.y);
                 context[lineTo](Cd.x, Cd.y);
                 context[stroke]();
                 break;
             case 'hat':
-                var hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.37)).cloneAdd(AC.cloneScale(1.19)),
+                let hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.37)).cloneAdd(AC.cloneScale(1.19)),
                     hatBackBottom = crossFrameSaddle.cloneSub(length.cloneScale(0.02)).cloneAdd(AC.cloneScale(1.14)),
                     hatFront = crossFrameSaddle.cloneAdd(length.cloneScale(0.28)).cloneAdd(AC.cloneScale(1.17)),
                     hatBack = crossFrameSaddle.cloneAdd(length.cloneScale(0.09)).cloneAdd(AC.cloneScale(1.15)),
@@ -180,7 +180,7 @@ export class Harley extends Bike {
         length = BX.cloneSub(A7);
         AC = new Point(length.y * this.direction, -length.x * this.direction);
         AC = AC.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
+        let CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
         context[beginPath]();
         context.lineWidth = 5 * track.zoomFactor;
         context[moveTo](BX.x, BX.y);
@@ -190,17 +190,17 @@ export class Harley extends Bike {
     };
 
     getRider() {
-        var rider = {},
+        let rider = {},
             M = this.frontWheel.pos.cloneSub(this.backWheel.pos),
             pos = this.head.pos.cloneSub(this.frontWheel.pos.cloneAdd(this.backWheel.pos).cloneScale(0.5)),
             AS = new Point(M.y * this.direction, -M.x * this.direction);
         rider.head = this.backWheel.pos.cloneAdd(M.cloneScale(0.35)).cloneAdd(pos.cloneScale(1.2));
         rider.hand = rider.shadowHand = this.backWheel.pos.cloneAdd(M.cloneScale(0.8)).cloneAdd(AS.cloneScale(0.68));
-        var N = rider.head.cloneSub(rider.hand);
+        let N = rider.head.cloneSub(rider.hand);
         N = new Point(N.y * this.direction, -N.x * this.direction);
         rider.elbow = rider.shadowElbow = rider.head.cloneAdd(rider.hand).cloneScale(0.5).cloneAdd(N.cloneScale(130 / N.lengthSquared()));
         rider.hip = this.backWheel.pos.cloneAdd(M.cloneScale(0.2)).cloneAdd(AS.cloneScale(0.5));
-        var R = new Point(6 * cos(this.distance), 6 * sin(this.distance));
+        let R = new Point(6 * cos(this.distance), 6 * sin(this.distance));
         rider.foot = this.backWheel.pos.cloneAdd(M.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneAdd(R);
         N = rider.hip.cloneSub(rider.foot);
         N = new Point(-N.y * this.direction, N.x * this.direction);

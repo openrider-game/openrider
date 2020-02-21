@@ -53,7 +53,7 @@ export class Bike extends Evts {
         this.gravity = new Point(last[24], last[25]);
         this.slow = last[26];
         this.parnt.targetsReached = last[27];
-        for (var i = 0, l = this.parnt.objects.length; i < l; i++) {
+        for (let i = 0, l = this.parnt.objects.length; i < l; i++) {
             this.parnt.objects[i].reached = last[28][i];
         }
         this.time = last[29];
@@ -63,8 +63,8 @@ export class Bike extends Evts {
             this.upPressed = last[32];
             this.downPressed = last[33];
             this.keys = last[34];
-            for (i = 0, l = this.keys.length; i < l; i++) {
-                for (var BJ in this.keys[i]) {
+            for (let i = 0, l = this.keys.length; i < l; i++) {
+                for (let BJ in this.keys[i]) {
                     if (BJ >= this.time) {
                         delete this.keys[i][BJ];
                     }
@@ -77,22 +77,22 @@ export class Bike extends Evts {
         this.doTurn = false;
         this.direction *= -1;
         this.frontToBack.turn();
-        var tmp = this.headToBack.len;
+        let tmp = this.headToBack.len;
         this.headToBack.len = this.headToFront.len;
         this.headToFront.len = tmp;
         this.emit('turn');
     }
 
     hitTarget() {
-        var track = this.parnt;
+        let track = this.parnt;
         this.emit('hitTarget');
         if (this.doSave & SAVE_TARGET) {
             this.emit('hitGoal');
             if (track.numTargets && track.targetsReached === track.numTargets) {
                 if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id !== undefined) {
                     if (confirm("You just set a new Track record!\nYour run will be saved for others to enjoy.")) {
-                        var keystring = '';
-                        for (var q, i = 0, l = this.keys.length; i < l; i++) {
+                        let keystring = '';
+                        for (let q, i = 0, l = this.keys.length; i < l; i++) {
                             for (q in this.keys[i]) {
                                 if (!isNaN(q)) {
                                     keystring += q + ' ';
@@ -100,7 +100,7 @@ export class Bike extends Evts {
                             }
                             keystring += ",";
                         }
-                        var request = new XMLHttpRequest();
+                        let request = new XMLHttpRequest();
                         request.open("POST", "/ghost/save", false);
                         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                         request.send("tid=" + track.id + "&v=" + this.toString() + "&t=" + track.currentTime + "&c=" + keystring);
@@ -135,7 +135,7 @@ export class Bike extends Evts {
         this.backWheel.downPressed = false;
         this.frontWheel.downPressed = false;
         this.head.touch = false;
-        var bike = this.parnt.bike = new DeadBike(this, this.getRider(), this.parnt);
+        let bike = this.parnt.bike = new DeadBike(this, this.getRider(), this.parnt);
         bike.hat = new Shard(this.head.pos.clone(), this);
         bike.hat.velocity = this.head.velocity.clone();
         bike.hat.size = 10;
@@ -146,7 +146,7 @@ export class Bike extends Evts {
         if (this.doSave) {
             this.hitTarget();
         }
-        var time = this.parnt.currentTime;
+        let time = this.parnt.currentTime;
         if (left !== this.leftPressed) {
             this.keys[0][time] = 1;
             this.leftPressed = left;
@@ -169,10 +169,10 @@ export class Bike extends Evts {
         if (!this.dead) {
             this.BS();
         }
-        for (var T = this.joints.$length - 1; T >= 0; T--) {
+        for (let T = this.joints.$length - 1; T >= 0; T--) {
             this.joints[T].proceed();
         }
-        for (var u = this.points.$length - 1; u >= 0; u--) {
+        for (let u = this.points.$length - 1; u >= 0; u--) {
             this.points[u].proceed();
         }
         if (this.backWheel.driving && this.frontWheel.driving) {
@@ -180,17 +180,17 @@ export class Bike extends Evts {
         }
         if (!this.slow && !this.dead) {
             this.BS();
-            for (T = this.joints.$length - 1; T >= 0; T--) {
+            for (let T = this.joints.$length - 1; T >= 0; T--) {
                 this.joints[T].proceed();
             }
-            for (u = this.points.$length - 1; u >= 0; u--) {
+            for (let u = this.points.$length - 1; u >= 0; u--) {
                 this.points[u].proceed();
             }
         }
     }
 
     clone() {
-        var backWheel = this.backWheel.clone(),
+        let backWheel = this.backWheel.clone(),
             frontWheel = this.frontWheel.clone(),
             head = this.head.clone(),
             headToBack = this.headToBack.clone(),

@@ -65,7 +65,7 @@ export class MTBGhost extends GhostBike {
             this.distance += this.backWheel.rotationSpeed / 5;
         }
         this.backWheel.downPressed = this.frontWheel.downPressed = this.downPressed;
-        var rotate = this.leftPressed - this.rightPressed;
+        let rotate = this.leftPressed - this.rightPressed;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
         this.headToFront.lean(-rotate * 5 * this.direction, 5);
         this.frontToBack.rotate(rotate / 8);
@@ -76,13 +76,13 @@ export class MTBGhost extends GhostBike {
     }
 
     draw() {
-        var color = this.color,
+        let color = this.color,
             backWheel = this.backWheel.pos.toPixel(track);
-        var pos = this.frontWheel.pos.toPixel(track);
-        var head = this.head.pos.toPixel(track);
-        var length = pos.cloneSub(backWheel);
-        var AC = new Point((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
-        var middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
+        let pos = this.frontWheel.pos.toPixel(track);
+        let head = this.head.pos.toPixel(track);
+        let length = pos.cloneSub(backWheel);
+        let AC = new Point((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
+        let middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         context.strokeStyle = color;
         context.globalAlpha = 0.6;
         context.lineWidth = 3.5 * track.zoomFactor;
@@ -93,7 +93,7 @@ export class MTBGhost extends GhostBike {
             .lineWidth = 5 * track.zoomFactor;
         context[moveTo](backWheel.x, backWheel.y)[lineTo](backWheel.x + length.x * 0.4 + AC.x * 0.05, backWheel.y + length.y * 0.4 + AC.y * 0.05)[moveTo](backWheel.x + length.x * 0.72 + middle.x * 0.64, backWheel.y + length.y * 0.72 + middle.y * 0.64)[lineTo](backWheel.x + length.x * 0.46 + middle.x * 0.4, backWheel.y + length.y * 0.46 + middle.y * 0.4)[lineTo](backWheel.x + length.x * 0.4 + AC.x * 0.05, backWheel.y + length.y * 0.4 + AC.y * 0.05)[stroke]()[beginPath]()
             .lineWidth = 2 * track.zoomFactor;
-        var Ap = new Point(6 * cos(this.distance) * track.zoomFactor, 6 * sin(this.distance) * track.zoomFactor);
+        let Ap = new Point(6 * cos(this.distance) * track.zoomFactor, 6 * sin(this.distance) * track.zoomFactor);
         context[moveTo](backWheel.x + length.x * 0.72 + middle.x * 0.64, backWheel.y + length.y * 0.72 + middle.y * 0.64)[lineTo](backWheel.x + length.x * 0.43 + AC.x * 0.05, backWheel.y + length.y * 0.43 + AC.y * 0.05)[moveTo](backWheel.x + length.x * 0.45 + middle.x * 0.3, backWheel.y + length.y * 0.45 + middle.y * 0.3)[lineTo](backWheel.x + length.x * 0.3 + middle.x * 0.4, backWheel.y + length.y * 0.3 + middle.y * 0.4)[lineTo](backWheel.x + length.x * 0.25 + middle.x * 0.6, backWheel.y + length.y * 0.25 + middle.y * 0.6)[moveTo](backWheel.x + length.x * 0.17 + middle.x * 0.6, backWheel.y + length.y * 0.17 + middle.y * 0.6)[lineTo](backWheel.x + length.x * 0.3 + middle.x * 0.6, backWheel.y + length.y * 0.3 + middle.y * 0.6)[moveTo](backWheel.x + length.x * 0.43 + AC.x * 0.05 + Ap.x, backWheel.y + length.y * 0.43 + AC.y * 0.05 + Ap.y)[lineTo](backWheel.x + length.x * 0.43 + AC.x * 0.05 - Ap.x, backWheel.y + length.y * 0.43 + AC.y * 0.05 - Ap.y)[stroke]()[beginPath]()
             .lineWidth = track.zoomFactor;
         context[moveTo](backWheel.x + length.x * 0.46 + middle.x * 0.4, backWheel.y + length.y * 0.46 + middle.y * 0.4)[lineTo](backWheel.x + length.x * 0.28 + middle.x * 0.5, backWheel.y + length.y * 0.28 + middle.y * 0.5)[stroke]()[beginPath]()
@@ -101,20 +101,20 @@ export class MTBGhost extends GhostBike {
         context[moveTo](pos.x, pos.y)[lineTo](backWheel.x + length.x * 0.71 + middle.x * 0.73, backWheel.y + length.y * 0.71 + middle.y * 0.73)[lineTo](backWheel.x + length.x * 0.73 + middle.x * 0.77, backWheel.y + length.y * 0.73 + middle.y * 0.77)[lineTo](backWheel.x + length.x * 0.7 + middle.x * 0.8, backWheel.y + length.y * 0.7 + middle.y * 0.8)[stroke]()
             .lineWidth = 6 * track.zoomFactor;
         AC = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
-        var crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25));
-        var B2 = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
-        var Bp = B2.cloneAdd(Ap);
-        var A6 = B2.cloneSub(Ap);
-        var A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
-        var AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
-        var Aa = Bp.cloneSub(AY);
+        let crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25));
+        let B2 = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
+        let Bp = B2.cloneAdd(Ap);
+        let A6 = B2.cloneSub(Ap);
+        let A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
+        let AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
+        let Aa = Bp.cloneSub(AY);
         middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
+        let CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         Aa = A6.cloneSub(AY);
         middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
+        let CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         context.strokeStyle = color;
         context.globalAlpha = 0.3;
         context[beginPath]()[moveTo](A6.x, A6.y)[lineTo](CX.x, CX.y)[lineTo](AY.x, AY.y)[stroke]()[beginPath]()
@@ -122,18 +122,18 @@ export class MTBGhost extends GhostBike {
         context.globalAlpha = 0.6;
         context[moveTo](Bp.x, Bp.y)[lineTo](CZ.x, CZ.y)[lineTo](AY.x, AY.y)[stroke]()[beginPath]()
             .lineWidth = 8 * track.zoomFactor;
-        var BX = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.95));
+        let BX = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.95));
         context[moveTo](AY.x, AY.y)[lineTo](BX.x, BX.y)[stroke]()[beginPath]()
             .lineWidth = 2 * track.zoomFactor;
         // Cap
         switch (this.cap) {
             case 'cap':
-                var Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15)),
+                let Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15)),
                     Cd = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(1.05));
                 context[moveTo](Ch.x, Ch.y)[lineTo](Cd.x, Cd.y)[stroke]();
                 break;
             case 'hat':
-                var hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.37)).cloneAdd(AC.cloneScale(1.19)),
+                let hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.37)).cloneAdd(AC.cloneScale(1.19)),
                     hatBackBottom = crossFrameSaddle.cloneSub(length.cloneScale(0.02)).cloneAdd(AC.cloneScale(1.14)),
                     hatFront = crossFrameSaddle.cloneAdd(length.cloneScale(0.28)).cloneAdd(AC.cloneScale(1.17)),
                     hatBack = crossFrameSaddle.cloneAdd(length.cloneScale(0.09)).cloneAdd(AC.cloneScale(1.15)),
@@ -147,7 +147,7 @@ export class MTBGhost extends GhostBike {
         length = BX.cloneSub(A7);
         AC = new Point(length.y * this.direction, -length.x * this.direction);
         AC = AC.cloneScale(track.zoomFactor * track.zoomFactor);
-        var CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
+        let CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
         context[beginPath]()
             .lineWidth = 5 * track.zoomFactor;
         context[moveTo](BX.x, BX.y)[lineTo](CU.x, CU.y)[lineTo](A7.x, A7.y)[stroke]()

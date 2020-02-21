@@ -8,7 +8,7 @@ import { beginPath, moveTo, lineTo, stroke, arc } from "../../utils/DrawUtils.js
 export class DeadRider {
     constructor(guy, parent) {
         this.dead = true;
-        var U = new Point(0, 0),
+        let U = new Point(0, 0),
             i = 0,
             l = 0;
         this.direction = 1;
@@ -39,12 +39,12 @@ export class DeadRider {
             8: new Joint(this.shadowKnee, this.shadowFoot, this),
             $length: 9
         };
-        for (i = 0, l = this.points.$length; i < l; i++) {
+        for (let i = 0, l = this.points.$length; i < l; i++) {
             this.points[i].size = 3;
             this.points[i].B6 = 0.05;
         }
         this.head.size = this.hip.size = 8;
-        for (i = 0, l = this.joints.$length; i < l; i++) {
+        for (let i = 0, l = this.joints.$length; i < l; i++) {
             this.joints[i].BC = 0.4;
             this.joints[i].BE = 0.7;
         }
@@ -55,7 +55,7 @@ export class DeadRider {
     }
 
     draw() {
-        var track = this.track,
+        let track = this.track,
             head = this.head.pos.toPixel(track),
             elbow = this.elbow.pos.toPixel(track),
             hand = this.hand.pos.toPixel(track),
@@ -84,7 +84,7 @@ export class DeadRider {
         head.selfAdd(head.cloneSub(hip).cloneScale(0.25));
         context.lineWidth = 2 * track.zoomFactor;
         context[beginPath]()[moveTo](head.x + 5 * track.zoomFactor, head.y)[arc](head.x, head.y, 5 * track.zoomFactor, 0, PI2, true)[stroke]();
-        var A6 = head.cloneSub(hip),
+        let A6 = head.cloneSub(hip),
             A7 = new Point(A6.y, -A6.x),
             AY = new Point(0, 0),
             Aa = new Point(0, 0);
@@ -105,10 +105,10 @@ export class DeadRider {
     }
 
     proceed() {
-        for (var i = this.joints.$length - 1; i >= 0; i--) {
+        for (let i = this.joints.$length - 1; i >= 0; i--) {
             this.joints[i].proceed();
         }
-        for (i = this.points.$length - 1; i >= 0; i--) {
+        for (let i = this.points.$length - 1; i >= 0; i--) {
             this.points[i].proceed();
         }
     }
@@ -116,27 +116,27 @@ export class DeadRider {
     pull(upperForce, lowerForce) {
         upperForce.selfScale(0.7);
         lowerForce.selfScale(0.7);
-        var i, l, len, upper, lower;
-        for (i = 0, l = this.joints.$length; i < l; i++) {
+        let i, l, len, upper, lower;
+        for (let i = 0, l = this.joints.$length; i < l; i++) {
             len = this.joints[i].getLength();
             if (len > 20) {
                 len = 20;
             }
             this.joints[i].lengthTowards = this.joints[i].len = len;
         }
-        for (i = 1; i < 5; i++) {
+        for (let i = 1; i < 5; i++) {
             this.joints[i].lengthTowards = 13;
             this.joints[i].len = 13;
         }
         upper = [this.head, this.elbow, this.shadowElbow, this.hand, this.shadowHand],
             lower = [this.hip, this.knee, this.shadowKnee, this.foot, this.shadowFoot];
-        for (i = 0, l = upper.length; i < l; i++) {
+        for (let i = 0, l = upper.length; i < l; i++) {
             upper[i].oldPos = upper[i].pos.cloneSub(upperForce);
         }
-        for (i = 0, l = lower.length; i < l; i++) {
+        for (let i = 0, l = lower.length; i < l; i++) {
             lower[i].oldPos = lower[i].pos.cloneSub(lowerForce);
         }
-        for (i = this.points.$length - 1; i >= 0; i--) {
+        for (let i = this.points.$length - 1; i >= 0; i--) {
             this.points[i].velocity.copy(this.points[i].pos.cloneSub(this.points[i].oldPos));
             this.points[i].velocity.x += rand() - rand();
             this.points[i].velocity.y += rand() - rand();

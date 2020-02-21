@@ -9,10 +9,9 @@ export class Evts {
     }
 
     once(evt, fn) {
-        var self = this;
-        return self.on(evt, function() {
+        return this.on(evt, function() {
             fn.apply(this, args);
-            self.off(evt, fn);
+            this.off(evt, fn);
         });
     }
 
@@ -24,9 +23,9 @@ export class Evts {
     }
 
     emit(evt) {
-        var e = this.$events && this.$events[evt];
+        let e = this.$events && this.$events[evt];
         if (e)
-            for (var args = _slice.call(arguments, 1), i = 0, l = e.length; i < l; i++) {
+            for (let args = _slice.call(arguments, 1), i = 0, l = e.length; i < l; i++) {
                 e[i].apply(this, args);
             }
         return this;

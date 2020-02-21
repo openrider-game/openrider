@@ -68,7 +68,7 @@ export class BMXGhost extends GhostBike {
             this.distance += this.backWheel.rotationSpeed / 5;
         }
         this.backWheel.downPressed = this.frontWheel.downPressed = this.downPressed;
-        var rotate = this.leftPressed - this.rightPressed;
+        let rotate = this.leftPressed - this.rightPressed;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
         this.headToFront.lean(-rotate * 5 * this.direction, 5);
         this.frontToBack.rotate(rotate / 6);
@@ -79,7 +79,7 @@ export class BMXGhost extends GhostBike {
     }
 
     draw() {
-        var track = this.parnt,
+        let track = this.parnt,
             color = this.color,
             backWheel = this.backWheel.pos.toPixel(track),
             frontWheel = this.frontWheel.pos.toPixel(track),
@@ -95,7 +95,7 @@ export class BMXGhost extends GhostBike {
         context[moveTo](frontWheel.x + 10 * z, frontWheel.y);
         context[arc](frontWheel.x, frontWheel.y, 10 * z, 0, PI2, true);
         context[stroke]();
-        var length = frontWheel.cloneSub(backWheel),
+        let length = frontWheel.cloneSub(backWheel),
             AC = new Point((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction),
             crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25)),
             shadowSteer = backWheel.cloneAdd(length.cloneScale(0.84)).cloneAdd(AC.cloneScale(0.42)),
@@ -110,7 +110,7 @@ export class BMXGhost extends GhostBike {
         context[moveTo](steer.x, steer.y);
         context[lineTo](pedalHinge.x, pedalHinge.y);
         context[lineTo](backWheel.x, backWheel.y);
-        var CY = new Point(6 * z * cos(this.distance), 6 * z * sin(this.distance)),
+        let CY = new Point(6 * z * cos(this.distance), 6 * z * sin(this.distance)),
             pedal = pedalHinge.cloneAdd(CY),
             shadowPedal = pedalHinge.cloneSub(CY),
             saddle = backWheel.cloneAdd(length.cloneScale(0.17)).cloneAdd(AC.cloneScale(0.38)),
@@ -123,12 +123,12 @@ export class BMXGhost extends GhostBike {
         context[lineTo](Cg.x, Cg.y);
         context[moveTo](pedalHinge.x, pedalHinge.y);
         context[lineTo](Ci.x, Ci.y);
-        var backWheelCenter = backWheel.cloneAdd(length.cloneScale(1)).cloneAdd(AC.cloneScale(0));
-        var Cl = backWheel.cloneAdd(length.cloneScale(0.97)).cloneAdd(AC.cloneScale(0));
-        var CO = backWheel.cloneAdd(length.cloneScale(0.8)).cloneAdd(AC.cloneScale(0.48));
-        var CbackWheel = backWheel.cloneAdd(length.cloneScale(0.86)).cloneAdd(AC.cloneScale(0.5));
-        var Ck = backWheel.cloneAdd(length.cloneScale(0.82)).cloneAdd(AC.cloneScale(0.65));
-        var steerCenter = backWheel.cloneAdd(length.cloneScale(0.78)).cloneAdd(AC.cloneScale(0.67));
+        let backWheelCenter = backWheel.cloneAdd(length.cloneScale(1)).cloneAdd(AC.cloneScale(0));
+        let Cl = backWheel.cloneAdd(length.cloneScale(0.97)).cloneAdd(AC.cloneScale(0));
+        let CO = backWheel.cloneAdd(length.cloneScale(0.8)).cloneAdd(AC.cloneScale(0.48));
+        let CbackWheel = backWheel.cloneAdd(length.cloneScale(0.86)).cloneAdd(AC.cloneScale(0.5));
+        let Ck = backWheel.cloneAdd(length.cloneScale(0.82)).cloneAdd(AC.cloneScale(0.65));
+        let steerCenter = backWheel.cloneAdd(length.cloneScale(0.78)).cloneAdd(AC.cloneScale(0.67));
         // Steering Wheel
         context[moveTo](backWheelCenter.x, backWheelCenter.y);
         context[lineTo](Cl.x, Cl.y);
@@ -137,17 +137,17 @@ export class BMXGhost extends GhostBike {
         context[lineTo](Ck.x, Ck.y);
         context[lineTo](steerCenter.x, steerCenter.y);
         context[stroke]();
-        var h = this.head.pos.toPixel(track);
+        let h = this.head.pos.toPixel(track);
         AC = h.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
-        var hip = crossFrameSaddle.cloneSub(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.3));
-        var Ar = pedal.cloneSub(hip);
-        var BA = new Point(Ar.y * this.direction, -Ar.x * this.direction);
+        let hip = crossFrameSaddle.cloneSub(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.3));
+        let Ar = pedal.cloneSub(hip);
+        let BA = new Point(Ar.y * this.direction, -Ar.x * this.direction);
         BA = BA.cloneScale(z * z);
-        var knee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
+        let knee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
         Ar = shadowPedal.cloneSub(hip);
         BA = new Point(Ar.y * this.direction, -Ar.x * this.direction);
         BA = BA.cloneScale(z * z);
-        var shadowKnee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
+        let shadowKnee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
         // Shadow Leg
         context[beginPath]();
         context.lineWidth = 6 * z;
@@ -165,7 +165,7 @@ export class BMXGhost extends GhostBike {
         context[lineTo](hip.x, hip.y);
         context[stroke]();
         // Body
-        var head = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(0.9));
+        let head = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(0.9));
         context[beginPath]();
         context.lineWidth = 8 * z;
         context[moveTo](hip.x, hip.y);
@@ -176,14 +176,14 @@ export class BMXGhost extends GhostBike {
         context.lineWidth = 2 * z;
         switch (this.cap) {
             case 'cap':
-                var Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.1)),
+                let Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.1)),
                     Cd = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(1.05));
                 context[moveTo](Ch.x, Ch.y);
                 context[lineTo](Cd.x, Cd.y);
                 context[stroke]();
                 break;
             case 'hat':
-                var hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.35)).cloneAdd(AC.cloneScale(1.15)),
+                let hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.35)).cloneAdd(AC.cloneScale(1.15)),
                     hatBackBottom = crossFrameSaddle.cloneSub(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(1.1)),
                     hatFront = crossFrameSaddle.cloneAdd(length.cloneScale(0.25)).cloneAdd(AC.cloneScale(1.13)),
                     hatBack = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(1.11)),
@@ -204,7 +204,7 @@ export class BMXGhost extends GhostBike {
                 context[fill]();
                 break;
             case 'party':
-                var capFront = {
+                let capFront = {
                         x: crossFrameSaddle.x + length.x * 0.28 + AC.x * 1.15,
                         y: crossFrameSaddle.y + length.y * 0.28 + AC.y * 1.15
                     },
@@ -232,9 +232,9 @@ export class BMXGhost extends GhostBike {
         AC = { x: length.y * this.direction, y: -length.x * this.direction };
         //~ AC = AC.cloneScale(z * z);
         AC = { x: AC.x * z * z, y: AC.y * z * z };
-        //~ var CV = steerCenter.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(130 / length.lengthSquared()));
-        var factor = 130 / (length.x * length.x + length.y * length.y);
-        var CV = {
+        //~ let CV = steerCenter.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(130 / length.lengthSquared()));
+        let factor = 130 / (length.x * length.x + length.y * length.y);
+        let CV = {
             x: steerCenter.x + length.x * 0.4 + AC.x * factor,
             y: steerCenter.y + length.y * 0.4 + AC.y * factor
         };

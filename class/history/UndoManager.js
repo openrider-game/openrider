@@ -12,7 +12,7 @@ export class UndoManager {
 
     undo() {
         if (this.undoPosition >= 0) {
-            var fn = this.undoStack[this.undoPosition--].undo;
+            let fn = this.undoStack[this.undoPosition--].undo;
             if (typeof fn === 'function') {
                 fn(this);
             }
@@ -22,7 +22,7 @@ export class UndoManager {
 
     redo() {
         if (this.undoPosition < this.undoStack.length - 1) {
-            var fn = this.undoStack[++this.undoPosition].redo;
+            let fn = this.undoStack[++this.undoPosition].redo;
             if (typeof fn === 'function') {
                 fn(this);
             }

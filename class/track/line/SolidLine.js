@@ -12,7 +12,7 @@ export class SolidLine extends Line {
             return this;
         }
         this.touched = true;
-        var pos = object.pos,
+        let pos = object.pos,
             AS = object.velocity,
             L = object.size,
             N = new Point(0, 0),
@@ -20,7 +20,7 @@ export class SolidLine extends Line {
             Ap = pos.cloneSub(this.a),
             Aw = Ap.dot(this.vector) / this.len / this.len;
         if (Aw >= 0 && Aw <= 1) {
-            var B2 = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - AS.x) * this.vector.y - (Ap.y - AS.y) * this.vector.x) < 0 ? -1 : 1;
+            let B2 = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - AS.x) * this.vector.y - (Ap.y - AS.y) * this.vector.x) < 0 ? -1 : 1;
             N = Ap.cloneSub(this.vector.cloneScale(Aw));
             R = N.getLength();
             if ((R < L || B2 < 0) && R !== 0) {
@@ -32,7 +32,7 @@ export class SolidLine extends Line {
         if (Aw * this.len < -L || Aw * this.len > this.len + L) {
             return this;
         }
-        var Bp = Aw > 0 ? this.b : this.a;
+        let Bp = Aw > 0 ? this.b : this.a;
         N = pos.cloneSub(Bp);
         R = N.getLength();
         if (R < L && R !== 0) {
@@ -44,7 +44,7 @@ export class SolidLine extends Line {
 
     getEnd() {
         this.stringGot = true;
-        var end = ' ' + this.b.toString(),
+        let end = ' ' + this.b.toString(),
             next = this.parnt.grid[floor(this.b.x / this.parnt.gridSize)][floor(this.b.y / this.parnt.gridSize)].search(this.b, 'line');
         if (next !== undefined) {
             end += next.getEnd();

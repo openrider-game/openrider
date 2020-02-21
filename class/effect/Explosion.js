@@ -25,17 +25,17 @@ export class Explosion {
     }
 
     draw() {
-        var i, l;
+        let i, l;
         if (this.speedValue > 0) {
             this.speedValue -= 10;
-            var center = this.pos.toPixel(this.parnt),
+            let center = this.pos.toPixel(this.parnt),
                 angle = rand() * PI2,
                 dist = this.speedValue / 2,
                 x = center.x + dist * cos(angle),
                 y = center.y + dist * sin(angle);
             context.fillStyle = '#ff0';
             context[beginPath]()[moveTo](x, y);
-            for (i = 1; i < 16; i++) {
+            for (let i = 1; i < 16; i++) {
                 dist = (this.speedValue + 30 * rand()) / 2;
                 x = center.x + dist * cos(angle + PI2 * i / 16);
                 y = center.y + dist * sin(angle + PI2 * i / 16);
@@ -43,13 +43,13 @@ export class Explosion {
             }
             context[fill]();
         }
-        for (i = 0, l = this.pieces.length; i < l; i++) {
+        for (let i = 0, l = this.pieces.length; i < l; i++) {
             this.pieces[i].draw();
         }
     }
 
     proceed() {
-        for (var i = this.pieces.length - 1; i >= 0; i--) {
+        for (let i = this.pieces.length - 1; i >= 0; i--) {
             this.pieces[i].proceed();
         }
     }

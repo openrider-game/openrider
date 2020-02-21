@@ -40,7 +40,7 @@ export class BodyPart {
     }
 
     clone() {
-        var clone = new BodyPart(this.pos, this.parnt);
+        let clone = new BodyPart(this.pos, this.parnt);
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.size = this.size;

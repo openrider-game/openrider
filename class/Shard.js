@@ -29,7 +29,7 @@ export class Shard {
     }
 
     draw() {
-        var pos = this.pos.toPixel(this.track),
+        let pos = this.pos.toPixel(this.track),
             s = this.size * this.track.zoomFactor,
             dist = this.shape[0] * s,
             x = pos.x + dist * cos(this.rotation),
@@ -51,9 +51,9 @@ export class Shard {
         this.rotationSpeed = point.dot(this.velocity) / this.size;
         this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.B6));
         this.rotation += this.rotationSpeed;
-        var pos = point.getLength();
+        let pos = point.getLength();
         if (pos > 0) {
-            var AS = new Point(-point.y / pos, point.x / pos);
+            let AS = new Point(-point.y / pos, point.x / pos);
             this.oldPos.selfAdd(AS.cloneScale(AS.dot(this.velocity) * 0.8));
         }
     }

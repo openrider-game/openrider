@@ -36,7 +36,7 @@ export class Wheel {
     }
 
     clone() {
-        var clone = new Wheel(this.pos, this.parnt);
+        let clone = new Wheel(this.pos, this.parnt);
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.speedValue = this.speedValue;

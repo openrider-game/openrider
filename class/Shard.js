@@ -1,7 +1,6 @@
 import { Point } from "./Point.js";
-import { context, track } from "../unobfuscated_bhr.js";
-import { rand, cos, sin } from "./utils/MathUtils.js";
-import { beginPath, moveTo, lineTo, fill } from "./utils/DrawUtils.js";
+import { cos, rand, sin } from "./utils/MathUtils.js";
+import { CanvasHelper } from "./helper/CanvasHelper.js";
 
 export class Shard {
     constructor(pos, parent) {
@@ -29,21 +28,22 @@ export class Shard {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let pos = this.pos.toPixel(this.track),
             s = this.size * this.track.zoomFactor,
             dist = this.shape[0] * s,
             x = pos.x + dist * cos(this.rotation),
             y = pos.y + dist * sin(this.rotation),
             i = 2;
-        context[beginPath]()[moveTo](x, y)
+        drawer.beginPath().moveTo(x, y)
             .fillStyle = '#000';
         for (; i < 8; i++) {
             dist = this.shape[i - 1] * s / 2;
             x = pos.x + dist * cos(this.rotation + 6.283 * i / 8);
             y = pos.y + dist * sin(this.rotation + 6.283 * i / 8);
-            context[lineTo](x, y);
+            drawer.lineTo(x, y);
         }
-        context[fill]();
+        drawer.fill();
     }
 
     /** @param {Point} point */
@@ -65,7 +65,7 @@ export class Shard {
         this.pos.selfAdd(this.velocity);
         this.driving = false;
         if (this.touch) {
-            track.touch(this);
+            this.track.touch(this);
         }
         this.velocity = this.pos.cloneSub(this.oldPos);
         this.oldPos.copy(this.pos);

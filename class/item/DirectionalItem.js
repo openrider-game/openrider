@@ -1,8 +1,7 @@
 import { Point } from "../Point.js";
 import { Item } from "./Item.js";
-import { context } from "../../unobfuscated_bhr.js";
 import { sin, cos } from "../utils/MathUtils.js";
-import { beginPath, moveTo, lineTo, fill, stroke } from "../utils/DrawUtils.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class DirectionalItem extends Item {
     constructor(x, y, rotation, parent) {
@@ -13,14 +12,15 @@ export class DirectionalItem extends Item {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             pos = this.pos.toPixel(track);
-        context.fillStyle = this.$color;
-        context[beginPath]()
+        drawer.setProperty('fillStyle', this.$color);
+        drawer.beginPath()
             .save();
-        context.translate(pos.x, pos.y);
-        context.rotate(this.rotation * Math.PI / 180);
-        context[moveTo](-7 * track.zoomFactor, -10 * track.zoomFactor)[lineTo](0, 10 * track.zoomFactor)[lineTo](7 * track.zoomFactor, -10 * track.zoomFactor)[lineTo](-7 * track.zoomFactor, -10 * track.zoomFactor)[fill]()[stroke]()
+        drawer.translate(pos.x, pos.y);
+        drawer.rotate(this.rotation * Math.PI / 180);
+        drawer.moveTo(-7 * track.zoomFactor, -10 * track.zoomFactor).lineTo(0, 10 * track.zoomFactor).lineTo(7 * track.zoomFactor, -10 * track.zoomFactor).lineTo(-7 * track.zoomFactor, -10 * track.zoomFactor).fill().stroke()
             .restore();
     }
 

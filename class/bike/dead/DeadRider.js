@@ -1,9 +1,8 @@
-import { Point } from "../../Point.js";
-import { BodyPart } from "../part/BodyPart.js";
+import { CanvasHelper } from "../../helper/CanvasHelper.js";
 import { Joint } from "../../Joint.js";
-import { context } from "../../../unobfuscated_bhr.js";
+import { Point } from "../../Point.js";
 import { PI2, rand } from "../../utils/MathUtils.js";
-import { beginPath, moveTo, lineTo, stroke, arc } from "../../utils/DrawUtils.js";
+import { BodyPart } from "../part/BodyPart.js";
 
 export class DeadRider {
     constructor(guy, parent) {
@@ -55,6 +54,7 @@ export class DeadRider {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let track = this.track,
             head = this.head.pos.toPixel(track),
             elbow = this.elbow.pos.toPixel(track),
@@ -66,24 +66,24 @@ export class DeadRider {
             shadowKnee = this.shadowKnee.pos.toPixel(track),
             shadowFoot = this.shadowFoot.pos.toPixel(track),
             hip = this.hip.pos.toPixel(track);
-        context.lineWidth = 5 * track.zoomFactor;
-        context.strokeStyle = 'rgba(0,0,0,0.5)';
+        drawer.setProperty('lineWidth', 5 * track.zoomFactor);
+        drawer.setProperty('strokeStyle', 'rgba(0,0,0,0.5)');
         // Shadow Arm
-        context[beginPath]()[moveTo](head.x, head.y)[lineTo](shadowElbow.x, shadowElbow.y)[lineTo](shadowHand.x, shadowHand.y)
+        drawer.beginPath().moveTo(head.x, head.y).lineTo(shadowElbow.x, shadowElbow.y).lineTo(shadowHand.x, shadowHand.y)
             // Shadow Leg
-            [moveTo](hip.x, hip.y)[lineTo](shadowKnee.x, shadowKnee.y)[lineTo](shadowFoot.x, shadowFoot.y)[stroke]();
-        context.strokeStyle = '#000';
+            .moveTo(hip.x, hip.y).lineTo(shadowKnee.x, shadowKnee.y).lineTo(shadowFoot.x, shadowFoot.y).stroke();
+        drawer.setProperty('strokeStyle', '#000');
         // Arm
-        context[beginPath]()[moveTo](head.x, head.y)[lineTo](elbow.x, elbow.y)[lineTo](hand.x, hand.y)
+        drawer.beginPath().moveTo(head.x, head.y).lineTo(elbow.x, elbow.y).lineTo(hand.x, hand.y)
             // Leg
-            [moveTo](hip.x, hip.y)[lineTo](knee.x, knee.y)[lineTo](foot.x, foot.y)[stroke]();
+            .moveTo(hip.x, hip.y).lineTo(knee.x, knee.y).lineTo(foot.x, foot.y).stroke();
         // Body
-        context.lineWidth = 8 * track.zoomFactor;
-        context[beginPath]()[moveTo](hip.x, hip.y)[lineTo](head.x, head.y)[stroke]();
+        drawer.setProperty('lineWidth', 8 * track.zoomFactor);
+        drawer.beginPath().moveTo(hip.x, hip.y).lineTo(head.x, head.y).stroke();
         // Head
         head.selfAdd(head.cloneSub(hip).cloneScale(0.25));
-        context.lineWidth = 2 * track.zoomFactor;
-        context[beginPath]()[moveTo](head.x + 5 * track.zoomFactor, head.y)[arc](head.x, head.y, 5 * track.zoomFactor, 0, PI2, true)[stroke]();
+        drawer.setProperty('lineWidth', 2 * track.zoomFactor);
+        drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, PI2, true).stroke();
         let A6 = head.cloneSub(hip),
             A7 = new Point(A6.y, -A6.x),
             AY = new Point(0, 0),
@@ -98,10 +98,10 @@ export class DeadRider {
         AY = head.cloneAdd(A7.cloneScale(0.15 * this.direction)).cloneAdd(A6.cloneScale(-0.05));
         Aa = head.cloneAdd(A7.cloneScale(-0.35 * this.direction)).cloneAdd(A6.cloneScale(0.15));
         // Cap
-        // context[beginPath]();
-        // context[moveTo](AY.x, AY.y);
-        // context[lineTo](Aa.x, Aa.y);
-        // context[stroke]();
+        // drawer.beginPath();
+        // drawer.moveTo(AY.x, AY.y);
+        // drawer.lineTo(Aa.x, Aa.y);
+        // drawer.stroke();
     }
 
     proceed() {
@@ -116,7 +116,7 @@ export class DeadRider {
     pull(upperForce, lowerForce) {
         upperForce.selfScale(0.7);
         lowerForce.selfScale(0.7);
-        let i, l, len, upper, lower;
+        let len, upper, lower;
         for (let i = 0, l = this.joints.$length; i < l; i++) {
             len = this.joints[i].getLength();
             if (len > 20) {

@@ -1,9 +1,8 @@
-import { Point } from "../Point.js";
-import { Bike } from "./Bike.js";
-import { up, down, left, right, context } from "../../unobfuscated_bhr.js";
 import { bmxConstants } from "../constant/TrackConstants.js";
-import { PI2, cos, sin, rand } from "../utils/MathUtils.js";
-import { beginPath, arc, moveTo, stroke, lineTo, fill } from "../utils/DrawUtils.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
+import { Point } from "../Point.js";
+import { cos, PI2, rand, sin } from "../utils/MathUtils.js";
+import { Bike } from "./Bike.js";
 
 export class BMX extends Bike {
     constructor(parent, last) {
@@ -24,28 +23,11 @@ export class BMX extends Bike {
         this.headToFront.lengthTowards = 45;
         this.headToFront.BC = 0.35;
         this.headToFront.BE = 0.3;
+        this.rotationFactor = 6;
     }
 
-    BS() {
-        if (this.doTurn) {
-            this.turn();
-        }
-        this.backWheel.speedValue += (up - this.points[1].speedValue) / 10;
-        if (up) {
-            this.distance += this.backWheel.rotationSpeed / 5;
-        }
-        this.backWheel.downPressed = this.frontWheel.downPressed = down;
-        let rotate = left - right;
-        this.headToBack.lean(rotate * 5 * this.direction, 5);
-        this.headToFront.lean(-rotate * 5 * this.direction, 5);
-        this.frontToBack.rotate(rotate / 6);
-        if (!rotate && up) {
-            this.headToBack.lean(-7, 5);
-            this.headToFront.lean(7, 5);
-        }
-    };
-
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let self = this,
             track = self.parnt,
             z = track.zoomFactor,
@@ -53,13 +35,13 @@ export class BMX extends Bike {
             backWheel = self.backWheel.pos.toPixel(track),
             frontWheel = self.frontWheel.pos.toPixel(track);
         // Wheels
-        context.strokeStyle = '#000';
-        context.lineWidth = 3.5 * z;
-        context[beginPath]()
+        drawer.setProperty('strokeStyle', '#000');
+        drawer.setProperty('lineWidth', 3.5 * z);
+        drawer.beginPath()
             // (front wheel)
-            [arc](backWheel.x, backWheel.y, 10 * z, 0, PI2, true)
+            .arc(backWheel.x, backWheel.y, 10 * z, 0, PI2, true)
             // (back wheel)
-            [moveTo](frontWheel.x + 10 * z, frontWheel.y)[arc](frontWheel.x, frontWheel.y, 10 * z, 0, PI2, true)[stroke]();
+            .moveTo(frontWheel.x + 10 * z, frontWheel.y).arc(frontWheel.x, frontWheel.y, 10 * z, 0, PI2, true).stroke();
         let length = {
                 x: frontWheel.x - backWheel.x,
                 y: frontWheel.y - backWheel.y
@@ -82,8 +64,8 @@ export class BMX extends Bike {
                 y: backWheel.y + length.y * 0.4 + AC.y * 0.05
             };
         // Frame
-        context.lineWidth = 3 * z;
-        context[beginPath]()[moveTo](backWheel.x, backWheel.y)[lineTo](crossFrameSaddle.x, crossFrameSaddle.y)[lineTo](shadowSteer.x, shadowSteer.y)[moveTo](steer.x, steer.y)[lineTo](pedalHinge.x, pedalHinge.y)[lineTo](backWheel.x, backWheel.y);
+        drawer.setProperty('lineWidth', 3 * z);
+        drawer.beginPath().moveTo(backWheel.x, backWheel.y).lineTo(crossFrameSaddle.x, crossFrameSaddle.y).lineTo(shadowSteer.x, shadowSteer.y).moveTo(steer.x, steer.y).lineTo(pedalHinge.x, pedalHinge.y).lineTo(backWheel.x, backWheel.y);
         let CY = {
                 x: 6 * cos(self.distance) * z,
                 y: 6 * sin(self.distance) * z
@@ -109,7 +91,7 @@ export class BMX extends Bike {
                 y: backWheel.y + length.y * 0.25 + AC.y * 0.4
             };
         // Saddle
-        context[moveTo](pedal.x, pedal.y)[lineTo](shadowPedal.x, shadowPedal.y)[moveTo](saddle.x, saddle.y)[lineTo](Cg.x, Cg.y)[moveTo](pedalHinge.x, pedalHinge.y)[lineTo](Ci.x, Ci.y);
+        drawer.moveTo(pedal.x, pedal.y).lineTo(shadowPedal.x, shadowPedal.y).moveTo(saddle.x, saddle.y).lineTo(Cg.x, Cg.y).moveTo(pedalHinge.x, pedalHinge.y).lineTo(Ci.x, Ci.y);
         let backWheelCenter = {
                 x: backWheel.x + length.x,
                 y: backWheel.y + length.y
@@ -135,11 +117,11 @@ export class BMX extends Bike {
                 y: backWheel.y + length.y * 0.78 + AC.y * 0.67
             };
         // Steering Wheel
-        context[moveTo](backWheelCenter.x, backWheelCenter.y)[lineTo](Cl.x, Cl.y)[lineTo](CO.x, CO.y)[lineTo](CbackWheel.x, CbackWheel.y)[lineTo](Ck.x, Ck.y)[lineTo](steerCenter.x, steerCenter.y)[stroke]();
+        drawer.moveTo(backWheelCenter.x, backWheelCenter.y).lineTo(Cl.x, Cl.y).lineTo(CO.x, CO.y).lineTo(CbackWheel.x, CbackWheel.y).lineTo(Ck.x, Ck.y).lineTo(steerCenter.x, steerCenter.y).stroke();
         if (self.dead) {
             return;
         }
-        context.lineCap = 'round';
+        drawer.setProperty('lineCap', 'round');
         let _head = self.head.pos.toPixel(track);
         AC = {
             x: _head.x - backWheel.x - length.x * 0.5,
@@ -176,28 +158,28 @@ export class BMX extends Bike {
             y: hip.y + Ar.y * 0.5 + BA.y * 200 / ArLengthSquared
         };
         // Shadow Leg
-        context.lineWidth = 6 * z;
-        context.strokeStyle = "rgba(0, 0, 0, 0.5)";
-        context[beginPath]()[moveTo](shadowPedal.x, shadowPedal.y)[lineTo](shadowKnee.x, shadowKnee.y)[lineTo](hip.x, hip.y)[stroke]();
+        drawer.setProperty('lineWidth', 6 * z);
+        drawer.setProperty('strokeStyle', "rgba(0, 0, 0, 0.5)");
+        drawer.beginPath().moveTo(shadowPedal.x, shadowPedal.y).lineTo(shadowKnee.x, shadowKnee.y).lineTo(hip.x, hip.y).stroke();
         // Leg
-        context.strokeStyle = '#000';
-        context[beginPath]()[moveTo](pedal.x, pedal.y)[lineTo](knee.x, knee.y)[lineTo](hip.x, hip.y)[stroke]();
+        drawer.setProperty('strokeStyle', '#000');
+        drawer.beginPath().moveTo(pedal.x, pedal.y).lineTo(knee.x, knee.y).lineTo(hip.x, hip.y).stroke();
         // Body
         let head = {
             x: crossFrameSaddle.x + length.x * 0.05 + AC.x * 0.88,
             y: crossFrameSaddle.y + length.y * 0.05 + AC.y * 0.88
         };
-        context.lineWidth = 8 * z;
-        context[beginPath]()[moveTo](hip.x, hip.y)[lineTo](head.x, head.y)[stroke]();
+        drawer.setProperty('lineWidth', 8 * z);
+        drawer.beginPath().moveTo(hip.x, hip.y).lineTo(head.x, head.y).stroke();
         // Head
         let headCenter = {
             x: crossFrameSaddle.x + length.x * 0.15 + AC.x * 1.05,
             y: crossFrameSaddle.y + length.y * 0.15 + AC.y * 1.05
         };
-        context.lineWidth = 2 * z;
-        context[beginPath]()[moveTo](headCenter.x + 5 * z, headCenter.y)[arc](headCenter.x, headCenter.y, 5 * z, 0, PI2, true)[stroke]()
+        drawer.setProperty('lineWidth', 2 * z);
+        drawer.beginPath().moveTo(headCenter.x + 5 * z, headCenter.y).arc(headCenter.x, headCenter.y, 5 * z, 0, PI2, true).stroke()
             // Cap
-            [beginPath]();
+            .beginPath();
         switch (self.cap) {
             case 'cap':
                 let capFront = {
@@ -208,7 +190,7 @@ export class BMX extends Bike {
                         x: crossFrameSaddle.x + length.x * 0.05 + AC.x * 1.05,
                         y: crossFrameSaddle.y + length.y * 0.05 + AC.y * 1.05
                     };
-                context[moveTo](capBack.x, capBack.y)[lineTo](capFront.x, capFront.y)[stroke]();
+                drawer.moveTo(capBack.x, capBack.y).lineTo(capFront.x, capFront.y).stroke();
                 break;
             case 'hat':
                 let hatFrontBottom = {
@@ -235,8 +217,8 @@ export class BMX extends Bike {
                         x: hatBackBottom.x + length.x * 0.02 + AC.x * 0.2,
                         y: hatBackBottom.y + length.y * 0.02 + AC.y * 0.2
                     };
-                context.fillStyle = '#000';
-                context[moveTo](hatFrontBottom.x, hatFrontBottom.y)[lineTo](hatFront.x, hatFront.y)[lineTo](hatFrontTop.x, hatFrontTop.y)[lineTo](hatBackTop.x, hatBackTop.y)[lineTo](hatBack.x, hatBack.y)[lineTo](hatBackBottom.x, hatBackBottom.y)[stroke]()[fill]();
+                drawer.setProperty('fillStyle', '#000');
+                drawer.moveTo(hatFrontBottom.x, hatFrontBottom.y).lineTo(hatFront.x, hatFront.y).lineTo(hatFrontTop.x, hatFrontTop.y).lineTo(hatBackTop.x, hatBackTop.y).lineTo(hatBack.x, hatBack.y).lineTo(hatBackBottom.x, hatBackBottom.y).stroke().fill();
                 break;
             case 'party':
                 let partyHatFront = {
@@ -251,15 +233,15 @@ export class BMX extends Bike {
                         x: partyHatBack.x + length.x * 0.07 + AC.x * 0.33,
                         y: partyHatBack.y + length.y * 0.07 + AC.y * 0.33
                     };
-                context.fillStyle = '#3960ad';
-                context[moveTo](partyHatFront.x, partyHatFront.y)[lineTo](partyHatTop.x, partyHatTop.y)[lineTo](partyHatBack.x, partyHatBack.y)[fill]()
-                    .strokeStyle = '#70d135';
-                context.lineWidth = 4 * z;
-                context[beginPath]()[moveTo](partyHatFront.x, partyHatFront.y)[lineTo](partyHatBack.x, partyHatBack.y)[stroke]()
-                    .fillStyle = '#ffd600';
-                context.lineWidth = 2 * z;
-                context[beginPath]()[moveTo](partyHatTop.x, partyHatTop.y)[arc](partyHatTop.x - length.x * 0.01 - AC.x * 0.03, partyHatTop.y - length.y * 0.01 - AC.y * 0.03, 3 * z, 0, PI2)[fill]()
-                    .fillStyle = context.strokeStyle = '#000';
+                drawer.setProperty('fillStyle', '#3960ad');
+                drawer.moveTo(partyHatFront.x, partyHatFront.y).lineTo(partyHatTop.x, partyHatTop.y).lineTo(partyHatBack.x, partyHatBack.y).fill()
+                    .setProperty('strokeStyle', '#70d135');
+                drawer.setProperty('lineWidth', 4 * z);
+                drawer.beginPath().moveTo(partyHatFront.x, partyHatFront.y).lineTo(partyHatBack.x, partyHatBack.y).stroke()
+                    .setProperty('fillStyle', '#ffd600');
+                drawer.setProperty('lineWidth', 2 * z);
+                drawer.beginPath().moveTo(partyHatTop.x, partyHatTop.y).arc(partyHatTop.x - length.x * 0.01 - AC.x * 0.03, partyHatTop.y - length.y * 0.01 - AC.y * 0.03, 3 * z, 0, PI2).fill()
+                    .setProperty('fillStyle', '#000').setProperty('strokeStyle', '#000');
                 break;
             case 'ninja':
                 let headBandFront = {
@@ -270,10 +252,10 @@ export class BMX extends Bike {
                         x: crossFrameSaddle.x + length.x * 0.05 + AC.x * 1.05,
                         y: crossFrameSaddle.y + length.y * 0.05 + AC.y * 1.05
                     };
-                context.lineWidth = 5 * z;
-                context[moveTo](headBandFront.x, headBandFront.y)[lineTo](headBandBack.x, headBandBack.y)[stroke]()
-                    .lineWidth = 2 * z;
-                context[lineTo](headBandBack.x - (8 + rand()) * z * dir, headBandBack.y - (4 + rand()) * z * dir)[moveTo](headBandBack.x, headBandBack.y)[lineTo](headBandBack.x - (8 + rand()) * z * dir, headBandBack.y + (4 + rand()) * z * dir)[stroke]();
+                drawer.setProperty('lineWidth', 5 * z);
+                drawer.moveTo(headBandFront.x, headBandFront.y).lineTo(headBandBack.x, headBandBack.y).stroke()
+                    .setProperty('lineWidth', 2 * z);
+                drawer.lineTo(headBandBack.x - (8 + rand()) * z * dir, headBandBack.y - (4 + rand()) * z * dir).moveTo(headBandBack.x, headBandBack.y).lineTo(headBandBack.x - (8 + rand()) * z * dir, headBandBack.y + (4 + rand()) * z * dir).stroke();
         }
         length = {
             x: head.x - steerCenter.x,
@@ -289,31 +271,8 @@ export class BMX extends Bike {
                 y: steerCenter.y + length.y * 0.4 + AC.y * 130 / lengthLengthSquared
             };
         // Arm
-        context.lineWidth = 5 * z;
-        context[beginPath]()[moveTo](head.x, head.y)[lineTo](elbow.x, elbow.y)[lineTo](steerCenter.x, steerCenter.y)[stroke]();
-    }
-
-    getRider() {
-        let guy = {},
-            length = this.frontWheel.pos.cloneSub(this.backWheel.pos),
-            pos = this.head.pos.cloneSub(this.frontWheel.pos.cloneAdd(this.backWheel.pos).cloneScale(0.5)),
-            AS = new Point(length.y * this.direction, -length.x * this.direction);
-        guy.head = this.backWheel.pos.cloneAdd(length.cloneScale(0.35)).cloneAdd(pos.cloneScale(1.2));
-        guy.hand = guy.shadowHand = this.backWheel.pos.cloneAdd(length.cloneScale(0.8)).cloneAdd(AS.cloneScale(0.68));
-        let N = guy.head.cloneSub(guy.hand);
-        N = new Point(N.y * this.direction, -N.x * this.direction);
-        guy.elbow = guy.shadowElbow = guy.head.cloneAdd(guy.hand).cloneScale(0.5).cloneAdd(N.cloneScale(130 / N.lengthSquared()));
-        guy.hip = this.backWheel.pos.cloneAdd(length.cloneScale(0.2)).cloneAdd(AS.cloneScale(0.5));
-        let direction = new Point(6 * cos(this.distance), 6 * sin(this.distance));
-        guy.foot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneAdd(direction);
-        N = guy.hip.cloneSub(guy.foot);
-        N = new Point(-N.y * this.direction, N.x * this.direction);
-        guy.knee = guy.hip.cloneAdd(guy.foot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
-        guy.shadowFoot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneSub(direction);
-        N = guy.hip.cloneSub(guy.shadowFoot);
-        N = new Point(-N.y * this.direction, N.x * this.direction);
-        guy.shadowKnee = guy.hip.cloneAdd(guy.shadowFoot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
-        return guy;
+        drawer.setProperty('lineWidth', 5 * z);
+        drawer.beginPath().moveTo(head.x, head.y).lineTo(elbow.x, elbow.y).lineTo(steerCenter.x, steerCenter.y).stroke();
     }
 
     toString() {

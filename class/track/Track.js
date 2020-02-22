@@ -1,15 +1,18 @@
-import { context } from "../../unobfuscated_bhr.js";
 import { TOOL_CAMERA } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/TrackConstants.js";
-import { fillText } from "../utils/DrawUtils.js";
 import { GridBox } from "./GridBox.js";
 import { SceneryLine } from "./line/SceneryLine.js";
 import { SolidLine } from "./line/SolidLine.js";
 import { Point } from "../Point.js";
 import { floor, round, ceil, pow } from "../utils/MathUtils.js";
+import { BMX } from "../bike/BMX.js";
+import { MTB } from "../bike/MTB.js";
+import { Harley } from "../bike/Harley.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Track {
     constructor() {
+        let drawer = CanvasHelper.getInstance();
         this.grid = {};
         this.gridSize = 100;
         this.cache = {};
@@ -20,8 +23,32 @@ export class Track {
         this.paused = false;
         this.currentTool = TOOL_CAMERA;
         this.camera = new Point(0, 0);
-        context[fillText]('Loading track... Please wait.', 36, 16);
+        drawer.fillText('Loading track... Please wait.', 36, 16);
         this.objects = [];
+        this.checkpoints = [];
+        this.left =
+            this.right =
+            this.up =
+            this.down = 0;
+    }
+
+    reset() {
+        this.checkpoints = [];
+        this.restart();
+    }
+
+    restart() {
+        this.unreachEverything();
+        this.paused = false;
+        let cp = this.checkpoints[this.checkpoints.length - 1];
+        this.bike = new({ BMX: BMX, MTB: MTB, HAR: Harley }[this.currentBike] || BMX)(this, cp && cp.bikeList);
+        if (this.bike) {
+            this.focalPoint = this.bike.head;
+            /** HACK */
+            this.currentTime = cp ? cp.currentTime : 0;
+            /** /HACK */
+            this.camera = this.bike.head.pos.clone();
+        }
     }
 
     gridSpread(_from, _to, q) {

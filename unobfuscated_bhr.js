@@ -1,6 +1,10 @@
 import { BMX } from "./class/bike/BMX.js";
 import { Harley } from "./class/bike/Harley.js";
 import { MTB } from "./class/bike/MTB.js";
+import { TOOL_BOMB, TOOL_BOOST, TOOL_BRUSH, TOOL_CAMERA, TOOL_CHECKPOINT, TOOL_ERASER, TOOL_GOAL, TOOL_GRAVITY, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE, TOOL_SLOWMO } from "./class/constant/ToolConstants.js";
+import { GHOST_COLORS, MIN_SIZE, TRACK_DEFAULT } from "./class/constant/TrackConstants.js";
+import { CanvasHelper } from "./class/helper/CanvasHelper.js";
+import { GhostString } from "./class/helper/GhostString.js";
 import { Bomb } from "./class/item/Bomb.js";
 import { Boost } from "./class/item/Boost.js";
 import { Checkpoint } from "./class/item/Checkpoint.js";
@@ -10,16 +14,9 @@ import { Target } from "./class/item/Target.js";
 import { Point } from "./class/Point.js";
 import { GridBox } from "./class/track/GridBox.js";
 import { RaceTrack } from "./class/track/RaceTrack.js";
-import { arc, beginPath, fill, moveTo } from "./class/utils/DrawUtils.js";
-import { floor, PI2, round } from "./class/utils/MathUtils.js";
 import { SurvivalTrack } from "./class/track/SurvivalTrack.js";
-import { MIN_SIZE, GHOST_COLORS, TRACK_DEFAULT } from "./class/constant/TrackConstants.js";
-import { TOOL_SLINE, TOOL_SBRUSH, TOOL_BRUSH, TOOL_LINE, TOOL_ERASER, TOOL_CAMERA, TOOL_GOAL, TOOL_CHECKPOINT, TOOL_BOOST, TOOL_GRAVITY, TOOL_BOMB, TOOL_SLOWMO } from "./class/constant/ToolConstants.js";
-import { GhostString } from "./class/helper/GhostString.js";
+import { floor, round } from "./class/utils/MathUtils.js";
 
-/**
- * @define {boolean}
- */
 const COMPILED = false;
 export const DEBUG = !COMPILED;
 
@@ -29,32 +26,17 @@ if (!document.createElement('canvas').getContext) {
 }
 
 // Initialize canvas
-export var canvas = document.getElementById('canvas_rider'),
-    context = canvas.getContext('2d');
-context.lineCap = 'round';
-context.lineJoin = 'round';
-context.font = '8px eiven';
+export var canvas = document.getElementById('canvas_rider');
 
-// Chainable and short Canvas methods
-function chain(fn, val) {
-    return function() {
-        fn.apply(val, arguments);
-        return val;
-    }
-}
-for (var i in context)
-    if (typeof context[i] === 'function') {
-        context['_' + i] = chain(context[i], context);
-    }
+new CanvasHelper(canvas.getContext('2d'));
+let drawer = CanvasHelper.getInstance();
 
-    // Lots of init
+drawer.setProperty('lineCap', 'round');
+drawer.setProperty('lineJoin', 'round');
+drawer.setProperty('font', '8px eiven');
+
+// Lots of init
 export var track,
-    // Pressed keys
-    left = 0,
-    right = 0,
-    up = 0,
-    down = 0,
-    turn = 0,
     // Snapping
     snapFromPrevLine = false,
     // Last Clicks
@@ -182,9 +164,9 @@ function small() {
 }
 
 function afterResize() {
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.font = '8px eiven';
+    drawer.setProperty('lineCap', 'round');
+    drawer.setProperty('lineJoin', 'round');
+    drawer.setProperty('font', '8px eiven');
     toolbar1.style.top = toolbar2.style.top = canvas.offsetTop + 'px';
     toolbar1.style.left = canvas.offsetLeft + 'px';
 }
@@ -230,7 +212,7 @@ document.onkeydown = function(event) {
                 if (track.bike) {
                     event.preventDefault();
                     track.focalPoint = track.bike.head;
-                    left = 1;
+                    track.left = 1;
                 }
                 break;
             }
@@ -240,7 +222,7 @@ document.onkeydown = function(event) {
                 if (track.bike) {
                     event.preventDefault();
                     track.focalPoint = track.bike.head;
-                    right = 1;
+                    track.right = 1;
                 }
                 break;
             }
@@ -250,7 +232,7 @@ document.onkeydown = function(event) {
                 if (track.bike) {
                     event.preventDefault();
                     track.focalPoint = track.bike.head;
-                    up = 1;
+                    track.up = 1;
                 }
                 break;
             }
@@ -260,7 +242,7 @@ document.onkeydown = function(event) {
                 if (track.bike) {
                     event.preventDefault();
                     track.focalPoint = track.bike.head;
-                    down = 1;
+                    track.down = 1;
                 }
                 break;
             }
@@ -299,7 +281,7 @@ document.onkeydown = function(event) {
                 break;
             }
     }
-    if (track.id === undefined) {
+    if (!track.id) {
         switch (event.keyCode) {
             case 65:
                 // A
@@ -405,16 +387,16 @@ document.onkeyup = function(event) {
             switchBikes();
             break;
         case 37: // left
-            left = 0;
+            track.left = 0;
             break;
         case 39: // right
-            right = 0;
+            track.right = 0;
             break;
         case 38: // up
-            up = 0;
+            track.up = 0;
             break;
         case 40: // down
-            down = 0;
+            track.down = 0;
             break;
         case 90:
         case 222: // Z
@@ -458,8 +440,8 @@ document.onkeyup = function(event) {
         case 56: // 8
         case 57: // 9
         case 58: // 0
-            if (track.id !== undefined) {
-                track._watchGhost(event.keyCode - 48);
+            if (track.id) {
+                track.watchGhost(event.keyCode - 48);
             }
             break;
         case 81: // Q
@@ -744,7 +726,7 @@ loadButton && (loadButton.onclick = function() {
     }
 });
 saveButton && (saveButton.onclick = function() {
-    if (track.id === undefined) {
+    if (!track.id) {
         trackcode.value = track.toString();
         trackcode.select();
         charcount.innerHTML = "Trackcode - " + round(trackcode.value.length / 1000) + "k - CTRL + C to copy";
@@ -760,8 +742,8 @@ uploadButton && (uploadButton.onclick = function() {
         changeThumb(true);
         toolbar1.style.display = 'none';
         toolbar2.style.display = 'none';
-        context.lineCap = 'round';
-        context.lineJoin = 'round';
+        drawer.setProperty('lineCap', 'round');
+        drawer.setProperty('lineJoin', 'round');
         document.getElementById('track_menu').style.display = 'none';
 
         // build options & messages DOM

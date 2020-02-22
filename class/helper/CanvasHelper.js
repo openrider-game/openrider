@@ -1,6 +1,13 @@
 export class CanvasHelper {
+    static instance;
+
     constructor(ctx) {
         this.ctx = ctx;
+        CanvasHelper.instance = this;
+    }
+
+    static getInstance() {
+        return CanvasHelper.instance;
     }
 
     fillRect(x, y, width, height) {
@@ -23,13 +30,13 @@ export class CanvasHelper {
         return this;
     }
 
-    stroke(path) {
-        this.ctx.stroke(path);
+    stroke() {
+        this.ctx.stroke();
         return this;
     }
 
-    fill(path, fillRule) {
-        this.ctx.fill(path, fillRule);
+    fill() {
+        this.ctx.fill();
         return this;
     }
 
@@ -43,13 +50,48 @@ export class CanvasHelper {
         return this;
     }
 
-    fillStyle(fill) {
-        this.ctx.fillStyle = fill;
+    strokeText(text, x, y, maxWidth) {
+        this.ctx.strokeText(text, x, y, maxWidth);
         return this;
     }
 
     fillText(text, x, y, maxWidth) {
         this.ctx.fillText(text, x, y, maxWidth);
+        return this;
+    }
+
+    clearRect(x, y, width, height) {
+        this.ctx.clearRect(x, y, width, height);
+        return this;
+    }
+
+    drawImage(image, sx, sy) {
+        this.ctx.drawImage(image, sx, sy);
+        return this;
+    }
+
+    setProperty(prop, value) {
+        this.ctx[prop] = value;
+        return this;
+    }
+
+    translate(x, y) {
+        this.ctx.translate(x, y);
+        return this;
+    }
+
+    rotate(angle) {
+        this.ctx.rotate(angle);
+        return this;
+    }
+
+    save() {
+        this.ctx.save();
+        return this;
+    }
+
+    restore() {
+        this.ctx.restore();
         return this;
     }
 }

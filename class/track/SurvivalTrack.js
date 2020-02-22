@@ -1,10 +1,8 @@
-import { BMX } from "../bike/BMX.js";
-import { Harley } from "../bike/Harley.js";
-import { MTB } from "../bike/MTB.js";
 import { Point } from "../Point.js";
 import { floor, rand } from "../utils/MathUtils.js";
-import { context, canvas } from "../../unobfuscated_bhr.js";
+import { canvas } from "../../unobfuscated_bhr.js";
 import { Track } from "./Track.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class SurvivalTrack extends Track {
     constructor() {
@@ -14,20 +12,7 @@ export class SurvivalTrack extends Track {
         this.difficulty = 0.5;
     }
 
-    restart() {
-        this.unreachEverything();
-        this.paused = false;
-        let bike = this.bike = this.currentBike === 'BMX' ? new BMX(this) : this.currentBike === 'HAR' ? new Harley(this) : new MTB(this);
-        this.focalPoint = bike.head;
-        this.camera = bike.head.pos.clone();
-    }
-
-    reset() {
-        this.checkpoints = [];
-        this.restart();
-    }
-
-    _watchGhost() {
+    watchGhost() {
         return this;
     }
 
@@ -89,10 +74,11 @@ export class SurvivalTrack extends Track {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         if (this.focalPoint) {
             this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
         }
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawer.clearRect(0, 0, canvas.width, canvas.height);
         let center = new Point(0, 0).normalizeToCanvas(),
             border = new Point(canvas.width, canvas.height).normalizeToCanvas();
         center.x = floor(center.x / this.gridSize);
@@ -117,9 +103,9 @@ export class SurvivalTrack extends Track {
                                 this.grid[x][y].lines[i].draw(this.cache[x + '_' + y].getContext('2d'), x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                         }
-                        context.drawImage(this.cache[x + '_' + y], floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                        drawer.drawImage(this.cache[x + '_' + y], floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
-                    context.strokeStyle = '#000';
+                    drawer.setProperty('strokeStyle', '#000');
                     //~ for(let i  = 0, l = this.grid[x][y].objects.length; i < l; i++) {
                     //~ this.grid[x][y].objects[i].draw();
                     //~ }
@@ -132,9 +118,9 @@ export class SurvivalTrack extends Track {
             }
         }
 
-        context.lineWidth = 10;
-        context.strokeStyle = '#fff';
-        context.fillStyle = '#000';
+        drawer.setProperty('lineWidth', 10);
+        drawer.setProperty('strokeStyle', '#fff');
+        drawer.setProperty('fillStyle', '#000');
 
         if (!this.bike.dead && this.bike.frontWheel.pos.x > this.farthestDistance) {
             this.farthestDistance = this.bike.frontWheel.pos.x;
@@ -147,17 +133,17 @@ export class SurvivalTrack extends Track {
         if (v % 1 === 0) {
             v += '.0';
         }
-        context.strokeText(text =
+        drawer.ctx.strokeText(text =
             'Distance: ' + d + ' meters' +
             '; Speed: ' + v + ' km/h' + (this.bike.dead ? ' - Press ENTER to retry' : ''), 28, 16);
-        context.fillText(text, 28, 16);
+        drawer.fillText(text, 28, 16);
         if (this.ghost) {
-            context.fillStyle = '#aaa';
-            context.textAlign = 'right';
-            context.strokeText(text = (this.ghost.name || 'Ghost') + floor(this.ghost.frontWheel.pos.x / 10) / 10, canvas.width - 7, 16);
-            context.fillText(text, canvas.width - 7, 16);
-            context.textAlign = 'left';
-            context.fillStyle = '#000';
+            drawer.setProperty('fillStyle', '#aaa');
+            drawer.setProperty('textAlign', 'right');
+            drawer.strokeText(text = (this.ghost.name || 'Ghost') + floor(this.ghost.frontWheel.pos.x / 10) / 10, canvas.width - 7, 16);
+            drawer.fillText(text, canvas.width - 7, 16);
+            drawer.setProperty('textAlign', 'left');
+            drawer.setProperty('fillStyle', '#000');
         }
         this.bike.draw();
         return this;

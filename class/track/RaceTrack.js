@@ -1,11 +1,8 @@
-import { canvas, context, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, up, watchGhost } from "../../unobfuscated_bhr.js";
+import { canvas, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../unobfuscated_bhr.js";
 import { BIKE_BMX, BIKE_MTB, TRACKSTRING_NEW, TRACKSTRING_OLD, TRACK_DEFAULT } from "../constant/TrackConstants.js";
 import { TOOL_BRUSH, TOOL_CAMERA, TOOL_GOAL, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE } from "../constant/ToolConstants.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
-import { BMX } from "../bike/BMX.js";
-import { Harley } from "../bike/Harley.js";
-import { MTB } from "../bike/MTB.js";
 import { CheckpointSave } from "../history/CheckpointSave.js";
 import { UndoManager } from "../history/UndoManager.js";
 import { Bomb } from "../item/Bomb.js";
@@ -15,10 +12,10 @@ import { Gravity } from "../item/Gravity.js";
 import { SlowMo } from "../item/SlowMo.js";
 import { Target } from "../item/Target.js";
 import { Point } from "../Point.js";
-import { arc, beginPath, fill, fillRect, lineTo, moveTo, stroke, strokeRect } from "../utils/DrawUtils.js";
 import { floor, PI2, round, toInt } from "../utils/MathUtils.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class RaceTrack extends Track {
     constructor(ID) {
@@ -26,12 +23,10 @@ export class RaceTrack extends Track {
         let rawTrack, x, y, rawLine;
         this.ghostKeys = [];
         this.ghostInstances = [];
-        this.checkpoints = [];
         this.canvas = canvas;
         this.id = ID;
         this.trackStringVersion = TRACKSTRING_NEW;
         this.undoManager = new UndoManager();
-        this.watchGhost = this._watchGhost;
         this.lastTool = TOOL_CAMERA;
 
         if (!this.id) {
@@ -223,35 +218,18 @@ export class RaceTrack extends Track {
     }
 
     restart() {
-        this.unreachEverything();
-        this.paused = false;
+        super.restart();
         this.ghostInstances = [];
         this.runningGhosts = [];
-        let cp = this.checkpoints[this.checkpoints.length - 1],
-            bike = this.bike = new({ BMX: BMX, MTB: MTB, HAR: Harley }[this.currentBike] || BMX)(this, cp && cp.bikeList),
-            l = this.ghostInstances.length,
-            i, ghostKeys = this.ghostKeys,
-            ghost;
-        if (bike) {
-            this.focalPoint = bike.head;
-            /** HACK */
-            this.currentTime = cp ? cp.currentTime : 0;
-            /** /HACK */
-            this.camera = bike.head.pos.clone();
-        }
-        for (let i = 0; i < l; i++) {
+        let ghost;
+        for (let i = 0; i < this.ghostInstances.length; i++) {
             this.ghostInstances[i] = ghost =
-                new(ghostKeys[i][6] === 'BMX' ? BMXGhost : MTBGhost)(this, ghostKeys[i], cp && cp.ghostLists[i]);
-            ghost.color = ghostKeys[i].color;
-            if (!bike || bike.$consts.length === 1 && !up) {
+                new(this.ghostKeys[i][6] === 'BMX' ? BMXGhost : MTBGhost)(this, this.ghostKeys[i], cp && cp.ghostLists[i]);
+            ghost.color = this.ghostKeys[i].color;
+            if (!this.bike || this.bike.$consts.length === 1 && !this.bike.up) {
                 this.focalPoint = ghost.head;
             }
         }
-    }
-
-    reset() {
-        this.checkpoints = [];
-        this.restart();
     }
 
     unreachEverything() {
@@ -270,7 +248,7 @@ export class RaceTrack extends Track {
             }
     }
 
-    _watchGhost(g) {
+    watchGhost(g) {
         if (g = typeof g === 'string' && g.charAt(0) === 'g' ? toInt(g.substr(1), 10) : this.ghosts[toInt(g, 10) - 1]) {
             watchGhost(g, this);
         }
@@ -333,13 +311,14 @@ export class RaceTrack extends Track {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let ghost,
             mousePx = mousePos.toPixel(this);
         if (this.focalPoint) {
             this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
         }
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
+        drawer.clearRect(0, 0, canvas.width, canvas.height);
+        drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL_LINE || this.currentTool === TOOL_SLINE ||
                 this.currentTool === TOOL_BRUSH || this.currentTool === TOOL_SBRUSH)) {
             if (mousePx.x < 50) {
@@ -356,9 +335,9 @@ export class RaceTrack extends Track {
                 this.camera.y += 10 / this.zoomFactor;
                 mousePos.y += 10 / this.zoomFactor;
             }
-            context.strokeStyle = '#f00';
+            drawer.setProperty('strokeStyle', '#f00');
             mousePx = mousePos.toPixel(this);
-            context[beginPath]()[moveTo](lastClick.toPixel(this).x, lastClick.toPixel(this).y)[lineTo](mousePx.x, mousePx.y)[stroke]();
+            drawer.beginPath().moveTo(lastClick.toPixel(this).x, lastClick.toPixel(this).y).lineTo(mousePx.x, mousePx.y).stroke();
         }
         let center = new Point(0, 0).normalizeToCanvas(),
             border = new Point(canvas.width, canvas.height).normalizeToCanvas();
@@ -395,9 +374,9 @@ export class RaceTrack extends Track {
                                 this.grid[x][y].lines[i].draw(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                         }
-                        context.drawImage(this.cache[key], floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                        drawer.drawImage(this.cache[key], floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
-                    context.strokeStyle = '#000';
+                    drawer.setProperty('strokeStyle', '#000');
                     for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
                         this.grid[x][y].objects[i].draw();
                     }
@@ -413,59 +392,55 @@ export class RaceTrack extends Track {
             return;
         }
 
-        function eraser() {
-            context.fillStyle = '#ffb6c1';
-            context[beginPath]()[arc](mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, PI2, true)[fill]();
-        }
         if (secretlyErasing) {
-            eraser();
+            this.eraser(mousePx);
         } else if (this.currentTool !== TOOL_CAMERA && !this.focalPoint) {
             switch (this.currentTool) {
                 case 'line':
                 case 'scenery line':
                 case 'brush':
                 case 'scenery brush':
-                    context.lineWidth = 1;
-                    context.strokeStyle = '#000';
+                    drawer.setProperty('lineWidth', 1);
+                    drawer.setProperty('strokeStyle', '#000');
                     x = mousePx.x;
                     y = mousePx.y;
-                    context[beginPath]()[moveTo](x - 10, y)[lineTo](x + 10, y)[moveTo](x, y + 10)[lineTo](x, y - 10)[stroke]();
+                    drawer.beginPath().moveTo(x - 10, y).lineTo(x + 10, y).moveTo(x, y + 10).lineTo(x, y - 10).stroke();
                     break;
                 case 'eraser':
-                    eraser();
+                    this.eraser(mousePx);
                     break;
                 case 'goal':
                 case 'checkpoint':
                 case 'bomb':
                 case 'slow-mo':
-                    context.fillStyle = this.currentTool === TOOL_GOAL ? '#ff0' : this.currentTool === 'checkpoint' ? '#00f' : this.currentTool === 'bomb' ? '#f00' : '#eee';
-                    context[beginPath]()[arc](mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, PI2, true)[fill]()[stroke]();
+                    drawer.setProperty('fillStyle', this.currentTool === TOOL_GOAL ? '#ff0' : this.currentTool === 'checkpoint' ? '#00f' : this.currentTool === 'bomb' ? '#f00' : '#eee');
+                    drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, PI2, true).fill().stroke();
                     break;
                 case 'boost':
                 case 'gravity':
-                    context[beginPath]()
-                        .fillStyle = this.currentTool === 'boost' ? '#ff0' : '#0f0';
-                    context.save();
+                    drawer.beginPath()
+                        .setProperty('fillStyle', this.currentTool === 'boost' ? '#ff0' : '#0f0');
+                    drawer.ctx.save();
                     if (!snapFromPrevLine) {
-                        context.translate(mousePx.x, mousePx.y);
+                        drawer.ctx.translate(mousePx.x, mousePx.y);
                     } else {
-                        context.translate(lastClick.toPixel(track).x, lastClick.toPixel(track).y);
-                        context.rotate(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y));
+                        drawer.ctx.translate(lastClick.toPixel(track).x, lastClick.toPixel(track).y);
+                        drawer.ctx.rotate(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y));
                     }
-                    context[moveTo](-7 * this.zoomFactor, -10 * this.zoomFactor)[lineTo](0, 10 * this.zoomFactor)[lineTo](7 * this.zoomFactor, -10 * this.zoomFactor)[lineTo](-7 * this.zoomFactor, -10 * this.zoomFactor)[fill]()[stroke]()
-                        .restore();
+                    drawer.moveTo(-7 * this.zoomFactor, -10 * this.zoomFactor).lineTo(0, 10 * this.zoomFactor).lineTo(7 * this.zoomFactor, -10 * this.zoomFactor).lineTo(-7 * this.zoomFactor, -10 * this.zoomFactor).fill().stroke()
+                    drawer.restore();
                     break;
                 default:
                     ;
             }
         }
-        context[beginPath]();
-        context.fillStyle = '#ff0';
-        context.lineWidth = 1;
-        context[arc](40, 12, 3.5, 0, PI2, true)[fill]()[stroke]()[beginPath]();
-        context.lineWidth = 10;
-        context.strokeStyle = '#fff';
-        context.fillStyle = '#000';
+        drawer.beginPath();
+        drawer.setProperty('fillStyle', '#ff0');
+        drawer.setProperty('lineWidth', 1);
+        drawer.arc(40, 12, 3.5, 0, PI2, true).fill().stroke().beginPath();
+        drawer.setProperty('lineWidth', 10);
+        drawer.setProperty('strokeStyle', '#fff');
+        drawer.setProperty('fillStyle', '#000');
         let minutes = floor(this.currentTime / 60000),
             seconds = floor(this.currentTime % 60000 / 1000),
             millis = floor((this.currentTime - minutes * 60000 - seconds * 1000) / 100),
@@ -494,32 +469,32 @@ export class RaceTrack extends Track {
         if (label && !label[0] && !label[1]) {
             text += ' - ' + (this.paused ? 'Unp' : 'P') + 'ause ( SPACE )';
         }
-        context.strokeText(text = ': ' + this.targetsReached + ' / ' + this.numTargets + '  -  ' + text, 50, 16);
-        context.fillText(text, 50, 16);
-        context.textAlign = 'right';
+        drawer.strokeText(text = ': ' + this.targetsReached + ' / ' + this.numTargets + ' - ' + text, 50, 16);
+        drawer.fillText(text, 50, 16);
+        drawer.setProperty('textAlign', 'right');
         for (let i = 0, l = this.ghostInstances.length; i < l; i++) {
             ghost = this.ghostInstances[i];
-            context.fillStyle = (ghost.color !== '#000' && ghost.color) || '#777';
+            drawer.setProperty('fillStyle', (ghost.color !== '#000' && ghost.color) || '#777');
             text = (this.focalPoint === ghost.head ? '>> ' : '') + (ghost.name || 'Ghost') + (ghost.targetsReached === this.numTargets ? ' finished!' : ': ' + ghost.targetsReached + ' / ' + this.numTargets);
-            context.strokeText(text, canvas.width - 7, 16 + 17 * i);
-            context.fillText(text, canvas.width - 7, 16 + 17 * i);
+            drawer.ctx.strokeText(text, canvas.width - 7, 16 + 17 * i);
+            drawer.fillText(text, canvas.width - 7, 16 + 17 * i);
         }
-        context.textAlign = 'left';
-        context.fillStyle = '#000';
+        drawer.setProperty('textAlign', 'left');
+        drawer.setProperty('fillStyle', '#000');
         if (label) {
             if (!label[0]) {
-                context.strokeText(label[2], 36, 15 + label[1] * 25);
-                context.fillText(label[2], 36, 15 + label[1] * 25);
+                drawer.ctx.strokeText(label[2], 36, 15 + label[1] * 25);
+                drawer.fillText(label[2], 36, 15 + label[1] * 25);
             } else {
-                context.textAlign = 'right';
+                drawer.setProperty('textAlign', 'right');
                 if (document.documentElement.offsetHeight <= window.innerHeight) {
-                    context.strokeText(label[2], canvas.width - 36, 15 + label[1] * 25);
-                    context.fillText(label[2], canvas.width - 36, 15 + label[1] * 25);
+                    drawer.ctx.strokeText(label[2], canvas.width - 36, 15 + label[1] * 25);
+                    drawer.fillText(label[2], canvas.width - 36, 15 + label[1] * 25);
                 } else {
-                    context.strokeText(label[2], canvas.width - 51, 15 + label[1] * 25);
-                    context.fillText(label[2], canvas.width - 51, 15 + label[1] * 25);
+                    drawer.ctx.strokeText(label[2], canvas.width - 51, 15 + label[1] * 25);
+                    drawer.fillText(label[2], canvas.width - 51, 15 + label[1] * 25);
                 }
-                context.textAlign = 'left';
+                drawer.setProperty('textAlign', 'left');
             }
         }
         if (this.changingThumb) {
@@ -527,14 +502,20 @@ export class RaceTrack extends Track {
                 x1 = x0 + 250,
                 y0 = (canvas.height - 150) / 2,
                 y1 = y0 + 150;
-            context.lineWidth = 1;
-            context.strokeStyle = '#fff';
-            context.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            context[fillRect](0, 0, canvas.width, y0)[fillRect](0, y1, canvas.width, y0)[fillRect](0, y0, x0, 150)[fillRect](x1, y0, x0, 150)[strokeRect](x0, y0, 250, 150);
-            //context.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
-            //context.fillRect(x1, y0, canvas.width - x1, 150);
+            drawer.setProperty('lineWidth', 1);
+            drawer.setProperty('strokeStyle', '#fff');
+            drawer.setProperty('fillStyle', 'rgba(0, 0, 0, 0.4)');
+            drawer.fillRect(0, 0, canvas.width, y0).fillRect(0, y1, canvas.width, y0).fillRect(0, y0, x0, 150).fillRect(x1, y0, x0, 150).strokeRect(x0, y0, 250, 150);
+            //drawer.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
+            //drawer.fillRect(x1, y0, canvas.width - x1, 150);
         }
         return this;
+    }
+
+    eraser(mousePx) {
+        let drawer = CanvasHelper.getInstance();
+        drawer.setProperty('fillStyle', '#ffb6c1');
+        drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, PI2, true).fill();
     }
 
     checkDelete(eraserPoint) {
@@ -637,7 +618,7 @@ export class RaceTrack extends Track {
         if (BZ === undefined) {
             BZ = Av;
         }
-        let grids = gridSpread(Av, BZ, this.gridSize),
+        let grids = this.gridSpread(Av, BZ, this.gridSize),
             deleted = [];
         for (let i = 0, l = grids.length; i < l; i++) {
             let x = floor(grids[i].x / this.gridSize),

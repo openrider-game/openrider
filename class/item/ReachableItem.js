@@ -1,7 +1,6 @@
 import { Item } from "./Item.js";
-import { context } from "../../unobfuscated_bhr.js";
 import { PI2 } from "../utils/MathUtils.js";
-import { beginPath, moveTo, arc, fill, stroke } from "../utils/DrawUtils.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class ReachableItem extends Item {
     constructor(x, y, parent) {
@@ -10,11 +9,12 @@ export class ReachableItem extends Item {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             pos = this.pos.toPixel(track);
-        context.fillStyle = this.reached ? this.$reachedColor : this.$color;
-        context.lineWidth = 2 * track.zoomFactor;
-        context[beginPath]()[moveTo](pos.x + 7 * track.zoomFactor, pos.y)[arc](pos.x, pos.y, 7 * track.zoomFactor, 0, PI2, true)[fill]()[stroke]();
+        drawer.setProperty('fillStyle', this.reached ? this.$reachedColor : this.$color);
+        drawer.setProperty('lineWidth', 2 * track.zoomFactor);
+        drawer.beginPath().moveTo(pos.x + 7 * track.zoomFactor, pos.y).arc(pos.x, pos.y, 7 * track.zoomFactor, 0, PI2, true).fill().stroke();
     }
 
     touch(part) {

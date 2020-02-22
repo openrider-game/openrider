@@ -6,8 +6,8 @@ import { Joint } from "../Joint.js";
 import { Point } from "../Point.js";
 import { DeadBike } from "./dead/DeadBike.js";
 import { MIN_TIME, SAVE_TARGET, SAVE_CHECKPOINT } from "../constant/TrackConstants.js";
-import { left, right, up, down } from "../../unobfuscated_bhr.js";
 import { GhostString } from "../helper/GhostString.js";
+import { cos, sin } from "../utils/MathUtils.js";
 
 export class Bike extends Evts {
     constructor(parent) {
@@ -22,6 +22,7 @@ export class Bike extends Evts {
             this.upPressed =
             this.downPressed = 0;
         this.keys = [{}, {}, {}, {}, {}];
+        this.rotationFactor = 0;
     }
 
     restore(last) {
@@ -73,6 +74,25 @@ export class Bike extends Evts {
         }
     }
 
+    BS() {
+        if (this.doTurn) {
+            this.turn();
+        }
+        this.backWheel.speedValue += (this.parnt.up - this.backWheel.speedValue) / 10;
+        if (this.parnt.up) {
+            this.distance += this.backWheel.rotationSpeed / 5;
+        }
+        this.backWheel.downPressed = this.frontWheel.downPressed = this.parnt.down;
+        let rotate = this.parnt.left - this.parnt.right;
+        this.headToBack.lean(rotate * 5 * this.direction, 5);
+        this.headToFront.lean(-rotate * 5 * this.direction, 5);
+        this.frontToBack.rotate(rotate / this.rotationFactor);
+        if (!rotate && this.parnt.up) {
+            this.headToBack.lean(-7, 5);
+            this.headToFront.lean(7, 5);
+        }
+    }
+
     turn() {
         this.doTurn = false;
         this.direction *= -1;
@@ -89,7 +109,7 @@ export class Bike extends Evts {
         if (this.doSave & SAVE_TARGET) {
             this.emit('hitGoal');
             if (track.numTargets && track.targetsReached === track.numTargets) {
-                if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id !== undefined) {
+                if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id) {
                     if (confirm("You just set a new Track record!\nYour run will be saved for others to enjoy.")) {
                         let keystring = '';
                         for (let q, i = 0, l = this.keys.length; i < l; i++) {
@@ -108,7 +128,7 @@ export class Bike extends Evts {
                             alert('Server responded: ' + request.responseText);
                         }
                     }
-                    left = right = up = down = 0;
+                    this.parnt.left = this.parnt.right = this.parnt.up = this.parnt.down = 0;
                 }
             }
         } else if (this.doSave & SAVE_CHECKPOINT) {
@@ -147,21 +167,21 @@ export class Bike extends Evts {
             this.hitTarget();
         }
         let time = this.parnt.currentTime;
-        if (left !== this.leftPressed) {
+        if (this.parnt.left !== this.leftPressed) {
             this.keys[0][time] = 1;
-            this.leftPressed = left;
+            this.leftPressed = this.parnt.left;
         }
-        if (right !== this.rightPressed) {
+        if (this.parnt.right !== this.rightPressed) {
             this.keys[1][time] = 1;
-            this.rightPressed = right;
+            this.rightPressed = this.parnt.right;
         }
-        if (up !== this.upPressed) {
+        if (this.parnt.up !== this.upPressed) {
             this.keys[2][time] = 1;
-            this.upPressed = up;
+            this.upPressed = this.parnt.up;
         }
-        if (down !== this.downPressed) {
+        if (this.parnt.down !== this.downPressed) {
             this.keys[3][time] = 1;
-            this.downPressed = down;
+            this.downPressed = this.parnt.down;
         }
         if (this.turn) {
             this.keys[4][time] = 1;
@@ -207,6 +227,29 @@ export class Bike extends Evts {
             slow: this.slow,
             time: this.time
         };
+    }
+
+    getRider() {
+        let rider = {},
+            length = this.frontWheel.pos.cloneSub(this.backWheel.pos),
+            pos = this.head.pos.cloneSub(this.frontWheel.pos.cloneAdd(this.backWheel.pos).cloneScale(0.5)),
+            AS = new Point(length.y * this.direction, -length.x * this.direction);
+        rider.head = this.backWheel.pos.cloneAdd(length.cloneScale(0.35)).cloneAdd(pos.cloneScale(1.2));
+        rider.hand = rider.shadowHand = this.backWheel.pos.cloneAdd(length.cloneScale(0.8)).cloneAdd(AS.cloneScale(0.68));
+        let N = rider.head.cloneSub(rider.hand);
+        N = new Point(N.y * this.direction, -N.x * this.direction);
+        rider.elbow = rider.shadowElbow = rider.head.cloneAdd(rider.hand).cloneScale(0.5).cloneAdd(N.cloneScale(130 / N.lengthSquared()));
+        rider.hip = this.backWheel.pos.cloneAdd(length.cloneScale(0.2)).cloneAdd(AS.cloneScale(0.5));
+        let direction = new Point(6 * cos(this.distance), 6 * sin(this.distance));
+        rider.foot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneAdd(direction);
+        N = rider.hip.cloneSub(rider.foot);
+        N = new Point(-N.y * this.direction, N.x * this.direction);
+        rider.knee = rider.hip.cloneAdd(rider.foot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
+        rider.shadowFoot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneSub(direction);
+        N = rider.hip.cloneSub(rider.shadowFoot);
+        N = new Point(-N.y * this.direction, N.x * this.direction);
+        rider.shadowKnee = rider.hip.cloneAdd(rider.shadowFoot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
+        return rider;
     }
 
     toJSON() {

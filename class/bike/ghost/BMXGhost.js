@@ -2,11 +2,10 @@ import { BodyPart } from "../part/BodyPart.js";
 import { Wheel } from "../part/Wheel.js";
 import { Joint } from "../../Joint.js";
 import { Point } from "../../Point.js";
-import { arc, beginPath, fill, lineTo, moveTo, stroke } from "../../utils/DrawUtils.js";
 import { cos, PI2, sin } from "../../utils/MathUtils.js";
 import { GhostBike } from "./GhostBike.js";
-import { context } from "../../../unobfuscated_bhr.js";
 import { bmxConstants } from "../../constant/TrackConstants.js";
+import { CanvasHelper } from "../../helper/CanvasHelper.js";
 
 export class BMXGhost extends GhostBike {
     constructor(parent, ghostKeys, last) {
@@ -79,22 +78,23 @@ export class BMXGhost extends GhostBike {
     }
 
     draw() {
+        let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             color = this.color,
             backWheel = this.backWheel.pos.toPixel(track),
             frontWheel = this.frontWheel.pos.toPixel(track),
             z = track.zoomFactor;
         // Wheels
-        context[beginPath]();
-        context.strokeStyle = color;
-        context.globalAlpha = 0.6;
-        context.lineWidth = 3.5 * z;
+        drawer.beginPath();
+        drawer.setProperty('strokeStyle', color);
+        drawer.setProperty('globalAlpha', 0.6);
+        drawer.setProperty('lineWidth', 3.5 * z);
         // (front wheel)
-        context[arc](backWheel.x, backWheel.y, 10 * z, 0, PI2, true);
+        drawer.arc(backWheel.x, backWheel.y, 10 * z, 0, PI2, true);
         // (back wheel)
-        context[moveTo](frontWheel.x + 10 * z, frontWheel.y);
-        context[arc](frontWheel.x, frontWheel.y, 10 * z, 0, PI2, true);
-        context[stroke]();
+        drawer.moveTo(frontWheel.x + 10 * z, frontWheel.y);
+        drawer.arc(frontWheel.x, frontWheel.y, 10 * z, 0, PI2, true);
+        drawer.stroke();
         let length = frontWheel.cloneSub(backWheel),
             AC = new Point((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction),
             crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25)),
@@ -102,14 +102,14 @@ export class BMXGhost extends GhostBike {
             steer = backWheel.cloneAdd(length.cloneScale(0.84)).cloneAdd(AC.cloneScale(0.37)),
             pedalHinge = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
         // Frame
-        context[beginPath]();
-        context.lineWidth = 3 * z;
-        context[moveTo](backWheel.x, backWheel.y);
-        context[lineTo](crossFrameSaddle.x, crossFrameSaddle.y);
-        context[lineTo](shadowSteer.x, shadowSteer.y);
-        context[moveTo](steer.x, steer.y);
-        context[lineTo](pedalHinge.x, pedalHinge.y);
-        context[lineTo](backWheel.x, backWheel.y);
+        drawer.beginPath();
+        drawer.setProperty('lineWidth', 3 * z);
+        drawer.moveTo(backWheel.x, backWheel.y);
+        drawer.lineTo(crossFrameSaddle.x, crossFrameSaddle.y);
+        drawer.lineTo(shadowSteer.x, shadowSteer.y);
+        drawer.moveTo(steer.x, steer.y);
+        drawer.lineTo(pedalHinge.x, pedalHinge.y);
+        drawer.lineTo(backWheel.x, backWheel.y);
         let CY = new Point(6 * z * cos(this.distance), 6 * z * sin(this.distance)),
             pedal = pedalHinge.cloneAdd(CY),
             shadowPedal = pedalHinge.cloneSub(CY),
@@ -117,12 +117,12 @@ export class BMXGhost extends GhostBike {
             Cg = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.45)),
             Ci = backWheel.cloneAdd(length.cloneScale(0.25)).cloneAdd(AC.cloneScale(0.4));
         // Saddle
-        context[moveTo](pedal.x, pedal.y);
-        context[lineTo](shadowPedal.x, shadowPedal.y);
-        context[moveTo](saddle.x, saddle.y);
-        context[lineTo](Cg.x, Cg.y);
-        context[moveTo](pedalHinge.x, pedalHinge.y);
-        context[lineTo](Ci.x, Ci.y);
+        drawer.moveTo(pedal.x, pedal.y);
+        drawer.lineTo(shadowPedal.x, shadowPedal.y);
+        drawer.moveTo(saddle.x, saddle.y);
+        drawer.lineTo(Cg.x, Cg.y);
+        drawer.moveTo(pedalHinge.x, pedalHinge.y);
+        drawer.lineTo(Ci.x, Ci.y);
         let backWheelCenter = backWheel.cloneAdd(length.cloneScale(1)).cloneAdd(AC.cloneScale(0));
         let Cl = backWheel.cloneAdd(length.cloneScale(0.97)).cloneAdd(AC.cloneScale(0));
         let CO = backWheel.cloneAdd(length.cloneScale(0.8)).cloneAdd(AC.cloneScale(0.48));
@@ -130,13 +130,13 @@ export class BMXGhost extends GhostBike {
         let Ck = backWheel.cloneAdd(length.cloneScale(0.82)).cloneAdd(AC.cloneScale(0.65));
         let steerCenter = backWheel.cloneAdd(length.cloneScale(0.78)).cloneAdd(AC.cloneScale(0.67));
         // Steering Wheel
-        context[moveTo](backWheelCenter.x, backWheelCenter.y);
-        context[lineTo](Cl.x, Cl.y);
-        context[lineTo](CO.x, CO.y);
-        context[lineTo](CbackWheel.x, CbackWheel.y);
-        context[lineTo](Ck.x, Ck.y);
-        context[lineTo](steerCenter.x, steerCenter.y);
-        context[stroke]();
+        drawer.moveTo(backWheelCenter.x, backWheelCenter.y);
+        drawer.lineTo(Cl.x, Cl.y);
+        drawer.lineTo(CO.x, CO.y);
+        drawer.lineTo(CbackWheel.x, CbackWheel.y);
+        drawer.lineTo(Ck.x, Ck.y);
+        drawer.lineTo(steerCenter.x, steerCenter.y);
+        drawer.stroke();
         let h = this.head.pos.toPixel(track);
         AC = h.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         let hip = crossFrameSaddle.cloneSub(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.3));
@@ -149,38 +149,38 @@ export class BMXGhost extends GhostBike {
         BA = BA.cloneScale(z * z);
         let shadowKnee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
         // Shadow Leg
-        context[beginPath]();
-        context.lineWidth = 6 * z;
-        context.globalAlpha = 0.3;
-        context[moveTo](shadowPedal.x, shadowPedal.y);
-        context[lineTo](shadowKnee.x, shadowKnee.y);
-        context[lineTo](hip.x, hip.y);
-        context[stroke]();
+        drawer.beginPath();
+        drawer.setProperty('lineWidth', 6 * z);
+        drawer.setProperty('globalAlpha', 0.3);
+        drawer.moveTo(shadowPedal.x, shadowPedal.y);
+        drawer.lineTo(shadowKnee.x, shadowKnee.y);
+        drawer.lineTo(hip.x, hip.y);
+        drawer.stroke();
         // Leg
-        context[beginPath]();
-        context.globalAlpha = 0.6;
-        context.lineWidth = 6 * z;
-        context[moveTo](pedal.x, pedal.y);
-        context[lineTo](knee.x, knee.y);
-        context[lineTo](hip.x, hip.y);
-        context[stroke]();
+        drawer.beginPath();
+        drawer.setProperty('globalAlpha', 0.6);
+        drawer.setProperty('lineWidth', 6 * z);
+        drawer.moveTo(pedal.x, pedal.y);
+        drawer.lineTo(knee.x, knee.y);
+        drawer.lineTo(hip.x, hip.y);
+        drawer.stroke();
         // Body
         let head = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(0.9));
-        context[beginPath]();
-        context.lineWidth = 8 * z;
-        context[moveTo](hip.x, hip.y);
-        context[lineTo](head.x, head.y);
-        context[stroke]();
+        drawer.beginPath();
+        drawer.setProperty('lineWidth', 8 * z);
+        drawer.moveTo(hip.x, hip.y);
+        drawer.lineTo(head.x, head.y);
+        drawer.stroke();
         // Cap
-        context[beginPath]();
-        context.lineWidth = 2 * z;
+        drawer.beginPath();
+        drawer.setProperty('lineWidth', 2 * z);
         switch (this.cap) {
             case 'cap':
                 let Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.1)),
                     Cd = crossFrameSaddle.cloneAdd(length.cloneScale(0.05)).cloneAdd(AC.cloneScale(1.05));
-                context[moveTo](Ch.x, Ch.y);
-                context[lineTo](Cd.x, Cd.y);
-                context[stroke]();
+                drawer.moveTo(Ch.x, Ch.y);
+                drawer.lineTo(Cd.x, Cd.y);
+                drawer.stroke();
                 break;
             case 'hat':
                 let hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.35)).cloneAdd(AC.cloneScale(1.15)),
@@ -193,15 +193,15 @@ export class BMXGhost extends GhostBike {
                         x: hatBackBottom.x + length.x * 0.02 + AC.x * 0.2,
                         y: hatBackBottom.y + length.y * 0.02 + AC.y * 0.2
                     };
-                context[moveTo](hatFrontBottom.x, hatFrontBottom.y);
-                context[lineTo](hatFront.x, hatFront.y);
-                context[lineTo](hatFrontTop.x, hatFrontTop.y);
-                context[lineTo](hatBackTop.x, hatBackTop.y);
-                context[lineTo](hatBack.x, hatBack.y);
-                context[lineTo](hatBackBottom.x, hatBackBottom.y);
-                context.fillStyle = color;
-                context[stroke]();
-                context[fill]();
+                drawer.moveTo(hatFrontBottom.x, hatFrontBottom.y);
+                drawer.lineTo(hatFront.x, hatFront.y);
+                drawer.lineTo(hatFrontTop.x, hatFrontTop.y);
+                drawer.lineTo(hatBackTop.x, hatBackTop.y);
+                drawer.lineTo(hatBack.x, hatBack.y);
+                drawer.lineTo(hatBackBottom.x, hatBackBottom.y);
+                drawer.setProperty('fillStyle', color);
+                drawer.stroke();
+                drawer.fill();
                 break;
             case 'party':
                 let capFront = {
@@ -216,15 +216,15 @@ export class BMXGhost extends GhostBike {
                         x: capBack.x + length.x * 0.07 + AC.x * 0.33,
                         y: capBack.y + length.y * 0.07 + AC.y * 0.33
                     };
-                context.fillStyle = '#3960ad';
-                context[moveTo](capFront.x, capFront.y)[lineTo](capTop.x, capTop.y)[lineTo](capBack.x, capBack.y)[fill]()
-                    .strokeStyle = '#70d135';
-                context.lineWidth = 4 * z;
-                context[beginPath]()[moveTo](capFront.x, capFront.y)[lineTo](capBack.x, capBack.y)[stroke]()
-                    .fillStyle = '#ffd600';
-                context.lineWidth = 2 * z;
-                context[beginPath]()[moveTo](capTop.x, capTop.y)[arc](capTop.x - length.x * 0.01 - AC.x * 0.03, capTop.y - length.y * 0.01 - AC.y * 0.03, 3 * z, 0, PI2)[fill]()
-                    .fillStyle = context.strokeStyle = '#000';
+                drawer.setProperty('fillStyle', '#3960ad');
+                drawer.moveTo(capFront.x, capFront.y).lineTo(capTop.x, capTop.y).lineTo(capBack.x, capBack.y).fill()
+                    .setProperty('strokeStyle', '#70d135');
+                drawer.setProperty('lineWidth', 4 * z);
+                drawer.beginPath().moveTo(capFront.x, capFront.y).lineTo(capBack.x, capBack.y).stroke()
+                    .setProperty('fillStyle', '#ffd600');
+                drawer.setProperty('lineWidth', 2 * z);
+                drawer.beginPath().moveTo(capTop.x, capTop.y).arc(capTop.x - length.x * 0.01 - AC.x * 0.03, capTop.y - length.y * 0.01 - AC.y * 0.03, 3 * z, 0, PI2).fill()
+                    .setProperty('fillStyle', '#000').setProperty('strokeStyle', '#000');
                 break;
         }
         length = head.cloneSub(steerCenter);
@@ -238,14 +238,14 @@ export class BMXGhost extends GhostBike {
             x: steerCenter.x + length.x * 0.4 + AC.x * factor,
             y: steerCenter.y + length.y * 0.4 + AC.y * factor
         };
-        context[beginPath]();
-        context.lineWidth = 5 * track.zoomFactor;
-        context[moveTo](head.x, head.y);
-        context[lineTo](CV.x, CV.y);
-        context[lineTo](steerCenter.x, steerCenter.y);
-        context[stroke]();
-        context.strokeStyle = '#000';
-        context.globalAlpha = 1;
+        drawer.beginPath();
+        drawer.setProperty('lineWidth', 5 * track.zoomFactor);
+        drawer.moveTo(head.x, head.y);
+        drawer.lineTo(CV.x, CV.y);
+        drawer.lineTo(steerCenter.x, steerCenter.y);
+        drawer.stroke();
+        drawer.setProperty('strokeStyle', '#000');
+        drawer.setProperty('globalAlpha', 1);
     }
 
     toString() { return 'BMX'; }

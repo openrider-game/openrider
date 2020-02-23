@@ -1,74 +1,47 @@
-export class GhostBike {
-    constructor(ghostKeys, cp, parent) {
+import { Bike } from "../Bike.js";
+
+export class GhostBike extends Bike {
+    constructor(ghostKeys, parent) {
+        super(parent);
         this.ghostKeys = ghostKeys;
         this.name = ghostKeys[7] || 'Ghost';
-        this.parnt = parent;
-        this.targetsReached = cp[31] || 0;
-        this.cap = 'hat';
         this.isGhost = true;
-        this.currentTime =
-            this.distance = 0;
-        this.reached = {};
+        this.currentTime = 0;
     }
 
-    turn() {
-        let self = this;
-        self.direction *= -1;
-        self.frontToBack.turn();
-        let headToBack = self.joints[0].len;
-        self.headToBack.len = self.joints[2].len;
-        self.headToFront.len = headToBack;
+    restore(last) {
+        super.restore(last);
+        this.head.drive = () => {};
+        this.targetsReached = last[27] || 0;
+        this.time = this.ghostKeys[5];
+        this.color = last[34];
     }
 
     proceed() {
-        let self = this,
-            bikeTime = self.parnt.currentTime,
-            i = 0;
-        if (bikeTime > self.time) {
-            self.proceed = () => {};
+        let bikeTime = this.parnt.currentTime;
+        if (bikeTime > this.time) {
+            return;
         }
-        if (self.ghostKeys[0][bikeTime]) {
-            self.leftPressed = self.leftPressed ? 0 : 1;
+        if (this.ghostKeys[0][bikeTime]) {
+            this.leftPressed = this.leftPressed ? 0 : 1;
         }
-        if (self.ghostKeys[1][bikeTime]) {
-            self.rightPressed = self.rightPressed ? 0 : 1;
+        if (this.ghostKeys[1][bikeTime]) {
+            this.rightPressed = this.rightPressed ? 0 : 1;
         }
-        if (self.ghostKeys[2][bikeTime]) {
-            self.upPressed = self.upPressed ? 0 : 1;
+        if (this.ghostKeys[2][bikeTime]) {
+            this.upPressed = this.upPressed ? 0 : 1;
         }
-        if (self.ghostKeys[3][bikeTime]) {
-            self.downPressed = self.downPressed ? 0 : 1;
+        if (this.ghostKeys[3][bikeTime]) {
+            this.downPressed = this.downPressed ? 0 : 1;
         }
-        if (self.ghostKeys[4][bikeTime]) {
-            self.turn();
+        if (this.ghostKeys[4][bikeTime]) {
+            this.turn();
         }
-        self.BS();
-        for (let i = self.joints.$length - 1; i >= 0; i--) {
-            self.joints[i].proceed();
-        }
-        for (let i = self.points.$length - 1; i >= 0; i--) {
-            self.points[i].proceed();
-        }
-        if (self.backWheel.driving && self.frontWheel.driving) {
-            self.slow = false;
-        }
-        if (!self.slow) {
-            self.BS();
-            for (let i = self.joints.$length - 1; i >= 0; i--) {
-                self.joints[i].proceed();
-            }
-            for (let i = self.points.$length - 1; i >= 0; i--) {
-                self.points[i].proceed();
-            }
-        }
-        self.currentTime += 40;
+        super.proceed(this.leftPressed, this.rightPressed, this.upPressed, this.downPressed);
+        this.currentTime += 40;
     }
 
-    enghosten(arr) {
-        return arr.map(function(cp) {
-            cp = cp.concat();
-            cp[28] = cp[29] = cp[30] = 0;
-            return cp;
-        });
+    draw() {
+        this.drawInternal(this.color, 0.6);
     }
 }

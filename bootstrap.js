@@ -3,6 +3,7 @@ import { Harley } from "./class/bike/Harley.js";
 import { MTB } from "./class/bike/MTB.js";
 import { TOOL_BOMB, TOOL_BOOST, TOOL_BRUSH, TOOL_CAMERA, TOOL_CHECKPOINT, TOOL_ERASER, TOOL_GOAL, TOOL_GRAVITY, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE, TOOL_SLOWMO } from "./class/constant/ToolConstants.js";
 import { GHOST_COLORS, MIN_SIZE, TRACK_DEFAULT } from "./class/constant/TrackConstants.js";
+import { BIKE_BMX, BIKE_MTB, BIKE_HAR } from "./class/constant/BikeConstants.js";
 import { CanvasHelper } from "./class/helper/CanvasHelper.js";
 import { GhostString } from "./class/helper/GhostString.js";
 import { Bomb } from "./class/item/Bomb.js";
@@ -15,7 +16,6 @@ import { Point } from "./class/Point.js";
 import { GridBox } from "./class/track/GridBox.js";
 import { RaceTrack } from "./class/track/RaceTrack.js";
 import { SurvivalTrack } from "./class/track/SurvivalTrack.js";
-import { floor, round } from "./class/utils/MathUtils.js";
 
 const COMPILED = false;
 export const DEBUG = !COMPILED;
@@ -92,7 +92,7 @@ function canvas_ride(id, ghosts) {
         var t = new RaceTrack(id);
         t.ghosts = ghosts;
     }
-    t.bike = t.currentBike === 'BMX' ? new BMX(t) : t.currentBike === 'HAR' ? new Harley(t) : new MTB(t);
+    t.bike = t.currentBike === BIKE_BMX ? new BMX(t) : t.currentBike === BIKE_HAR ? new Harley(t) : new MTB(t);
     t.focalPoint = t.bike.head;
     instances.push(function() {
         t.proceed();
@@ -122,7 +122,7 @@ export function watchGhost(ID, track) {
 }
 
 function switchBikes() {
-    track.currentBike = track.currentBike === 'BMX' ? 'MTB' : 'BMX';
+    track.currentBike = track.currentBike === BIKE_BMX ? BIKE_MTB : BIKE_BMX;
     track.reset();
 }
 
@@ -463,11 +463,11 @@ document.onkeyup = function(event) {
     }
 };
 toolbar1.onmousemove = function(event) {
-    var pos = floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25);
+    var pos = Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25);
     label = [0, pos, hints[0][pos]];
 };
 toolbar2.onmousemove = function(event) {
-    var pos = floor((event.clientY - toolbar2.offsetTop + window.pageYOffset) / 25);
+    var pos = Math.floor((event.clientY - toolbar2.offsetTop + window.pageYOffset) / 25);
     label = [1, pos, hints[1][pos]];
     if (pos === 14) {
         if (track.currentTool === TOOL_SLINE || track.currentTool === TOOL_SBRUSH) {
@@ -477,7 +477,7 @@ toolbar2.onmousemove = function(event) {
 };
 toolbar1.onmousedown = function(event) {
     track.focalPoint = false;
-    switch (floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
+    switch (Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
         case 1:
             track.paused = !track.paused;
             break;
@@ -509,7 +509,7 @@ toolbar1.onmousedown = function(event) {
 toolbar2.onmousedown = function(event) {
     if (track.id) return false;
     track.focalPoint = false;
-    switch (floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
+    switch (Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
         case 1:
             track.currentTool = TOOL_BRUSH;
             break;
@@ -612,8 +612,8 @@ canvas.onmousedown = function(event) {
             ;
     }
     if (item !== undefined) {
-        var x = floor(item.pos.x / track.gridSize);
-        var y = floor(item.pos.y / track.gridSize);
+        var x = Math.floor(item.pos.x / track.gridSize);
+        var y = Math.floor(item.pos.y / track.gridSize);
         if (track.grid[x] === undefined) {
             track.grid[x] = [];
         }
@@ -641,8 +641,8 @@ document.onmousemove = function(event) {
         event.clientY - canvas.offsetTop + window.pageYOffset
     ).normalizeToCanvas();
     if (track.currentTool !== TOOL_ERASER && event.button !== 2) {
-        mousePos.x = round(mousePos.x / gridDetail) * gridDetail;
-        mousePos.y = round(mousePos.y / gridDetail) * gridDetail;
+        mousePos.x = Math.round(mousePos.x / gridDetail) * gridDetail;
+        mousePos.y = Math.round(mousePos.y / gridDetail) * gridDetail;
     }
     if (snapFromPrevLine) {
         if (track.currentTool === TOOL_CAMERA) {
@@ -676,11 +676,11 @@ canvas.onmouseup = function() {
             });
         } else if (track.currentTool === TOOL_BOOST || track.currentTool === TOOL_GRAVITY) {
             document.body.style.cursor = 'none';
-            direction = round(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y) * 180 / Math.PI);
+            direction = Math.round(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y) * 180 / Math.PI);
             item = track.currentTool === TOOL_BOOST ? new Boost(lastClick.x, lastClick.y, direction, track) :
                 new Gravity(lastClick.x, lastClick.y, direction, track);
-            x = floor(item.pos.x / track.gridSize);
-            y = floor(item.pos.y / track.gridSize);
+            x = Math.floor(item.pos.x / track.gridSize);
+            y = Math.floor(item.pos.y / track.gridSize);
             if (track.grid[x] === undefined) {
                 track.grid[x] = [];
             }
@@ -729,7 +729,7 @@ saveButton && (saveButton.onclick = function() {
     if (!track.id) {
         trackcode.value = track.toString();
         trackcode.select();
-        charcount.innerHTML = "Trackcode - " + round(trackcode.value.length / 1000) + "k - CTRL + C to copy";
+        charcount.innerHTML = "Trackcode - " + Math.round(trackcode.value.length / 1000) + "k - CTRL + C to copy";
     }
 });
 uploadButton && (uploadButton.onclick = function() {
@@ -829,7 +829,7 @@ uploadButton && (uploadButton.onclick = function() {
             if (name.length < 4) { alert('The track name is too short!'); return false; }
 
             desc = inputDesc.value;
-            //~ partners = tagif.getTags().map(function (n) { return map[n].toInt(); });
+            //~ partners = tagif.getTags().map(function (n) { return map[n].parseInt(); });
 
             submit.disabled = true;
             request = new XMLHttpRequest();
@@ -857,7 +857,7 @@ uploadButton && (uploadButton.onclick = function() {
 
 function zoom(way) {
     if ((way < 0 && track.zoomFactor > 0.2) || (way > 0 && track.zoomFactor < 4)) {
-        track.zoomFactor = round(track.zoomFactor * 10 + 2 * way) / 10;
+        track.zoomFactor = Math.round(track.zoomFactor * 10 + 2 * way) / 10;
         track.cache = {};
     }
 }

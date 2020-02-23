@@ -1,5 +1,4 @@
-import { track, canvas } from "../unobfuscated_bhr.js";
-import { sqrt, round } from "./utils/MathUtils.js";
+import { track, canvas } from "../bootstrap.js";
 
 export class Point {
     constructor(x, y) {
@@ -79,7 +78,7 @@ export class Point {
 
     /** @return {number} */
     getLength() {
-        return sqrt(this.x * this.x + this.y * this.y);
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
     /** @return {number} */
@@ -91,7 +90,7 @@ export class Point {
     distanceTo(point) {
         let dx = this.x - point.x,
             dy = this.y - point.y;
-        return sqrt(dx * dx + dy * dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /** @return {number} */
@@ -103,7 +102,7 @@ export class Point {
 
     /** @return {string} */
     toString() {
-        return round(this.x).toString(32) + ' ' + round(this.y).toString(32);
+        return Math.round(this.x).toString(32) + ' ' + Math.round(this.y).toString(32);
     }
 
     toJSON() {

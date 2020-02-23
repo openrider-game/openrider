@@ -1,6 +1,5 @@
 import { Point } from "../../Point.js";
 import { Line } from "./Line.js";
-import { floor } from "../../utils/MathUtils.js";
 
 export class SolidLine extends Line {
     constructor(x1, y1, x2, y2, parent) {
@@ -45,7 +44,7 @@ export class SolidLine extends Line {
     getEnd() {
         this.stringGot = true;
         let end = ' ' + this.b.toString(),
-            next = this.parnt.grid[floor(this.b.x / this.parnt.gridSize)][floor(this.b.y / this.parnt.gridSize)].search(this.b, 'line');
+            next = this.parnt.grid[Math.floor(this.b.x / this.parnt.gridSize)][Math.floor(this.b.y / this.parnt.gridSize)].search(this.b, 'line');
         if (next !== undefined) {
             end += next.getEnd();
         }

@@ -1,6 +1,5 @@
 import { Point } from "../Point.js";
-import { eraserSize } from "../../unobfuscated_bhr.js";
-import { PI2 } from "../utils/MathUtils.js";
+import { eraserSize } from "../../bootstrap.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Item {
@@ -26,7 +25,7 @@ export class Item {
         let track = this.parnt,
             pos = this.pos.toPixel(track);
         drawer.setProperty('fillStyle', this.$color);
-        drawer.beginPath().moveTo(pos.x + 7 * track.zoomFactor, pos.y).arc(pos.x, pos.y, 7 * track.zoomFactor, 0, PI2, true).fill().stroke();
+        drawer.beginPath().moveTo(pos.x + 7 * track.zoomFactor, pos.y).arc(pos.x, pos.y, 7 * track.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
     }
 
     touch(part) {

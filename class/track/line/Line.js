@@ -1,5 +1,5 @@
 import { Point } from "../../Point.js";
-import { eraserSize } from "../../../unobfuscated_bhr.js";
+import { eraserSize } from "../../../bootstrap.js";
 
 export class Line {
     constructor(x1, y1, x2, y2, parent) {

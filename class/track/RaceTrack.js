@@ -1,5 +1,6 @@
-import { canvas, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../unobfuscated_bhr.js";
-import { BIKE_BMX, BIKE_MTB, TRACKSTRING_NEW, TRACKSTRING_OLD, TRACK_DEFAULT } from "../constant/TrackConstants.js";
+import { canvas, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
+import { TRACKSTRING_NEW, TRACKSTRING_OLD, TRACK_DEFAULT } from "../constant/TrackConstants.js";
+import { BIKE_BMX, BIKE_MTB, BIKE_HAR } from "../constant/BikeConstants.js"
 import { TOOL_BRUSH, TOOL_CAMERA, TOOL_GOAL, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE } from "../constant/ToolConstants.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
@@ -12,7 +13,6 @@ import { Gravity } from "../item/Gravity.js";
 import { SlowMo } from "../item/SlowMo.js";
 import { Target } from "../item/Target.js";
 import { Point } from "../Point.js";
-import { floor, PI2, round, toInt } from "../utils/MathUtils.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
@@ -55,7 +55,7 @@ export class RaceTrack extends Track {
             rawLine = lines[i].split(/\s+/g);
             if (rawLine.length > 3) {
                 for (let k = 0, m = rawLine.length - 2; k < m; k += 2) {
-                    this.addLine({ x: toInt(rawLine[k], 32), y: toInt(rawLine[k + 1], 32) }, { x: toInt(rawLine[k + 2], 32), y: toInt(rawLine[k + 3], 32) });
+                    this.addLine({ x: parseInt(rawLine[k], 32), y: parseInt(rawLine[k + 1], 32) }, { x: parseInt(rawLine[k + 2], 32), y: parseInt(rawLine[k + 3], 32) });
                 }
             }
         }
@@ -65,7 +65,7 @@ export class RaceTrack extends Track {
                 rawLine = scenery[i].split(/\s+/g);
                 if (rawLine.length > 3) {
                     for (let k = 0, m = rawLine.length - 2; k < m; k += 2) {
-                        this.addLine({ x: toInt(rawLine[k], 32), y: toInt(rawLine[k + 1], 32) }, { x: toInt(rawLine[k + 2], 32), y: toInt(rawLine[k + 3], 32) }, true);
+                        this.addLine({ x: parseInt(rawLine[k], 32), y: parseInt(rawLine[k + 1], 32) }, { x: parseInt(rawLine[k + 2], 32), y: parseInt(rawLine[k + 3], 32) }, true);
                     }
                 }
             }
@@ -78,8 +78,8 @@ export class RaceTrack extends Track {
         for (let i = 0, l = objects.length; i < l; i++) {
             let rawCoords = objects[i].split(/\s+/g);
             if (rawCoords.length > 2) {
-                x = toInt(rawCoords[1], 32);
-                y = toInt(rawCoords[2], 32);
+                x = parseInt(rawCoords[1], 32);
+                y = parseInt(rawCoords[2], 32);
                 switch (rawCoords[0]) {
                     case 'T':
                         item = new Target(x, y, this);
@@ -91,10 +91,10 @@ export class RaceTrack extends Track {
                         this.objects.push(item);
                         break;
                     case 'B':
-                        item = new Boost(x, y, toInt(rawCoords[3], 32) + 180, this);
+                        item = new Boost(x, y, parseInt(rawCoords[3], 32) + 180, this);
                         break;
                     case 'G':
-                        item = new Gravity(x, y, toInt(rawCoords[3], 32) + 180, this);
+                        item = new Gravity(x, y, parseInt(rawCoords[3], 32) + 180, this);
                         break;
                     case 'O':
                         item = new Bomb(x, y, this);
@@ -106,8 +106,8 @@ export class RaceTrack extends Track {
                         ;
                 }
                 if (item) {
-                    x = floor(x / this.gridSize);
-                    y = floor(y / this.gridSize);
+                    x = Math.floor(x / this.gridSize);
+                    y = Math.floor(y / this.gridSize);
                     if (this.grid[x] === undefined) {
                         this.grid[x] = {};
                     }
@@ -118,7 +118,7 @@ export class RaceTrack extends Track {
                 }
             }
         }
-        if (hashSplit[3] === BIKE_BMX || hashSplit[3] === BIKE_MTB || hashSplit[3] === 'HAR') {
+        if (hashSplit[3] === BIKE_BMX || hashSplit[3] === BIKE_MTB || hashSplit[3] === BIKE_HAR) {
             this.currentBike = hashSplit[3];
             this.time = hashSplit[4] !== '' ? hashSplit[4] : false;
         } else {
@@ -155,14 +155,14 @@ export class RaceTrack extends Track {
             17: bike.frontWheel.velocity.x,
             18: bike.frontWheel.velocity.y,
             19: bike.frontWheel.speedValue,
-            20: bike.joints[0].len,
-            21: bike.joints[1].len,
-            22: bike.joints[2].len,
+            20: bike.headToBack.len,
+            21: bike.frontToBack.len,
+            22: bike.headToFront.len,
             23: bike.direction,
             24: bike.gravity.x,
             25: bike.gravity.y,
             26: bike.slow,
-            27: track.targetsReached,
+            27: null,
             28: reached,
             29: track.currentTime,
             30: bike.leftPressed,
@@ -198,20 +198,22 @@ export class RaceTrack extends Track {
                 17: ghost.frontWheel.velocity.x,
                 18: ghost.frontWheel.velocity.y,
                 19: ghost.frontWheel.speedValue,
-                20: ghost.joints[0].len,
-                21: ghost.joints[1].len,
-                22: ghost.joints[2].len,
+                20: ghost.headToBack.len,
+                21: ghost.frontToBack.len,
+                22: ghost.headToFront.len,
                 23: ghost.direction,
                 24: ghost.gravity.x,
                 25: ghost.gravity.y,
                 26: ghost.slow,
-                27: ghost.leftPressed,
-                28: ghost.rightPressed,
-                29: ghost.upPressed,
-                30: ghost.downPressed,
-                31: ghost.targetsReached,
-                32: ghost.color,
-                length: 33
+                27: track.targetsReached,
+                28: reached,
+                29: track.currentTime,
+                30: ghost.leftPressed,
+                31: ghost.rightPressed,
+                32: ghost.upPressed,
+                33: ghost.downPressed,
+                34: ghost.color,
+                length: 34
             };
         }
         track.checkpoints.push(new CheckpointSave(track, bikeList, ghostLists));
@@ -224,7 +226,7 @@ export class RaceTrack extends Track {
         let ghost;
         for (let i = 0; i < this.ghostInstances.length; i++) {
             this.ghostInstances[i] = ghost =
-                new(this.ghostKeys[i][6] === 'BMX' ? BMXGhost : MTBGhost)(this, this.ghostKeys[i], cp && cp.ghostLists[i]);
+                new(this.ghostKeys[i][6] === BIKE_BMX ? BMXGhost : MTBGhost)(this, this.ghostKeys[i], cp && cp.ghostLists[i]);
             ghost.color = this.ghostKeys[i].color;
             if (!this.bike || this.bike.$consts.length === 1 && !this.bike.up) {
                 this.focalPoint = ghost.head;
@@ -249,15 +251,15 @@ export class RaceTrack extends Track {
     }
 
     watchGhost(g) {
-        if (g = typeof g === 'string' && g.charAt(0) === 'g' ? toInt(g.substr(1), 10) : this.ghosts[toInt(g, 10) - 1]) {
+        if (g = typeof g === 'string' && g.charAt(0) === 'g' ? parseInt(g.substr(1), 10) : this.ghosts[parseInt(g, 10) - 1]) {
             watchGhost(g, this);
         }
         return this;
     }
 
     touch(part) {
-        let x = floor(part.pos.x / this.gridSize - 0.5),
-            y = floor(part.pos.y / this.gridSize - 0.5),
+        let x = Math.floor(part.pos.x / this.gridSize - 0.5),
+            y = Math.floor(part.pos.y / this.gridSize - 0.5),
             grid = this.grid;
         if (grid[x] !== undefined) {
             if (grid[x][y] !== undefined) {
@@ -341,10 +343,10 @@ export class RaceTrack extends Track {
         }
         let center = new Point(0, 0).normalizeToCanvas(),
             border = new Point(canvas.width, canvas.height).normalizeToCanvas();
-        center.x = floor(center.x / this.gridSize);
-        center.y = floor(center.y / this.gridSize);
-        border.x = floor(border.x / this.gridSize);
-        border.y = floor(border.y / this.gridSize);
+        center.x = Math.floor(center.x / this.gridSize);
+        center.y = Math.floor(center.y / this.gridSize);
+        border.x = Math.floor(border.x / this.gridSize);
+        border.y = Math.floor(border.y / this.gridSize);
         let DI = [],
             x, y, key;
         for (let x = center.x; x <= border.x; x++) {
@@ -374,7 +376,7 @@ export class RaceTrack extends Track {
                                 this.grid[x][y].lines[i].draw(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                         }
-                        drawer.drawImage(this.cache[key], floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                        drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
                     drawer.setProperty('strokeStyle', '#000');
                     for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
@@ -414,7 +416,7 @@ export class RaceTrack extends Track {
                 case 'bomb':
                 case 'slow-mo':
                     drawer.setProperty('fillStyle', this.currentTool === TOOL_GOAL ? '#ff0' : this.currentTool === 'checkpoint' ? '#00f' : this.currentTool === 'bomb' ? '#f00' : '#eee');
-                    drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, PI2, true).fill().stroke();
+                    drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
                     break;
                 case 'boost':
                 case 'gravity':
@@ -437,13 +439,13 @@ export class RaceTrack extends Track {
         drawer.beginPath();
         drawer.setProperty('fillStyle', '#ff0');
         drawer.setProperty('lineWidth', 1);
-        drawer.arc(40, 12, 3.5, 0, PI2, true).fill().stroke().beginPath();
+        drawer.arc(40, 12, 3.5, 0, 2 * Math.PI, true).fill().stroke().beginPath();
         drawer.setProperty('lineWidth', 10);
         drawer.setProperty('strokeStyle', '#fff');
         drawer.setProperty('fillStyle', '#000');
-        let minutes = floor(this.currentTime / 60000),
-            seconds = floor(this.currentTime % 60000 / 1000),
-            millis = floor((this.currentTime - minutes * 60000 - seconds * 1000) / 100),
+        let minutes = Math.floor(this.currentTime / 60000),
+            seconds = Math.floor(this.currentTime % 60000 / 1000),
+            millis = Math.floor((this.currentTime - minutes * 60000 - seconds * 1000) / 100),
             text = '';
         if (minutes < 10) {
             minutes = '0' + minutes;
@@ -515,12 +517,12 @@ export class RaceTrack extends Track {
     eraser(mousePx) {
         let drawer = CanvasHelper.getInstance();
         drawer.setProperty('fillStyle', '#ffb6c1');
-        drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, PI2, true).fill();
+        drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, 2 * Math.PI, true).fill();
     }
 
     checkDelete(eraserPoint) {
-        let x = floor(eraserPoint.x / this.gridSize - 0.5),
-            y = floor(eraserPoint.y / this.gridSize - 0.5),
+        let x = Math.floor(eraserPoint.x / this.gridSize - 0.5),
+            y = Math.floor(eraserPoint.y / this.gridSize - 0.5),
             Ix = this.grid[x],
             Ix1 = this.grid[x + 1],
             Ixy, Ixy1, Ix1y, Ix1y1, i, l, deleted = [];
@@ -621,8 +623,8 @@ export class RaceTrack extends Track {
         let grids = this.gridSpread(Av, BZ, this.gridSize),
             deleted = [];
         for (let i = 0, l = grids.length; i < l; i++) {
-            let x = floor(grids[i].x / this.gridSize),
-                y = floor(grids[i].y / this.gridSize);
+            let x = Math.floor(grids[i].x / this.gridSize),
+                y = Math.floor(grids[i].y / this.gridSize);
             deleted = deleted.concat(this.grid[x][y].remove());
             delete this.cache[x + '_' + y];
         }
@@ -648,10 +650,10 @@ export class RaceTrack extends Track {
 
     shortenLastLineSet() {
         if (this.currentTool === 'scenery line' || this.currentTool === 'scenery brush') {
-            let x = floor(lastScenery.x / this.gridSize),
-                y = floor(lastScenery.y / this.gridSize),
+            let x = Math.floor(lastScenery.x / this.gridSize),
+                y = Math.floor(lastScenery.y / this.gridSize),
                 line = this.grid[x][y].scenery[this.grid[x][y].scenery.length - 1];
-            if (line && line.b.x === round(lastScenery.x) && line.b.y === round(lastScenery.y)) {
+            if (line && line.b.x === Math.round(lastScenery.x) && line.b.y === Math.round(lastScenery.y)) {
                 line.doRemove = true;
                 lastScenery.copy(line.a);
                 this.remove(line.a, line.b);
@@ -659,10 +661,10 @@ export class RaceTrack extends Track {
                 alert('No more scenery line to erase!');
             }
         } else {
-            let x = floor(lastForeground.x / this.gridSize),
-                y = floor(lastForeground.y / this.gridSize),
+            let x = Math.floor(lastForeground.x / this.gridSize),
+                y = Math.floor(lastForeground.y / this.gridSize),
                 line = this.grid[x][y].lines[this.grid[x][y].lines.length - 1];
-            if (line !== undefined && line.b.x === round(lastForeground.x) && line.b.y === round(lastForeground.y)) {
+            if (line !== undefined && line.b.x === Math.round(lastForeground.x) && line.b.y === Math.round(lastForeground.y)) {
                 line.doRemove = true;
                 lastForeground.copy(line.a);
                 this.remove(line.a, line.b);

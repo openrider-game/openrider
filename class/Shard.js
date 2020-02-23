@@ -1,24 +1,23 @@
 import { Point } from "./Point.js";
-import { cos, rand, sin } from "./utils/MathUtils.js";
 import { CanvasHelper } from "./helper/CanvasHelper.js";
 
 export class Shard {
     constructor(pos, parent) {
         /** @type {Point} */
-        this.pos = new Point(pos.x + 5 * (rand() - rand()), pos.y + 5 * (rand() - rand()));
+        this.pos = new Point(pos.x + 5 * (Math.random() - Math.random()), pos.y + 5 * (Math.random() - Math.random()));
         /** @type {Point} */
         this.oldPos = new Point(this.pos.x, this.pos.y);
         /** @type {Point} */
-        this.velocity = new Point(11 * (rand() - rand()), 11 * (rand() - rand()));
+        this.velocity = new Point(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()));
         /** @type {Object} */
         this.parnt = parent;
         this.track = parent.parnt;
         /** @type {number} */
-        this.size = 2 + rand() * 9;
+        this.size = 2 + Math.random() * 9;
         /** @type {number} */
-        this.rotation = rand() * 6.2;
+        this.rotation = Math.random() * 6.2;
         /** @type {number} */
-        this.rotationSpeed = rand() - rand();
+        this.rotationSpeed = Math.random() - Math.random();
         /** @type {number} */
         this.B6 = 0.05;
         /** @type {boolean} */
@@ -32,15 +31,15 @@ export class Shard {
         let pos = this.pos.toPixel(this.track),
             s = this.size * this.track.zoomFactor,
             dist = this.shape[0] * s,
-            x = pos.x + dist * cos(this.rotation),
-            y = pos.y + dist * sin(this.rotation),
+            x = pos.x + dist * Math.cos(this.rotation),
+            y = pos.y + dist * Math.sin(this.rotation),
             i = 2;
         drawer.beginPath().moveTo(x, y)
             .fillStyle = '#000';
         for (; i < 8; i++) {
             dist = this.shape[i - 1] * s / 2;
-            x = pos.x + dist * cos(this.rotation + 6.283 * i / 8);
-            y = pos.y + dist * sin(this.rotation + 6.283 * i / 8);
+            x = pos.x + dist * Math.cos(this.rotation + 6.283 * i / 8);
+            y = pos.y + dist * Math.sin(this.rotation + 6.283 * i / 8);
             drawer.lineTo(x, y);
         }
         drawer.fill();

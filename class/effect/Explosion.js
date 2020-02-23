@@ -1,13 +1,12 @@
 import { BodyPart } from "../bike/part/BodyPart.js";
 import { Shard } from "../Shard.js";
-import { rand, PI2, cos, sin } from "../utils/MathUtils.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Explosion {
     constructor(pos, gravity, time, parent) {
         this.dead = true;
         this.parnt = parent;
-        this.speedValue = 30 + 20 * rand();
+        this.speedValue = 30 + 20 * Math.random();
         this.pointsf = 0;
         this.pieces = [
             new Shard(pos, this),
@@ -28,16 +27,16 @@ export class Explosion {
         if (this.speedValue > 0) {
             this.speedValue -= 10;
             let center = this.pos.toPixel(this.parnt),
-                angle = rand() * PI2,
+                angle = Math.random() * 2 * Math.PI,
                 dist = this.speedValue / 2,
-                x = center.x + dist * cos(angle),
-                y = center.y + dist * sin(angle);
+                x = center.x + dist * Math.cos(angle),
+                y = center.y + dist * Math.sin(angle);
             drawer.setProperty('fillStyle', '#ff0');
             drawer.beginPath().moveTo(x, y);
             for (let i = 1; i < 16; i++) {
-                dist = (this.speedValue + 30 * rand()) / 2;
-                x = center.x + dist * cos(angle + PI2 * i / 16);
-                y = center.y + dist * sin(angle + PI2 * i / 16);
+                dist = (this.speedValue + 30 * Math.random()) / 2;
+                x = center.x + dist * Math.cos(angle + 2 * Math.PI * i / 16);
+                y = center.y + dist * Math.sin(angle + 2 * Math.PI * i / 16);
                 drawer.lineTo(x, y);
             }
             drawer.fill();

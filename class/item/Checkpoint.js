@@ -1,5 +1,5 @@
 import { ReachableItem } from "./ReachableItem.js";
-import { DEBUG } from "../../unobfuscated_bhr.js";
+import { DEBUG } from "../../bootstrap.js";
 import { SAVE_CHECKPOINT } from "../constant/TrackConstants.js";
 
 export class Checkpoint extends ReachableItem {

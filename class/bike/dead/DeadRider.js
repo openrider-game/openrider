@@ -1,15 +1,13 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
 import { Joint } from "../../Joint.js";
 import { Point } from "../../Point.js";
-import { PI2, rand } from "../../utils/MathUtils.js";
 import { BodyPart } from "../part/BodyPart.js";
 
 export class DeadRider {
     constructor(guy, parent) {
         this.dead = true;
         let U = new Point(0, 0),
-            i = 0,
-            l = 0;
+            i = 0;
         this.direction = 1;
         this.parnt = parent;
         this.track = parent.parnt;
@@ -83,7 +81,7 @@ export class DeadRider {
         // Head
         head.selfAdd(head.cloneSub(hip).cloneScale(0.25));
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
-        drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, PI2, true).stroke();
+        drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true).stroke();
         let A6 = head.cloneSub(hip),
             A7 = new Point(A6.y, -A6.x),
             AY = new Point(0, 0),
@@ -138,8 +136,8 @@ export class DeadRider {
         }
         for (let i = this.points.$length - 1; i >= 0; i--) {
             this.points[i].velocity.copy(this.points[i].pos.cloneSub(this.points[i].oldPos));
-            this.points[i].velocity.x += rand() - rand();
-            this.points[i].velocity.y += rand() - rand();
+            this.points[i].velocity.x += Math.random() - Math.random();
+            this.points[i].velocity.y += Math.random() - Math.random();
         }
     }
 }

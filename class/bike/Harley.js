@@ -1,14 +1,13 @@
-import { harConstants } from "../constant/TrackConstants.js";
+import { BIKE_HAR, HAR_INITIAL_STATE } from "../constant/BikeConstants.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 import { Point } from "../Point.js";
-import { cos, PI2, sin } from "../utils/MathUtils.js";
-import { Bike } from "./Bike.js";
+import { PlayerBike } from "./PlayerBike.js";
 
-export class Harley extends Bike {
+export class Harley extends PlayerBike {
     constructor(parent, last) {
         super(parent);
-        last = last || harConstants[0];
-        this.$consts = harConstants;
+        last = last || HAR_INITIAL_STATE[0];
+        this.$consts = HAR_INITIAL_STATE;
 
         this.restore(last);
         this.head.size = 14;
@@ -38,16 +37,16 @@ export class Harley extends Bike {
         drawer.beginPath();
         drawer.setProperty('strokeStyle', '#000');
         drawer.setProperty('lineWidth', 3.5 * track.zoomFactor);
-        drawer.arc(backWheel.x, backWheel.y, 12.5 * track.zoomFactor, 0, PI2, true);
+        drawer.arc(backWheel.x, backWheel.y, 12.5 * track.zoomFactor, 0, 2 * Math.PI, true);
         drawer.moveTo(pos.x + 12.5 * track.zoomFactor, pos.y);
-        drawer.arc(pos.x, pos.y, 12.5 * track.zoomFactor, 0, PI2, true);
+        drawer.arc(pos.x, pos.y, 12.5 * track.zoomFactor, 0, 2 * Math.PI, true);
         drawer.stroke();
         drawer.beginPath();
         drawer.setProperty('fillStyle', 'grey');
         drawer.moveTo(backWheel.x + 5 * track.zoomFactor, backWheel.y);
-        drawer.arc(backWheel.x, backWheel.y, 5 * track.zoomFactor, 0, PI2, true);
+        drawer.arc(backWheel.x, backWheel.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true);
         drawer.moveTo(pos.x + 4 * track.zoomFactor, pos.y);
-        drawer.arc(pos.x, pos.y, 4 * track.zoomFactor, 0, PI2, true);
+        drawer.arc(pos.x, pos.y, 4 * track.zoomFactor, 0, 2 * Math.PI, true);
         drawer.fill();
         drawer.beginPath();
         drawer.setProperty('lineWidth', 5 * track.zoomFactor);
@@ -83,7 +82,7 @@ export class Harley extends Bike {
         drawer.setProperty('lineWidth', 3 * track.zoomFactor);
         drawer.moveTo(pos.x, pos.y);
         drawer.lineTo(backWheel.x + length.x * 0.56 + middle.x * 0.73, backWheel.y + length.y * 0.56 + middle.y * 0.73);
-        let Ap = new Point(6 * cos(this.distance) * track.zoomFactor, 6 * sin(this.distance) * track.zoomFactor);
+        let Ap = new Point(6 * Math.cos(this.distance) * track.zoomFactor, 6 * Math.sin(this.distance) * track.zoomFactor);
         drawer.lineTo(backWheel.x + length.x * 0.58 + middle.x * 0.77, backWheel.y + length.y * 0.58 + middle.y * 0.77);
         drawer.lineTo(backWheel.x + length.x * 0.55 + middle.x * 0.8, backWheel.y + length.y * 0.55 + middle.y * 0.8);
         drawer.stroke();
@@ -128,7 +127,7 @@ export class Harley extends Bike {
         drawer.beginPath();
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
         drawer.moveTo(Bl.x + 5 * track.zoomFactor, Bl.y);
-        drawer.arc(Bl.x, Bl.y, 5 * track.zoomFactor, 0, PI2, true);
+        drawer.arc(Bl.x, Bl.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true);
         drawer.stroke();
         // Cap
         drawer.beginPath();
@@ -170,6 +169,6 @@ export class Harley extends Bike {
     }
 
     toString() {
-        return 'HAR';
+        return BIKE_HAR;
     };
 }

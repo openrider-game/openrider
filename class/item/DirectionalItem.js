@@ -1,6 +1,5 @@
 import { Point } from "../Point.js";
 import { Item } from "./Item.js";
-import { sin, cos } from "../utils/MathUtils.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class DirectionalItem extends Item {
@@ -8,7 +7,7 @@ export class DirectionalItem extends Item {
         super(x, y, parent);
         let rad = rotation * Math.PI / 180;
         this.rotation = rotation;
-        this.direction = new Point(-sin(rad), cos(rad));
+        this.direction = new Point(-Math.sin(rad), Math.cos(rad));
     }
 
     draw() {

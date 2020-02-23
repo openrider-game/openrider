@@ -1,5 +1,5 @@
 import { Point } from "../../Point.js";
-import { track } from "../../../unobfuscated_bhr.js";
+import { track } from "../../../bootstrap.js";
 
 export class Wheel {
     constructor(center, parent) {

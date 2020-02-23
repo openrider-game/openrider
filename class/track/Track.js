@@ -1,10 +1,9 @@
 import { TOOL_CAMERA } from "../constant/ToolConstants.js";
-import { BIKE_BMX } from "../constant/TrackConstants.js";
+import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
 import { SceneryLine } from "./line/SceneryLine.js";
 import { SolidLine } from "./line/SolidLine.js";
 import { Point } from "../Point.js";
-import { floor, round, ceil, pow } from "../utils/MathUtils.js";
 import { BMX } from "../bike/BMX.js";
 import { MTB } from "../bike/MTB.js";
 import { Harley } from "../bike/Harley.js";
@@ -66,19 +65,19 @@ export class Track {
             i = 0;
         lines.push(_from);
         while (i < 5000) {
-            if (floor(from.x / q) === floor(_to.x / q) && floor(from.y / q) === floor(_to.y / q)) {
+            if (Math.floor(from.x / q) === Math.floor(_to.x / q) && Math.floor(from.y / q) === Math.floor(_to.y / q)) {
                 break;
             }
             var to1 = new Point(
-                direction.x < 0 ? round(ceil((from.x + 1) / q + direction.x) * q) - 1 : round(floor(from.x / q + direction.x) * q), 0
+                direction.x < 0 ? Math.round(Math.ceil((from.x + 1) / q + direction.x) * q) - 1 : Math.round(Math.floor(from.x / q + direction.x) * q), 0
             );
-            to1.y = round(_from.y + (to1.x - _from.x) * factor);
+            to1.y = Math.round(_from.y + (to1.x - _from.x) * factor);
             var to2 = new Point(
-                0, direction.y < 0 ? round(ceil((from.y + 1) / q + direction.y) * q) - 1 : round(floor(from.y / q + direction.y) * q)
+                0, direction.y < 0 ? Math.round(Math.ceil((from.y + 1) / q + direction.y) * q) - 1 : Math.round(Math.floor(from.y / q + direction.y) * q)
             );
-            to2.x = round(_from.x + (to2.y - _from.y) / factor);
+            to2.x = Math.round(_from.x + (to2.y - _from.y) / factor);
             // Take the shortest line piece
-            if (pow(to1.x - _from.x, 2) + pow(to1.y - _from.y, 2) < pow(to2.x - _from.x, 2) + pow(to2.y - _from.y, 2)) {
+            if (Math.pow(to1.x - _from.x, 2) + Math.pow(to1.y - _from.y, 2) < Math.pow(to2.x - _from.x, 2) + Math.pow(to2.y - _from.y, 2)) {
                 from = to1;
                 lines.push(to1);
             } else {
@@ -94,8 +93,8 @@ export class Track {
         let grids = this.gridSpread(line.a, line.b, this.gridSize),
             x, y;
         for (let i = 0, l = grids.length; i < l; i++) {
-            x = floor(grids[i].x / this.gridSize);
-            y = floor(grids[i].y / this.gridSize);
+            x = Math.floor(grids[i].x / this.gridSize);
+            y = Math.floor(grids[i].y / this.gridSize);
             if (this.grid[x] === undefined) {
                 this.grid[x] = {};
             }
@@ -125,8 +124,8 @@ export class Track {
 
     addObject(item) {
         let track = this,
-            x = floor(item.pos.x / track.gridSize),
-            y = floor(item.pos.y / track.gridSize);
+            x = Math.floor(item.pos.x / track.gridSize),
+            y = Math.floor(item.pos.y / track.gridSize);
         if (track.grid[x] === undefined) {
             track.grid[x] = {};
         }

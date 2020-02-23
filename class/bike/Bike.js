@@ -79,7 +79,7 @@ export class Bike extends Evts {
         }
     }
 
-    proceed(left, right, up, down) {
+    update(left, right, up, down) {
         if (this.backWheel.driving && this.frontWheel.driving) {
             this.slow = false;
         }
@@ -89,10 +89,10 @@ export class Bike extends Evts {
                 this.updateControls(left, right, up, down);
             }
             for (let t = this.joints.$length - 1; t >= 0; t--) {
-                this.joints[t].proceed();
+                this.joints[t].update();
             }
             for (let u = this.points.$length - 1; u >= 0; u--) {
-                this.points[u].proceed();
+                this.points[u].update();
             }
         }
     }

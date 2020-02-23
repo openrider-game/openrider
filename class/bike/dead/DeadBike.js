@@ -15,19 +15,19 @@ export class DeadBike {
         this.deathPoint = bike.clone();
     }
 
-    draw() {
-        this.bike.draw();
-        this.rider.draw();
+    render() {
+        this.bike.render();
+        this.rider.render();
         if (this.hat) {
-            this.hat.draw();
+            this.hat.render();
         }
     }
 
-    proceed() {
-        this.bike.proceed();
-        this.rider.proceed();
+    update() {
+        this.bike.update();
+        this.rider.update();
         if (this.hat) {
-            this.hat.proceed();
+            this.hat.update();
         }
     }
 }

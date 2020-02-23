@@ -1,7 +1,7 @@
 import { BIKE_BMX, BMX_INITIAL_STATE } from "../constant/BikeConstants.js";
-import { BMXDrawer } from "./drawer/BMXDrawer.js";
+import { BMXRenderer } from "./renderer/BMXRenderer.js";
 import { PlayerBike } from "./PlayerBike.js";
-export class BMX extends BMXDrawer(PlayerBike) {
+export class BMX extends BMXRenderer(PlayerBike) {
     constructor(parent, last) {
         super(parent);
         last = last || BMX_INITIAL_STATE[0];

@@ -11,7 +11,7 @@ export class Line {
         this.parnt = parent;
     }
 
-    draw(context, offsetLeft, offsetTop) {
+    render(context, offsetLeft, offsetTop) {
         context.beginPath();
         context.moveTo(this.a.x * this.parnt.zoomFactor - offsetLeft, this.a.y * this.parnt.zoomFactor - offsetTop);
         context.lineTo(this.b.x * this.parnt.zoomFactor - offsetLeft, this.b.y * this.parnt.zoomFactor - offsetTop);

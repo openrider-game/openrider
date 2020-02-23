@@ -51,7 +51,7 @@ export class DeadRider {
             }
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.track,
             head = this.head.pos.toPixel(track),
@@ -102,12 +102,12 @@ export class DeadRider {
         // drawer.stroke();
     }
 
-    proceed() {
+    update() {
         for (let i = this.joints.$length - 1; i >= 0; i--) {
-            this.joints[i].proceed();
+            this.joints[i].update();
         }
         for (let i = this.points.$length - 1; i >= 0; i--) {
-            this.points[i].proceed();
+            this.points[i].update();
         }
     }
 

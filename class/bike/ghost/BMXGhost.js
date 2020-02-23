@@ -1,8 +1,8 @@
 import { BIKE_BMX, BMX_INITIAL_STATE } from "../../constant/BikeConstants.js";
-import { BMXDrawer } from "../drawer/BMXDrawer.js";
+import { BMXRenderer } from "../renderer/BMXRenderer.js";
 import { GhostBike } from "./GhostBike.js";
 
-export class BMXGhost extends BMXDrawer(GhostBike) {
+export class BMXGhost extends BMXRenderer(GhostBike) {
     constructor(parent, ghostKeys, last) {
         super(ghostKeys, parent);
         last = last || (console.log('fallback', last), BMX_INITIAL_STATE[0]);

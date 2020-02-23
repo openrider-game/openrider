@@ -1,8 +1,8 @@
-import { MTB_INITIAL_STATE } from "../constant/BikeConstants.js";
-import { MTBDrawer } from "./drawer/MTBDrawer.js";
+import { BIKE_MTB, MTB_INITIAL_STATE } from "../constant/BikeConstants.js";
+import { MTBRenderer } from "./renderer/MTBRenderer.js";
 import { PlayerBike } from "./PlayerBike.js";
 
-export class MTB extends MTBDrawer(PlayerBike) {
+export class MTB extends MTBRenderer(PlayerBike) {
     constructor(parent, last) {
         super(parent);
         last = last || MTB_INITIAL_STATE[0];

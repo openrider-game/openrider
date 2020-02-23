@@ -1,7 +1,7 @@
 import { MIN_TIME, SAVE_CHECKPOINT, SAVE_TARGET } from "../constant/TrackConstants.js";
 import { GhostString } from "../helper/GhostString.js";
 import { Point } from "../Point.js";
-import { Shard } from "../Shard.js";
+import { Shard } from "../effect/Shard.js";
 import { Bike } from "./Bike.js";
 import { DeadBike } from "./dead/DeadBike.js";
 
@@ -74,7 +74,7 @@ export class PlayerBike extends Bike {
                     method: 'POST',
                     body: 'k=' + GhostString.generate(this.keys) +
                         '&b=' + encodeURIComponent(JSON.stringify(bikeList)) + track.bike +
-                        '&g=' + (ghostList ? encodeURIComponent(JSON.stringify(ghostList) + track.ghost) : '0') +
+                        '&g=' + (ghostList ? encodeURIComponent(JSON.stringify(ghostList) + track.ghostInstances) : '0') +
                         '&i=' + track.id
                 })).then(function() { console.log('saved'); });
             }
@@ -96,7 +96,7 @@ export class PlayerBike extends Bike {
         bike.hat.rotationSpeed = 0.1;
     }
 
-    proceed() {
+    update() {
         if (this.doSave) {
             this.hitTarget();
         }
@@ -120,11 +120,11 @@ export class PlayerBike extends Bike {
         if (this.doTurn) {
             this.keys[4][time] = 1;
         }
-        super.proceed(this.parnt.left, this.parnt.right, this.parnt.up, this.parnt.down);
+        super.update(this.parnt.left, this.parnt.right, this.parnt.up, this.parnt.down);
     }
 
-    draw() {
-        this.drawInternal('#000', 1);
+    render() {
+        this.renderInternal('#000', 1);
     }
 
     clone() {

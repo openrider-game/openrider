@@ -1,8 +1,8 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
 import { Point } from "../../Point.js";
 
-export const MTBDrawer = (Base) => class extends Base {
-    drawInternal(color, opacityFactor) {
+export const MTBRenderer = (Base) => class extends Base {
+    renderInternal(color, opacityFactor) {
         let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             backWheel = this.backWheel.pos.toPixel(track),

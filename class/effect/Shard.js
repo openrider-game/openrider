@@ -1,5 +1,5 @@
-import { Point } from "./Point.js";
-import { CanvasHelper } from "./helper/CanvasHelper.js";
+import { Point } from "../Point.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Shard {
     constructor(pos, parent) {
@@ -26,7 +26,7 @@ export class Shard {
         this.shape = [1, 0.7, 0.8, 0.9, 0.5, 1, 0.7, 1];
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let pos = this.pos.toPixel(this.track),
             s = this.size * this.track.zoomFactor,
@@ -57,7 +57,7 @@ export class Shard {
         }
     }
 
-    proceed() {
+    update() {
         this.rotation += this.rotationSpeed;
         this.velocity.selfAdd(this.parnt.gravity);
         this.velocity = this.velocity.cloneScale(0.99);

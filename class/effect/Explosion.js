@@ -1,5 +1,5 @@
 import { BodyPart } from "../bike/part/BodyPart.js";
-import { Shard } from "../Shard.js";
+import { Shard } from "./Shard.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Explosion {
@@ -22,7 +22,7 @@ export class Explosion {
         this.head.velocity.x = 20;
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         if (this.speedValue > 0) {
             this.speedValue -= 10;
@@ -42,13 +42,13 @@ export class Explosion {
             drawer.fill();
         }
         for (let i = 0, l = this.pieces.length; i < l; i++) {
-            this.pieces[i].draw();
+            this.pieces[i].render();
         }
     }
 
-    proceed() {
+    update() {
         for (let i = this.pieces.length - 1; i >= 0; i--) {
-            this.pieces[i].proceed();
+            this.pieces[i].update();
         }
     }
 }

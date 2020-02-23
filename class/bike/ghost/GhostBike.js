@@ -7,6 +7,7 @@ export class GhostBike extends Bike {
         this.name = ghostKeys[7] || 'Ghost';
         this.isGhost = true;
         this.currentTime = 0;
+        this.reached = {};
     }
 
     restore(last) {
@@ -17,7 +18,7 @@ export class GhostBike extends Bike {
         this.color = last[34];
     }
 
-    proceed() {
+    update() {
         let bikeTime = this.parnt.currentTime;
         if (bikeTime > this.time) {
             return;
@@ -37,11 +38,11 @@ export class GhostBike extends Bike {
         if (this.ghostKeys[4][bikeTime]) {
             this.turn();
         }
-        super.proceed(this.leftPressed, this.rightPressed, this.upPressed, this.downPressed);
+        super.update(this.leftPressed, this.rightPressed, this.upPressed, this.downPressed);
         this.currentTime += 40;
     }
 
-    draw() {
-        this.drawInternal(this.color, 0.6);
+    render() {
+        this.renderInternal(this.color, 0.6);
     }
 }

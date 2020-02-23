@@ -95,7 +95,7 @@ function canvas_ride(id, ghosts) {
     t.bike = t.currentBike === BIKE_BMX ? new BMX(t) : t.currentBike === BIKE_HAR ? new Harley(t) : new MTB(t);
     t.focalPoint = t.bike.head;
     instances.push(function() {
-        t.proceed();
+        t.update();
     });
     return track = t;
 }
@@ -107,18 +107,24 @@ intv = setInterval(function() {
 }, 40);
 
 export function watchGhost(ID, track) {
-    if (track.ghost.contains(ID)) {
+    if (track.ghostIDs.contains(ID)) {
         return;
     }
     fetch(new Request('ghost/load', { method: 'POST', body: 'id=' + ID })).then(function(ghostStr) {
         var ghostArr = GhostString.parse(ghostStr);
-        // t.ghostKeys = ghostArr;
-        // t.ghost = ghostArr[5];
         track.ghostKeys.push(ghostArr);
         ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
-        track.ghost.push(ID);
+        track.ghostIDs.push(ID);
         track.reset();
     });
+}
+
+function watchGhostString(ghostStr) {
+    var ghostArr = GhostString.parse(ghostStr);
+    track.ghostKeys.push(ghostArr);
+    track.ghostIDs.push(1);
+    ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
+    track.reset();
 }
 
 function switchBikes() {
@@ -812,7 +818,7 @@ uploadButton && (uploadButton.onclick = function() {
             tmp = track.cache;
             track.cache = {};
             changeThumb(false);
-            track.draw();
+            track.render();
             thumb.getContext('2d')
                 .drawImage(canvas,
                     (canvas.width - 500) / 2, (canvas.height - 300) / 2,
@@ -916,6 +922,7 @@ export default {
     game: {
         'ride': canvas_ride,
         'watchGhost': watchGhost,
+        'watchGhostString': watchGhostString,
         'detach': rmEvts,
         'attach': addEvts,
         'changeThumb': changeThumb

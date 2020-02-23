@@ -22,6 +22,7 @@ export class RaceTrack extends Track {
         super();
         let rawTrack, x, y, rawLine;
         this.ghostKeys = [];
+        this.ghostIDs = [];
         this.ghostInstances = [];
         this.canvas = canvas;
         this.id = ID;
@@ -162,7 +163,7 @@ export class RaceTrack extends Track {
             24: bike.gravity.x,
             25: bike.gravity.y,
             26: bike.slow,
-            27: null,
+            27: track.targetsReached,
             28: reached,
             29: track.currentTime,
             30: bike.leftPressed,
@@ -224,11 +225,12 @@ export class RaceTrack extends Track {
         this.ghostInstances = [];
         this.runningGhosts = [];
         let ghost;
-        for (let i = 0; i < this.ghostInstances.length; i++) {
+        let cp = this.checkpoints[this.checkpoints.length - 1];
+        for (let i = 0; i < this.ghostIDs.length; i++) {
             this.ghostInstances[i] = ghost =
                 new(this.ghostKeys[i][6] === BIKE_BMX ? BMXGhost : MTBGhost)(this, this.ghostKeys[i], cp && cp.ghostLists[i]);
             ghost.color = this.ghostKeys[i].color;
-            if (!this.bike || this.bike.$consts.length === 1 && !this.bike.up) {
+            if (!this.bike || this.checkpoints.length === 0 && !this.up) {
                 this.focalPoint = ghost.head;
             }
         }
@@ -294,25 +296,25 @@ export class RaceTrack extends Track {
         return this;
     }
 
-    proceed() {
+    update() {
         let l = this.ghostInstances.length,
             i = 0;
         if (!this.paused) {
-            this.bike && this.bike.proceed();
+            this.bike && this.bike.update();
             for (; i < l; i++) {
-                this.ghostInstances[i].proceed();
+                this.ghostInstances[i].update();
             }
             this.currentTime += 40;
         }
-        this.draw();
+        this.render();
         for (let i = 0; i < l; i++) {
-            this.ghostInstances[i].draw();
+            this.ghostInstances[i].render();
         }
-        this.bike && this.bike.draw();
+        this.bike && this.bike.render();
         return this;
     }
 
-    draw() {
+    async render() {
         let drawer = CanvasHelper.getInstance();
         let ghost,
             mousePx = mousePos.toPixel(this);
@@ -363,7 +365,7 @@ export class RaceTrack extends Track {
                             graphic.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
                             graphic.strokeStyle = '#aaa';
                             for (let i = 0, l = this.grid[x][y].scenery.length; i < l; i++) {
-                                this.grid[x][y].scenery[i].draw(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
+                                this.grid[x][y].scenery[i].render(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                             graphic.strokeStyle = '#000';
                             if (shadeLines) {
@@ -373,14 +375,14 @@ export class RaceTrack extends Track {
                                 graphic.shadowColor = '#000';
                             }
                             for (let i = 0, l = this.grid[x][y].lines.length; i < l; i++) {
-                                this.grid[x][y].lines[i].draw(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
+                                this.grid[x][y].lines[i].render(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                         }
                         drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
                     drawer.setProperty('strokeStyle', '#000');
                     for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
-                        this.grid[x][y].objects[i].draw();
+                        this.grid[x][y].objects[i].render();
                     }
                 }
             }
@@ -433,7 +435,7 @@ export class RaceTrack extends Track {
                     drawer.restore();
                     break;
                 default:
-                    ;
+                    break;
             }
         }
         drawer.beginPath();

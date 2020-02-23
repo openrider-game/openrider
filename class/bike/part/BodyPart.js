@@ -27,7 +27,7 @@ export class BodyPart {
         this.driving = true;
     }
 
-    proceed() {
+    update() {
         this.velocity.selfAdd(this.parnt.gravity).selfScale(0.99);
         //~ this.velocity = this.velocity.cloneScale(0.99);
         this.pos.selfAdd(this.velocity);

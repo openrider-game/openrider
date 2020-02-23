@@ -25,7 +25,7 @@ export class Harley extends PlayerBike {
         this.rotationFactor = 10;
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.parnt;
         let backWheel = this.backWheel.pos.toPixel(track);

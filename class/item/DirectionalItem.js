@@ -10,7 +10,7 @@ export class DirectionalItem extends Item {
         this.direction = new Point(-Math.sin(rad), Math.cos(rad));
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             pos = this.pos.toPixel(track);

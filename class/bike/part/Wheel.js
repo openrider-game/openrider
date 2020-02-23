@@ -24,7 +24,7 @@ export class Wheel {
         this.driving = true;
     }
 
-    proceed() {
+    update() {
         this.velocity.selfAdd(this.parnt.gravity).selfScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;

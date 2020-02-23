@@ -22,7 +22,7 @@ export class Joint {
         this.b.pos.selfAdd(DU.cloneScale(-rad));
     }
 
-    proceed() {
+    update() {
         let vector = this.b.pos.cloneSub(this.a.pos);
         let length = vector.getLength();
         if (length < 1) {

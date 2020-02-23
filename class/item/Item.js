@@ -20,7 +20,7 @@ export class Item {
         this.$id = Item.$id++;
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             pos = this.pos.toPixel(track);

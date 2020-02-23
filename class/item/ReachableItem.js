@@ -7,7 +7,7 @@ export class ReachableItem extends Item {
         this.reached = false;
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.parnt,
             pos = this.pos.toPixel(track);

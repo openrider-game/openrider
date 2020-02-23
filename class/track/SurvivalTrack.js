@@ -51,10 +51,9 @@ export class SurvivalTrack extends Track {
         return this;
     }
 
-    proceed() {
+    update() {
         if (!this.paused) {
-            this.ghost && this.ghost.proceed();
-            this.bike && this.bike.proceed();
+            this.bike && this.bike.update();
             this.currentTime += 40;
         }
         let p, line = this.lines[this.lines.length - 1];
@@ -66,13 +65,12 @@ export class SurvivalTrack extends Track {
             this.difficulty += 0.001;
         }
         //~ }
-        this.draw();
-        this.ghost && this.ghost.draw();
-        this.bike && this.bike.draw();
+        this.render();
+        this.bike && this.bike.render();
         return this;
     }
 
-    draw() {
+    render() {
         let drawer = CanvasHelper.getInstance();
         if (this.focalPoint) {
             this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
@@ -99,14 +97,14 @@ export class SurvivalTrack extends Track {
                             graphic.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
                             graphic.strokeStyle = '#000';
                             for (let i = 0, l = this.grid[x][y].lines.length; i < l; i++) {
-                                this.grid[x][y].lines[i].draw(this.cache[x + '_' + y].getContext('2d'), x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
+                                this.grid[x][y].lines[i].render(this.cache[x + '_' + y].getContext('2d'), x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
                             }
                         }
                         drawer.drawImage(this.cache[x + '_' + y], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
                     drawer.setProperty('strokeStyle', '#000');
                     //~ for(let i  = 0, l = this.grid[x][y].objects.length; i < l; i++) {
-                    //~ this.grid[x][y].objects[i].draw();
+                    //~ this.grid[x][y].objects[i].render();
                     //~ }
                 }
             }
@@ -136,15 +134,7 @@ export class SurvivalTrack extends Track {
             'Distance: ' + d + ' meters' +
             '; Speed: ' + v + ' km/h' + (this.bike.dead ? ' - Press ENTER to retry' : ''), 28, 16);
         drawer.fillText(text, 28, 16);
-        if (this.ghost) {
-            drawer.setProperty('fillStyle', '#aaa');
-            drawer.setProperty('textAlign', 'right');
-            drawer.strokeText(text = (this.ghost.name || 'Ghost') + Math.floor(this.ghost.frontWheel.pos.x / 10) / 10, canvas.width - 7, 16);
-            drawer.fillText(text, canvas.width - 7, 16);
-            drawer.setProperty('textAlign', 'left');
-            drawer.setProperty('fillStyle', '#000');
-        }
-        this.bike.draw();
+        this.bike.render();
         return this;
     }
 

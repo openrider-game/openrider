@@ -1,8 +1,8 @@
 import { GhostBike } from "./GhostBike.js";
 import { MTB_INITIAL_STATE } from "../../constant/BikeConstants.js";
-import { MTBDrawer } from "../drawer/MTBDrawer.js";
+import { MTBRenderer } from "../renderer/MTBRenderer.js";
 
-export class MTBGhost extends MTBDrawer(GhostBike) {
+export class MTBGhost extends MTBRenderer(GhostBike) {
     constructor(parent, ghostKeys, last) {
         super(ghostKeys, parent);
         last = last || (console.log('fallback', last), MTB_INITIAL_STATE[0]);

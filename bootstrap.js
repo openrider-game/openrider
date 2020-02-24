@@ -1,9 +1,7 @@
-import { BMX } from "./class/bike/BMX.js";
-import { Harley } from "./class/bike/Harley.js";
-import { MTB } from "./class/bike/MTB.js";
-import { TOOL_BOMB, TOOL_BOOST, TOOL_BRUSH, TOOL_CAMERA, TOOL_CHECKPOINT, TOOL_ERASER, TOOL_GOAL, TOOL_GRAVITY, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE, TOOL_SLOWMO } from "./class/constant/ToolConstants.js";
+import { BIKE_BMX, BIKE_MTB } from "./class/constant/BikeConstants.js";
+import { TOOL } from "./class/constant/ToolConstants.js";
 import { GHOST_COLORS, MIN_SIZE, TRACK_DEFAULT } from "./class/constant/TrackConstants.js";
-import { BIKE_BMX, BIKE_MTB, BIKE_HAR } from "./class/constant/BikeConstants.js";
+import { Game } from "./class/Game.js";
 import { CanvasHelper } from "./class/helper/CanvasHelper.js";
 import { GhostString } from "./class/helper/GhostString.js";
 import { Bomb } from "./class/item/Bomb.js";
@@ -14,8 +12,6 @@ import { SlowMo } from "./class/item/SlowMo.js";
 import { Target } from "./class/item/Target.js";
 import { Point } from "./class/Point.js";
 import { GridBox } from "./class/track/GridBox.js";
-import { RaceTrack } from "./class/track/RaceTrack.js";
-import { SurvivalTrack } from "./class/track/SurvivalTrack.js";
 
 const COMPILED = false;
 export const DEBUG = !COMPILED;
@@ -36,7 +32,7 @@ drawer.setProperty('lineJoin', 'round');
 drawer.setProperty('font', '8px eiven');
 
 // Lots of init
-export var track,
+export var track, game,
     // Snapping
     snapFromPrevLine = false,
     // Last Clicks
@@ -54,8 +50,6 @@ export var track,
     label = [],
     // Grid Detail
     gridDetail = 1,
-    // Track managers
-    intv, instances = [],
     // Shade Lines
     shadeLines = false,
     // Labels
@@ -85,46 +79,31 @@ toolbar2.style.top = canvas.offsetTop + 'px';
 toolbar2.style.left = canvas.offsetLeft + canvas.width - 22 + 'px';
 
 function canvas_ride(id, ghosts) {
-    small();
-    if (id === 'SURVIVAL') {
-        var t = new SurvivalTrack();
-    } else {
-        var t = new RaceTrack(id);
-        t.ghosts = ghosts;
-    }
-    t.bike = t.currentBike === BIKE_BMX ? new BMX(t) : t.currentBike === BIKE_HAR ? new Harley(t) : new MTB(t);
-    t.focalPoint = t.bike.head;
-    instances.push(function() {
-        t.update();
-    });
-    return track = t;
+    game = new Game(id, ghosts);
+    track = game.track;
+    game.run();
 }
 
-intv = setInterval(function() {
-    for (var i = instances.length; i--;) {
-        instances[i]();
-    }
-}, 40);
-
 export function watchGhost(ID, track) {
-    if (track.ghostIDs.contains(ID)) {
-        return;
+    if (track.ghostIDs !== undefined && !track.ghostIDs.contains(ID)) {
+        fetch(new Request('ghost/load', { method: 'POST', body: 'id=' + ID })).then(function(ghostStr) {
+            var ghostArr = GhostString.parse(ghostStr);
+            track.ghostKeys.push(ghostArr);
+            ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
+            track.ghostIDs.push(ID);
+            track.reset();
+        });
     }
-    fetch(new Request('ghost/load', { method: 'POST', body: 'id=' + ID })).then(function(ghostStr) {
-        var ghostArr = GhostString.parse(ghostStr);
-        track.ghostKeys.push(ghostArr);
-        ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
-        track.ghostIDs.push(ID);
-        track.reset();
-    });
 }
 
 function watchGhostString(ghostStr) {
-    var ghostArr = GhostString.parse(ghostStr);
-    track.ghostKeys.push(ghostArr);
-    track.ghostIDs.push(1);
-    ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
-    track.reset();
+    if (track.ghostKeys !== undefined) {
+        var ghostArr = GhostString.parse(ghostStr);
+        track.ghostKeys.push(ghostArr);
+        track.ghostIDs.push(1);
+        ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
+        track.reset();
+    }
 }
 
 function switchBikes() {
@@ -476,7 +455,7 @@ toolbar2.onmousemove = function(event) {
     var pos = Math.floor((event.clientY - toolbar2.offsetTop + window.pageYOffset) / 25);
     label = [1, pos, hints[1][pos]];
     if (pos === 14) {
-        if (track.currentTool === TOOL_SLINE || track.currentTool === TOOL_SBRUSH) {
+        if (track.currentTool === TOOL.SLINE || track.currentTool === TOOL.SBRUSH) {
             label[2] = 'Shorten last set of scenery lines ( Z )';
         }
     }
@@ -517,22 +496,22 @@ toolbar2.onmousedown = function(event) {
     track.focalPoint = false;
     switch (Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
         case 1:
-            track.currentTool = TOOL_BRUSH;
+            track.currentTool = TOOL.BRUSH;
             break;
         case 2:
-            track.currentTool = TOOL_SBRUSH;
+            track.currentTool = TOOL.SBRUSH;
             break;
         case 3:
-            track.currentTool = TOOL_LINE;
+            track.currentTool = TOOL.LINE;
             break;
         case 4:
-            track.currentTool = TOOL_SLINE;
+            track.currentTool = TOOL.SLINE;
             break;
         case 5:
-            track.currentTool = TOOL_ERASER;
+            track.currentTool = TOOL.ERASER;
             break;
         case 6:
-            track.currentTool = TOOL_CAMERA;
+            track.currentTool = TOOL.CAMERA;
             break;
         case 7:
             if (gridDetail === 1) {
@@ -544,22 +523,22 @@ toolbar2.onmousedown = function(event) {
             }
             break;
         case 9:
-            track.currentTool = TOOL_GOAL;
+            track.currentTool = TOOL.GOAL;
             break;
         case 10:
-            track.currentTool = TOOL_CHECKPOINT;
+            track.currentTool = TOOL.CHECKPOINT;
             break;
         case 11:
-            track.currentTool = TOOL_BOOST;
+            track.currentTool = TOOL.BOOST;
             break;
         case 12:
-            track.currentTool = TOOL_GRAVITY;
+            track.currentTool = TOOL.GRAVITY;
             break;
         case 13:
-            track.currentTool = TOOL_BOMB;
+            track.currentTool = TOOL.BOMB;
             break;
         case 14:
-            track.currentTool = TOOL_SLOWMO;
+            track.currentTool = TOOL.SLOWMO;
             break;
         case 16:
             track.shortenLastLineSet();
@@ -570,14 +549,14 @@ toolbar2.onmousedown = function(event) {
 };
 canvas.onmouseover = function() {
     label = [];
-    document.body.style.cursor = track.currentTool === TOOL_CAMERA ? 'move' : 'none';
+    document.body.style.cursor = track.currentTool === TOOL.CAMERA ? 'move' : 'none';
 };
 canvas.onmousedown = function(event) {
     event.preventDefault();
     snapFromPrevLine = true;
     track.focalPoint = false;
 
-    if (event.button === 2 && track.currentTool !== TOOL_CAMERA) {
+    if (event.button === 2 && track.currentTool !== TOOL.CAMERA) {
         erase();
         secretlyErasing = true;
         return;
@@ -587,29 +566,29 @@ canvas.onmousedown = function(event) {
         lastClick.copy(mousePos);
     }
     switch (track.currentTool) {
-        case TOOL_BOOST:
-        case TOOL_GRAVITY:
+        case TOOL.BOOST:
+        case TOOL.GRAVITY:
             document.body.style.cursor = 'crosshair';
             break;
-        case TOOL_ERASER:
+        case TOOL.ERASER:
             erase();
             break;
-        case TOOL_GOAL:
+        case TOOL.GOAL:
             track.objects.push(item = new Target(lastClick.x, lastClick.y, track));
             track.numTargets++;
             break;
-        case TOOL_CHECKPOINT:
+        case TOOL.CHECKPOINT:
             track.objects.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
             break;
-        case TOOL_BOMB:
+        case TOOL.BOMB:
             item = new Bomb(lastClick.x, lastClick.y, track);
             break;
-        case TOOL_SLOWMO:
+        case TOOL.SLOWMO:
             item = new SlowMo(lastClick.x, lastClick.y, track);
-        case TOOL_BRUSH:
-        case TOOL_SBRUSH:
+        case TOOL.BRUSH:
+        case TOOL.SBRUSH:
             if (shift) {
-                track.addLine(lastClick, mousePos, track.currentTool !== TOOL_BRUSH);
+                track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
             }
             shift = false;
             snapFromPrevLine = true;
@@ -639,25 +618,25 @@ canvas.oncontextmenu = function(event) {
     event.preventDefault();
 };
 document.onmousemove = function(event) {
-    if (track.currentTool !== TOOL_CAMERA) {
+    if (track.currentTool !== TOOL.CAMERA) {
         track.focalPoint = false;
     }
     mousePos = new Point(
         event.clientX - canvas.offsetLeft,
         event.clientY - canvas.offsetTop + window.pageYOffset
-    ).normalizeToCanvas();
-    if (track.currentTool !== TOOL_ERASER && event.button !== 2) {
+    ).normalizeToCanvas(track);
+    if (track.currentTool !== TOOL.ERASER && event.button !== 2) {
         mousePos.x = Math.round(mousePos.x / gridDetail) * gridDetail;
         mousePos.y = Math.round(mousePos.y / gridDetail) * gridDetail;
     }
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL_CAMERA) {
+        if (track.currentTool === TOOL.CAMERA) {
             track.camera.selfAdd(lastClick.cloneSub(mousePos));
             mousePos.copy(lastClick);
-        } else if (track.currentTool === TOOL_ERASER || event.button === 2) {
+        } else if (track.currentTool === TOOL.ERASER || event.button === 2) {
             erase();
-        } else if (!shift && (track.currentTool === TOOL_BRUSH || track.currentTool === TOOL_SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
-            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL_BRUSH);
+        } else if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
+            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {
                 line.remove();
             }, function() {
@@ -672,18 +651,18 @@ canvas.onmouseup = function() {
         return secretlyErasing = false;
     }
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL_LINE || track.currentTool === TOOL_SLINE ||
-            track.currentTool === TOOL_BRUSH || track.currentTool === TOOL_SBRUSH) {
-            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL_LINE && track.currentTool !== TOOL_BRUSH);
+        if (track.currentTool === TOOL.LINE || track.currentTool === TOOL.SLINE ||
+            track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
+            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.LINE && track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {
                 line.remove();
             }, function() {
                 line.reAdd();
             });
-        } else if (track.currentTool === TOOL_BOOST || track.currentTool === TOOL_GRAVITY) {
+        } else if (track.currentTool === TOOL.BOOST || track.currentTool === TOOL.GRAVITY) {
             document.body.style.cursor = 'none';
             direction = Math.round(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y) * 180 / Math.PI);
-            item = track.currentTool === TOOL_BOOST ? new Boost(lastClick.x, lastClick.y, direction, track) :
+            item = track.currentTool === TOOL.BOOST ? new Boost(lastClick.x, lastClick.y, direction, track) :
                 new Gravity(lastClick.x, lastClick.y, direction, track);
             x = Math.floor(item.pos.x / track.gridSize);
             y = Math.floor(item.pos.y / track.gridSize);
@@ -713,7 +692,6 @@ canvas.onmouseout = function() {
 
 newButton && (newButton.onclick = function() {
     if (confirm('Do you really want to start a new track?')) {
-        instances.pop();
         track = canvas_ride(TRACK_DEFAULT, []);
         charcount.innerHTML = 'trackcode';
         trackcode.value = null;
@@ -722,7 +700,6 @@ newButton && (newButton.onclick = function() {
 });
 loadButton && (loadButton.onclick = function() {
     if (trackcode.value.length > 10) {
-        instances.pop();
         track = canvas_ride(trackcode.value, []);
         charcount.innerHTML = "Trackcode";
         trackcode.value = null;
@@ -743,7 +720,7 @@ uploadButton && (uploadButton.onclick = function() {
     if (trackcode.length > MIN_SIZE) {
         // pause the track and select the camera tool
         track.paused = true;
-        track.currentTool = TOOL_CAMERA;
+        track.currentTool = TOOL.CAMERA;
         // start thumb-changing mode and hide superfluous things.
         changeThumb(true);
         toolbar1.style.display = 'none';
@@ -871,9 +848,9 @@ function zoom(way) {
 function onScroll(e) {
     e.preventDefault();
     if (shift) {
-        if (track.currentTool === TOOL_ERASER) {
+        if (track.currentTool === TOOL.ERASER) {
             if ((e.detail > 0 || e.wheelDelta < 0) && eraserSize > 5) { eraserSize -= 5; } else if ((e.detail < 0 || e.wheelDelta > 0) && eraserSize < 40) { eraserSize += 5; }
-        } else if (track.currentTool === TOOL_BRUSH || track.currentTool === TOOL_SBRUSH) {
+        } else if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
             if ((e.detail > 0 || e.wheelDelta < 0) && drawingSize > 4) { drawingSize -= 8; } else if ((e.detail < 0 || e.wheelDelta > 0) && drawingSize < 200) { drawingSize += 8; }
         }
     } else {
@@ -882,7 +859,7 @@ function onScroll(e) {
     var Cw = new Point(
         e.clientX - canvas.offsetLeft,
         e.clientY - canvas.offsetTop + window.pageYOffset
-    ).normalizeToCanvas();
+    ).normalizeToCanvas(track);
     if (!track.focalPoint) {
         track.camera.selfAdd(mousePos.cloneSub(Cw));
     }

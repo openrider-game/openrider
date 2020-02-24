@@ -9,12 +9,12 @@ export class Point {
     }
 
     /** @return {Point} */
-    toPixel() {
+    toPixel(track) {
         return new Point((this.x - track.camera.x) * track.zoomFactor + canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + canvas.height / 2);
     }
 
     /** @return {Point} */
-    normalizeToCanvas() {
+    normalizeToCanvas(track) {
         return new Point((this.x - canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - canvas.height / 2) / track.zoomFactor + track.camera.y);
     }
 

@@ -1,9 +1,10 @@
 import { canvas, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
-import { TRACKSTRING_NEW, TRACKSTRING_OLD, TRACK_DEFAULT } from "../constant/TrackConstants.js";
-import { BIKE_BMX, BIKE_MTB, BIKE_HAR } from "../constant/BikeConstants.js"
-import { TOOL_BRUSH, TOOL_CAMERA, TOOL_GOAL, TOOL_LINE, TOOL_SBRUSH, TOOL_SLINE } from "../constant/ToolConstants.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
+import { BIKE_BMX, BIKE_HAR, BIKE_MTB } from "../constant/BikeConstants.js";
+import { TOOL } from "../constant/ToolConstants.js";
+import { TRACKSTRING_NEW, TRACKSTRING_OLD, TRACK_DEFAULT } from "../constant/TrackConstants.js";
+import { CanvasHelper } from "../helper/CanvasHelper.js";
 import { CheckpointSave } from "../history/CheckpointSave.js";
 import { UndoManager } from "../history/UndoManager.js";
 import { Bomb } from "../item/Bomb.js";
@@ -15,7 +16,6 @@ import { Target } from "../item/Target.js";
 import { Point } from "../Point.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
-import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class RaceTrack extends Track {
     constructor(ID) {
@@ -28,17 +28,17 @@ export class RaceTrack extends Track {
         this.id = ID;
         this.trackStringVersion = TRACKSTRING_NEW;
         this.undoManager = new UndoManager();
-        this.lastTool = TOOL_CAMERA;
+        this.lastTool = TOOL.CAMERA;
 
         if (!this.id) {
             rawTrack = TRACK_DEFAULT;
             toolbar2.style.display = 'block';
-            this.currentTool = TOOL_LINE;
+            this.currentTool = TOOL.LINE;
         } else if (this.id.length > 7) { // change to detect an int
             rawTrack = this.id;
             this.id = undefined;
             toolbar2.style.display = 'block';
-            this.currentTool = TOOL_LINE;
+            this.currentTool = TOOL.LINE;
         } else {
             let request = new XMLHttpRequest();
             request.open('POST', '/tracks/load', false);
@@ -297,20 +297,17 @@ export class RaceTrack extends Track {
     }
 
     update() {
-        let l = this.ghostInstances.length,
-            i = 0;
+        let i = 0;
         if (!this.paused) {
             this.bike && this.bike.update();
-            for (; i < l; i++) {
+            for (; i < this.ghostInstances.length; i++) {
                 this.ghostInstances[i].update();
             }
             this.currentTime += 40;
         }
-        this.render();
-        for (let i = 0; i < l; i++) {
-            this.ghostInstances[i].render();
+        if (this.focalPoint) {
+            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
         }
-        this.bike && this.bike.render();
         return this;
     }
 
@@ -318,13 +315,10 @@ export class RaceTrack extends Track {
         let drawer = CanvasHelper.getInstance();
         let ghost,
             mousePx = mousePos.toPixel(this);
-        if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
-        }
         drawer.clearRect(0, 0, canvas.width, canvas.height);
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
-        if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL_LINE || this.currentTool === TOOL_SLINE ||
-                this.currentTool === TOOL_BRUSH || this.currentTool === TOOL_SBRUSH)) {
+        if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
+                this.currentTool === TOOL.BRUSH || this.currentTool === TOOL.SBRUSH)) {
             if (mousePx.x < 50) {
                 this.camera.x -= 10 / this.zoomFactor;
                 mousePos.x -= 10 / this.zoomFactor;
@@ -343,8 +337,8 @@ export class RaceTrack extends Track {
             mousePx = mousePos.toPixel(this);
             drawer.beginPath().moveTo(lastClick.toPixel(this).x, lastClick.toPixel(this).y).lineTo(mousePx.x, mousePx.y).stroke();
         }
-        let center = new Point(0, 0).normalizeToCanvas(),
-            border = new Point(canvas.width, canvas.height).normalizeToCanvas();
+        let center = new Point(0, 0).normalizeToCanvas(this),
+            border = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
         center.x = Math.floor(center.x / this.gridSize);
         center.y = Math.floor(center.y / this.gridSize);
         border.x = Math.floor(border.x / this.gridSize);
@@ -398,7 +392,7 @@ export class RaceTrack extends Track {
 
         if (secretlyErasing) {
             this.eraser(mousePx);
-        } else if (this.currentTool !== TOOL_CAMERA && !this.focalPoint) {
+        } else if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
             switch (this.currentTool) {
                 case 'line':
                 case 'scenery line':
@@ -417,13 +411,13 @@ export class RaceTrack extends Track {
                 case 'checkpoint':
                 case 'bomb':
                 case 'slow-mo':
-                    drawer.setProperty('fillStyle', this.currentTool === TOOL_GOAL ? '#ff0' : this.currentTool === 'checkpoint' ? '#00f' : this.currentTool === 'bomb' ? '#f00' : '#eee');
+                    drawer.setProperty('fillStyle', this.currentTool === TOOL.GOAL ? '#ff0' : this.currentTool === TOOL.CHECKPOINT ? '#00f' : this.currentTool === TOOL.BOMB ? '#f00' : '#eee');
                     drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
                     break;
                 case 'boost':
                 case 'gravity':
                     drawer.beginPath()
-                        .setProperty('fillStyle', this.currentTool === 'boost' ? '#ff0' : '#0f0');
+                        .setProperty('fillStyle', this.currentTool === TOOL.BOOST ? '#ff0' : '#0f0');
                     drawer.ctx.save();
                     if (!snapFromPrevLine) {
                         drawer.ctx.translate(mousePx.x, mousePx.y);
@@ -513,6 +507,10 @@ export class RaceTrack extends Track {
             //drawer.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
             //drawer.fillRect(x1, y0, canvas.width - x1, 150);
         }
+        for (let i = 0; i < this.ghostInstances.length; i++) {
+            this.ghostInstances[i].render();
+        }
+        this.bike && this.bike.render();
         return this;
     }
 

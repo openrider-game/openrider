@@ -1,4 +1,4 @@
-import { TOOL_CAMERA } from "../constant/ToolConstants.js";
+import { TOOL } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
 import { SceneryLine } from "./line/SceneryLine.js";
@@ -20,7 +20,7 @@ export class Track {
         this.currentTime = 0;
         this.currentBike = BIKE_BMX;
         this.paused = false;
-        this.currentTool = TOOL_CAMERA;
+        this.currentTool = TOOL.CAMERA;
         this.camera = new Point(0, 0);
         drawer.fillText('Loading track... Please wait.', 36, 16);
         this.objects = [];

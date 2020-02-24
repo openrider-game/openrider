@@ -58,33 +58,49 @@ export class Track {
         if (this.spreadCache[q][key]) {
             return this.spreadCache[q][key];
         }
-        var lines = this.spreadCache[q][key] = [],
-            from = new Point(_from.x, _from.y),
-            factor = (_to.y - _from.y) / (_to.x - _from.x),
-            direction = new Point(_from.x < _to.x ? 1 : -1, _from.y < _to.y ? 1 : -1),
-            i = 0;
-        lines.push(_from);
-        while (i < 5000) {
-            if (Math.floor(from.x / q) === Math.floor(_to.x / q) && Math.floor(from.y / q) === Math.floor(_to.y / q)) {
-                break;
+
+        // To fix thin lines, go through the edges of the line, rather than the center of the line.
+        const vector = new Point(_to.x - _from.x, _to.y - _from.y);
+        const len = vector.getLength();
+        const froms = [
+            new Point(_from.x + (-vector.x - vector.y) / len, _from.y + ( vector.x - vector.y) / len),
+            new Point(_from.x + (-vector.x + vector.y) / len, _from.y + (-vector.x - vector.y) / len)
+        ];
+        const tos = [
+            new Point(_to.x + ( vector.x - vector.y) / len, _to.y + ( vector.x + vector.y) / len),
+            new Point(_to.x + ( vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
+        ];
+
+        const lines = this.spreadCache[q][key] = [];
+
+        for (let edge = 0; edge < 2; edge++) {
+            var from = new Point(froms[edge].x, froms[edge].y),
+                factor = (tos[edge].y - froms[edge].y) / (tos[edge].x - froms[edge].x),
+                direction = new Point(froms[edge].x < tos[edge].x ? 1 : -1, froms[edge].y < tos[edge].y ? 1 : -1),
+                i = 0;
+            lines.push(froms[edge]);
+            while (i < 5000) {
+                if (Math.floor(from.x / q) === Math.floor(tos[edge].x / q) && Math.floor(from.y / q) === Math.floor(tos[edge].y / q)) {
+                    break;
+                }
+                var to1 = new Point(
+                    direction.x < 0 ? Math.round(Math.ceil((from.x + 1) / q + direction.x) * q) - 1 : Math.round(Math.floor(from.x / q + direction.x) * q), 0
+                );
+                to1.y = Math.round(froms[edge].y + (to1.x - froms[edge].x) * factor);
+                var to2 = new Point(
+                    0, direction.y < 0 ? Math.round(Math.ceil((from.y + 1) / q + direction.y) * q) - 1 : Math.round(Math.floor(from.y / q + direction.y) * q)
+                );
+                to2.x = Math.round(froms[edge].x + (to2.y - froms[edge].y) / factor);
+                // Take the shortest line piece
+                if (Math.pow(to1.x - froms[edge].x, 2) + Math.pow(to1.y - froms[edge].y, 2) < Math.pow(to2.x - froms[edge].x, 2) + Math.pow(to2.y - froms[edge].y, 2)) {
+                    from = to1;
+                } else {
+                    from = to2;
+                }
+                lines.push(from);
+
+                i++;
             }
-            var to1 = new Point(
-                direction.x < 0 ? Math.round(Math.ceil((from.x + 1) / q + direction.x) * q) - 1 : Math.round(Math.floor(from.x / q + direction.x) * q), 0
-            );
-            to1.y = Math.round(_from.y + (to1.x - _from.x) * factor);
-            var to2 = new Point(
-                0, direction.y < 0 ? Math.round(Math.ceil((from.y + 1) / q + direction.y) * q) - 1 : Math.round(Math.floor(from.y / q + direction.y) * q)
-            );
-            to2.x = Math.round(_from.x + (to2.y - _from.y) / factor);
-            // Take the shortest line piece
-            if (Math.pow(to1.x - _from.x, 2) + Math.pow(to1.y - _from.y, 2) < Math.pow(to2.x - _from.x, 2) + Math.pow(to2.y - _from.y, 2)) {
-                from = to1;
-                lines.push(to1);
-            } else {
-                from = to2;
-                lines.push(to2);
-            }
-            i++;
         }
         return lines;
     }
@@ -92,6 +108,7 @@ export class Track {
     addLineInternal(line) {
         let grids = this.gridSpread(line.a, line.b, this.gridSize),
             x, y;
+        const drawnLines = new WeakSet();   // List of gridBoxes that have the lines, to prevent duplicates
         for (let i = 0, l = grids.length; i < l; i++) {
             x = Math.floor(grids[i].x / this.gridSize);
             y = Math.floor(grids[i].y / this.gridSize);
@@ -101,10 +118,13 @@ export class Track {
             if (this.grid[x][y] === undefined) {
                 this.grid[x][y] = new GridBox();
             }
-            if (line.isScenery) {
-                this.grid[x][y].scenery.push(line);
-            } else {
-                this.grid[x][y].lines.push(line);
+            if (!drawnLines.has(this.grid[x][y])) {
+                if (line.isScenery) {
+                    this.grid[x][y].scenery.push(line);
+                } else {
+                    this.grid[x][y].lines.push(line);
+                }
+                drawnLines.add(this.grid[x][y]);
             }
             delete this.cache[x + '_' + y];
         }

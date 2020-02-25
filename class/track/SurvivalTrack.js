@@ -65,19 +65,17 @@ export class SurvivalTrack extends Track {
             this.difficulty += 0.001;
         }
         //~ }
-        this.render();
-        this.bike && this.bike.render();
+        if (this.focalPoint) {
+            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
+        }
         return this;
     }
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
-        }
         drawer.clearRect(0, 0, canvas.width, canvas.height);
-        let center = new Point(0, 0).normalizeToCanvas(),
-            border = new Point(canvas.width, canvas.height).normalizeToCanvas();
+        let center = new Point(0, 0).normalizeToCanvas(this),
+            border = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
         center.x = Math.floor(center.x / this.gridSize);
         center.y = Math.floor(center.y / this.gridSize);
         border.x = Math.floor(border.x / this.gridSize);
@@ -134,7 +132,7 @@ export class SurvivalTrack extends Track {
             'Distance: ' + d + ' meters' +
             '; Speed: ' + v + ' km/h' + (this.bike.dead ? ' - Press ENTER to retry' : ''), 28, 16);
         drawer.fillText(text, 28, 16);
-        this.bike.render();
+        this.bike && this.bike.render();
         return this;
     }
 

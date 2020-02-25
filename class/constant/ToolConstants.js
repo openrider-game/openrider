@@ -1,13 +1,14 @@
-export const
-    TOOL_CAMERA = 'camera',
-    TOOL_LINE = 'line',
-    TOOL_SLINE = 'scenery line',
-    TOOL_BRUSH = 'brush',
-    TOOL_SBRUSH = 'scenery brush',
-    TOOL_GRAVITY = 'gravity',
-    TOOL_BOOST = 'boost',
-    TOOL_CHECKPOINT = 'checkpoint',
-    TOOL_SLOWMO = 'slow-mo',
-    TOOL_GOAL = 'goal',
-    TOOL_BOMB = 'bomb',
-    TOOL_ERASER = 'eraser';
+export const TOOL = {
+    CAMERA: 'camera',
+    LINE: 'line',
+    SLINE: 'scenery line',
+    BRUSH: 'brush',
+    SBRUSH: 'scenery brush',
+    GRAVITY: 'gravity',
+    BOOST: 'boost',
+    CHECKPOINT: 'checkpoint',
+    SLOWMO: 'slow-mo',
+    GOAL: 'goal',
+    BOMB: 'bomb',
+    ERASER: 'eraser'
+};

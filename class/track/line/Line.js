@@ -12,11 +12,8 @@ export class Line {
     }
 
     render(context, offsetLeft, offsetTop) {
-        //  Wow, starting a new path and stroking for every line is awful.
-        //context.beginPath();
         context.moveTo(this.a.x * this.parnt.zoomFactor - offsetLeft, this.a.y * this.parnt.zoomFactor - offsetTop);
         context.lineTo(this.b.x * this.parnt.zoomFactor - offsetLeft, this.b.y * this.parnt.zoomFactor - offsetTop);
-        //context.stroke();
     }
 
     checkDelete(eraserPoint) {

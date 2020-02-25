@@ -311,13 +311,15 @@ export class RaceTrack extends Track {
         return this;
     }
 
-    // Removed async, as it's never called with await. Sorry if you wanted to keep it there.
     render() {
         let drawer = CanvasHelper.getInstance();
         let mousePx = mousePos.toPixel(this);
         drawer.clearRect(0, 0, canvas.width, canvas.height);
+
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         drawer.setProperty('lineJoin', 'round');
+
+        this.drawGridBoxes(drawer);
 
         // Draw red line and move camera when using line or brush tool
         if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
@@ -340,14 +342,12 @@ export class RaceTrack extends Track {
             mousePx = mousePos.toPixel(this);
             drawer.beginPath().moveTo(lastClick.toPixel(this).x, lastClick.toPixel(this).y).lineTo(mousePx.x, mousePx.y).stroke();
         }
-        
-        this.drawGridBoxes(drawer);
 
         // Don't show text or tools if you're making a thumbnail.
         if (canvas.width === 250) {
             return;
         }
-        
+
         // Draw tools (crosshairs, eraser, powerups)
         if (secretlyErasing) {
             this.eraser(mousePx);

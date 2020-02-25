@@ -73,7 +73,7 @@ export class RaceTrack extends Track {
         }
         this.numTargets = 0;
         this.targetsReached = 0;
-        this.powerups = [];
+        this.collectables = []; // Goals and Checkpoints
         let objects = hashSplit[2] ? hashSplit[2].split(',') : [],
             item;
         for (let i = 0, l = objects.length; i < l; i++) {
@@ -85,11 +85,11 @@ export class RaceTrack extends Track {
                     case 'T':
                         item = new Target(x, y, this);
                         this.numTargets++;
-                        this.powerups.push(item);
+                        this.collectables.push(item);
                         break;
                     case 'C':
                         item = new Checkpoint(x, y, this);
-                        this.powerups.push(item);
+                        this.collectables.push(item);
                         break;
                     case 'B':
                         item = new Boost(x, y, parseInt(rawCoords[3], 32) + 180, this);
@@ -132,7 +132,7 @@ export class RaceTrack extends Track {
             bike = track.bike,
             ghosts = track.ghostInstances,
             i = 0,
-            l = track.powerups.length,
+            l = track.collectables.length,
             ghost, reached = { length: l },
             bikeList, ghostLists = { length: ghosts.length };
         bikeList = {
@@ -174,7 +174,7 @@ export class RaceTrack extends Track {
             length: 35
         };
         for (; i < l; i++) {
-            reached[i] = track.powerups[i].reached;
+            reached[i] = track.collectables[i].reached;
         }
         for (let i = 0, l = ghosts.length; i < l; i++) {
             ghost = ghosts[i];
@@ -524,9 +524,9 @@ export class RaceTrack extends Track {
                 }
             }
         }
-        for (let i = 0, l = this.powerups.length; i < l; i++) {
-            if (this.powerups[i] && this.powerups[i].doRemove !== undefined) {
-                deleted.push(this.powerups.splice(i--, 1)[0]);
+        for (let i = 0, l = this.collectables.length; i < l; i++) {
+            if (this.collectables[i] && this.collectables[i].doRemove !== undefined) {
+                deleted.push(this.collectables.splice(i--, 1)[0]);
             }
         }
         return deleted;

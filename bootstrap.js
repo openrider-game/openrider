@@ -574,11 +574,11 @@ canvas.onmousedown = function(event) {
             erase();
             break;
         case TOOL.GOAL:
-            track.powerups.push(item = new Target(lastClick.x, lastClick.y, track));
+            track.collectables.push(item = new Target(lastClick.x, lastClick.y, track));
             track.numTargets++;
             break;
         case TOOL.CHECKPOINT:
-            track.powerups.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
+            track.collectables.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
             break;
         case TOOL.BOMB:
             item = new Bomb(lastClick.x, lastClick.y, track);

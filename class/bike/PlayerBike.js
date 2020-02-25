@@ -15,8 +15,8 @@ export class PlayerBike extends Bike {
         super.restore(last);
         this.head.drive = () => this.die();
         this.parnt.targetsReached = last[27];
-        for (let i = 0, l = this.parnt.powerups.length; i < l; i++) {
-            this.parnt.powerups[i].reached = last[28][i];
+        for (let i = 0, l = this.parnt.collectables.length; i < l; i++) {
+            this.parnt.collectables[i].reached = last[28][i];
         }
         this.time = last[29];
         if (this.time) {

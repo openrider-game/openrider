@@ -1,3 +1,4 @@
+import { canvas, shadeLines } from "../../bootstrap.js";
 import { TOOL } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
@@ -47,6 +48,68 @@ export class Track {
             this.currentTime = cp ? cp.currentTime : 0;
             /** /HACK */
             this.camera = this.bike.head.pos.clone();
+        }
+    }
+
+    drawGridBoxes(drawer) {
+        // Coordinates of top left, and bottom right, gridBoxes.
+        let topLeft = new Point(0, 0).normalizeToCanvas(this);
+        let bottomRight = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
+        topLeft.x = Math.floor(topLeft.x / this.gridSize);
+        topLeft.y = Math.floor(topLeft.y / this.gridSize);
+        bottomRight.x = Math.floor(bottomRight.x / this.gridSize);
+        bottomRight.y = Math.floor(bottomRight.y / this.gridSize);
+
+        let onScreen = new Set();  // List of gridBoxes that are on the screen
+        let key;
+        // Loop through all the gridBoxes on the screen
+        for (let x = topLeft.x; x <= bottomRight.x; x++) {
+            for (let y = topLeft.y; y <= bottomRight.y; y++) {
+                if (this.grid[x] !== undefined && this.grid[x][y] !== undefined) {
+                    if (this.grid[x][y].lines.length > 0 || this.grid[x][y].scenery.length > 0) {
+                        key = x + '_' + y;
+                        onScreen.add(key);
+                        if (this.cache[key] === undefined) {    // If the gridBox is not drawn, draw it.
+                            let canvas = this.cache[key] = document.createElement('canvas');
+                            let ctx = canvas.getContext('2d');
+                            canvas.width = this.gridSize * this.zoomFactor;
+                            canvas.height = this.gridSize * this.zoomFactor;
+                            ctx.lineCap = 'round';
+                            ctx.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
+                            ctx.strokeStyle = '#aaa';
+                            ctx.beginPath();
+                            for (let i = 0, l = this.grid[x][y].scenery.length; i < l; i++) {
+                                this.grid[x][y].scenery[i].render(ctx, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
+                            }
+                            ctx.stroke();
+                            ctx.strokeStyle = '#000';
+                            if (shadeLines) {
+                                ctx.shadowOffsetX =
+                                    ctx.shadowOffsetY = 2;
+                                ctx.shadowBlur = Math.max(2, 10 * this.zoomFactor);
+                                ctx.shadowColor = '#000';
+                            }
+                            ctx.beginPath();
+                            for (let i = 0, l = this.grid[x][y].lines.length; i < l; i++) {
+                                this.grid[x][y].lines[i].render(ctx, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
+                            }
+                            ctx.stroke();
+                        }
+                        drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                    }
+                    drawer.setProperty('strokeStyle', '#000');
+                    for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
+                        this.grid[x][y].objects[i].render();
+                    }
+                }
+            }
+        }
+        // Delete all cached gridBoxes that are no longer on the screen.
+        // Note: It would be faster to store which gridBoxes were on screen in the last frame, and only check those.
+        for (let Ay in this.cache) {
+            if (!onScreen.has(Ay)) {
+                delete this.cache[Ay];
+            }
         }
     }
 

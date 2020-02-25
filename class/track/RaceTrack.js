@@ -311,13 +311,15 @@ export class RaceTrack extends Track {
         return this;
     }
 
-    async render() {
+    // Removed async, as it's never called with await. Sorry if you wanted to keep it there.
+    render() {
         let drawer = CanvasHelper.getInstance();
-        let ghost,
-            mousePx = mousePos.toPixel(this);
+        let mousePx = mousePos.toPixel(this);
         drawer.clearRect(0, 0, canvas.width, canvas.height);
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         drawer.setProperty('lineJoin', 'round');
+
+        // Draw red line and move camera when using line or brush tool
         if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
                 this.currentTool === TOOL.BRUSH || this.currentTool === TOOL.SBRUSH)) {
             if (mousePx.x < 50) {
@@ -338,59 +340,15 @@ export class RaceTrack extends Track {
             mousePx = mousePos.toPixel(this);
             drawer.beginPath().moveTo(lastClick.toPixel(this).x, lastClick.toPixel(this).y).lineTo(mousePx.x, mousePx.y).stroke();
         }
-        let center = new Point(0, 0).normalizeToCanvas(this),
-            border = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
-        center.x = Math.floor(center.x / this.gridSize);
-        center.y = Math.floor(center.y / this.gridSize);
-        border.x = Math.floor(border.x / this.gridSize);
-        border.y = Math.floor(border.y / this.gridSize);
-        let DI = [],
-            x, y, key;
-        for (let x = center.x; x <= border.x; x++) {
-            for (let y = center.y; y <= border.y; y++) {
-                if (this.grid[x] !== undefined && this.grid[x][y] !== undefined) {
-                    if (this.grid[x][y].lines.length > 0 || this.grid[x][y].scenery.length > 0) {
-                        DI[key = x + '_' + y] = 1;
-                        if (this.cache[key] === undefined) {
-                            let el = this.cache[key] = document.createElement('canvas');
-                            el.width = this.gridSize * this.zoomFactor;
-                            el.height = this.gridSize * this.zoomFactor;
-                            let graphic = el.getContext('2d');
-                            graphic.lineCap = 'round';
-                            graphic.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
-                            graphic.strokeStyle = '#aaa';
-                            for (let i = 0, l = this.grid[x][y].scenery.length; i < l; i++) {
-                                this.grid[x][y].scenery[i].render(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
-                            }
-                            graphic.strokeStyle = '#000';
-                            if (shadeLines) {
-                                graphic.shadowOffsetX =
-                                    graphic.shadowOffsetY = 2;
-                                graphic.shadowBlur = Math.max(2, 10 * this.zoomFactor);
-                                graphic.shadowColor = '#000';
-                            }
-                            for (let i = 0, l = this.grid[x][y].lines.length; i < l; i++) {
-                                this.grid[x][y].lines[i].render(graphic, x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
-                            }
-                        }
-                        drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
-                    }
-                    drawer.setProperty('strokeStyle', '#000');
-                    for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
-                        this.grid[x][y].objects[i].render();
-                    }
-                }
-            }
-        }
-        for (let Ay in this.cache) {
-            if (DI[Ay] === undefined) {
-                delete this.cache[Ay];
-            }
-        }
+        
+        this.drawGridBoxes(drawer);
+
+        // Don't show text or tools if you're making a thumbnail.
         if (canvas.width === 250) {
             return;
         }
-
+        
+        // Draw tools (crosshairs, eraser, powerups)
         if (secretlyErasing) {
             this.eraser(mousePx);
         } else if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
@@ -401,8 +359,8 @@ export class RaceTrack extends Track {
                 case 'scenery brush':
                     drawer.setProperty('lineWidth', 1);
                     drawer.setProperty('strokeStyle', '#000');
-                    x = mousePx.x;
-                    y = mousePx.y;
+                    let x = mousePx.x;
+                    let y = mousePx.y;
                     drawer.beginPath().moveTo(x - 10, y).lineTo(x + 10, y).moveTo(x, y + 10).lineTo(x, y - 10).stroke();
                     break;
                 case 'eraser':
@@ -433,6 +391,32 @@ export class RaceTrack extends Track {
                     break;
             }
         }
+
+        this.drawText(drawer);
+
+        if (this.changingThumb) {
+            let x0 = (canvas.width - 250) / 2,
+                x1 = x0 + 250,
+                y0 = (canvas.height - 150) / 2,
+                y1 = y0 + 150;
+            drawer.setProperty('lineWidth', 1);
+            drawer.setProperty('strokeStyle', '#fff');
+            drawer.setProperty('fillStyle', 'rgba(0, 0, 0, 0.4)');
+            drawer.fillRect(0, 0, canvas.width, y0).fillRect(0, y1, canvas.width, y0).fillRect(0, y0, x0, 150).fillRect(x1, y0, x0, 150).strokeRect(x0, y0, 250, 150);
+            //drawer.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
+            //drawer.fillRect(x1, y0, canvas.width - x1, 150);
+        }
+
+        for (let i = 0; i < this.ghostInstances.length; i++) {
+            this.ghostInstances[i].render();
+        }
+
+        if (this.bike) this.bike.render();
+
+        return this;
+    }
+
+    drawText(drawer) {
         drawer.beginPath();
         drawer.setProperty('fillStyle', '#ff0');
         drawer.setProperty('lineWidth', 1);
@@ -470,14 +454,18 @@ export class RaceTrack extends Track {
         }
         drawer.strokeText(text = ': ' + this.targetsReached + ' / ' + this.numTargets + ' - ' + text, 50, 16);
         drawer.fillText(text, 50, 16);
+
+        // Ghost info
         drawer.setProperty('textAlign', 'right');
         for (let i = 0, l = this.ghostInstances.length; i < l; i++) {
-            ghost = this.ghostInstances[i];
+            const ghost = this.ghostInstances[i];
             drawer.setProperty('fillStyle', (ghost.color !== '#000' && ghost.color) || '#777');
             text = (this.focalPoint === ghost.head ? '>> ' : '') + (ghost.name || 'Ghost') + (ghost.targetsReached === this.numTargets ? ' finished!' : ': ' + ghost.targetsReached + ' / ' + this.numTargets);
             drawer.ctx.strokeText(text, canvas.width - 7, 16 + 17 * i);
             drawer.fillText(text, canvas.width - 7, 16 + 17 * i);
         }
+
+        // Tooltip
         drawer.setProperty('textAlign', 'left');
         drawer.setProperty('fillStyle', '#000');
         if (label) {
@@ -496,23 +484,6 @@ export class RaceTrack extends Track {
                 drawer.setProperty('textAlign', 'left');
             }
         }
-        if (this.changingThumb) {
-            let x0 = (canvas.width - 250) / 2,
-                x1 = x0 + 250,
-                y0 = (canvas.height - 150) / 2,
-                y1 = y0 + 150;
-            drawer.setProperty('lineWidth', 1);
-            drawer.setProperty('strokeStyle', '#fff');
-            drawer.setProperty('fillStyle', 'rgba(0, 0, 0, 0.4)');
-            drawer.fillRect(0, 0, canvas.width, y0).fillRect(0, y1, canvas.width, y0).fillRect(0, y0, x0, 150).fillRect(x1, y0, x0, 150).strokeRect(x0, y0, 250, 150);
-            //drawer.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
-            //drawer.fillRect(x1, y0, canvas.width - x1, 150);
-        }
-        for (let i = 0; i < this.ghostInstances.length; i++) {
-            this.ghostInstances[i].render();
-        }
-        this.bike && this.bike.render();
-        return this;
     }
 
     eraser(mousePx) {

@@ -12,31 +12,31 @@ export class SolidLine extends Line {
         }
         this.touched = true;
         let pos = object.pos,
-            AS = object.velocity,
-            L = object.size,
+            vel = object.velocity,
+            radius = object.size,
             N = new Point(0, 0),
-            R = 0,
+            dist = 0,
             Ap = pos.cloneSub(this.a),
             Aw = Ap.dot(this.vector) / this.len / this.len;
         if (Aw >= 0 && Aw <= 1) {
-            let B2 = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - AS.x) * this.vector.y - (Ap.y - AS.y) * this.vector.x) < 0 ? -1 : 1;
+            let B2 = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - vel.x) * this.vector.y - (Ap.y - vel.y) * this.vector.x) < 0 ? -1 : 1;
             N = Ap.cloneSub(this.vector.cloneScale(Aw));
-            R = N.getLength();
-            if ((R < L || B2 < 0) && R !== 0) {
-                pos.selfAdd(N.cloneScale((L * B2 - R) / R));
-                object.drive(new Point(-N.y / R, N.x / R));
+            dist = N.getLength();
+            if ((dist < radius || B2 < 0) && dist !== 0) {
+                pos.selfAdd(N.cloneScale((radius * B2 - dist) / dist));
+                object.drive(new Point(-N.y / dist, N.x / dist));
                 return this;
             }
         }
-        if (Aw * this.len < -L || Aw * this.len > this.len + L) {
+        if (Aw * this.len < -radius || Aw * this.len > this.len + radius) {
             return this;
         }
         let Bp = Aw > 0 ? this.b : this.a;
         N = pos.cloneSub(Bp);
-        R = N.getLength();
-        if (R < L && R !== 0) {
-            pos.selfAdd(N.cloneScale((L - R) / R));
-            object.drive(new Point(-N.y / R, N.x / R));
+        dist = N.getLength();
+        if (dist < radius && dist !== 0) {
+            pos.selfAdd(N.cloneScale((radius - dist) / dist));
+            object.drive(new Point(-N.y / dist, N.x / dist));
             return this;
         }
     }

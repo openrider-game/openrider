@@ -24,7 +24,7 @@ export class Track {
         this.currentTool = TOOL.CAMERA;
         this.camera = new Point(0, 0);
         drawer.fillText('Loading track... Please wait.', 36, 16);
-        this.objects = [];
+        this.powerups = [];
         this.checkpoints = [];
         this.left =
             this.right =
@@ -98,8 +98,8 @@ export class Track {
                         drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
                     drawer.setProperty('strokeStyle', '#000');
-                    for (let i = 0, l = this.grid[x][y].objects.length; i < l; i++) {
-                        this.grid[x][y].objects[i].render();
+                    for (let i = 0, l = this.grid[x][y].powerups.length; i < l; i++) {
+                        this.grid[x][y].powerups[i].render();
                     }
                 }
             }
@@ -229,6 +229,6 @@ export class Track {
         if (track.grid[x][y] === undefined) {
             track.grid[x][y] = new GridBox(x, y);
         }
-        track.grid[x][y].objects.push(item);
+        track.grid[x][y].powerups.push(item);
     }
 }

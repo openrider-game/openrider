@@ -73,7 +73,7 @@ export class RaceTrack extends Track {
         }
         this.numTargets = 0;
         this.targetsReached = 0;
-        this.objects = [];
+        this.powerups = [];
         let objects = hashSplit[2] ? hashSplit[2].split(',') : [],
             item;
         for (let i = 0, l = objects.length; i < l; i++) {
@@ -85,11 +85,11 @@ export class RaceTrack extends Track {
                     case 'T':
                         item = new Target(x, y, this);
                         this.numTargets++;
-                        this.objects.push(item);
+                        this.powerups.push(item);
                         break;
                     case 'C':
                         item = new Checkpoint(x, y, this);
-                        this.objects.push(item);
+                        this.powerups.push(item);
                         break;
                     case 'B':
                         item = new Boost(x, y, parseInt(rawCoords[3], 32) + 180, this);
@@ -115,7 +115,7 @@ export class RaceTrack extends Track {
                     if (this.grid[x][y] === undefined) {
                         this.grid[x][y] = new GridBox(x, y);
                     }
-                    this.grid[x][y].objects.push(item);
+                    this.grid[x][y].powerups.push(item);
                 }
             }
         }
@@ -132,7 +132,7 @@ export class RaceTrack extends Track {
             bike = track.bike,
             ghosts = track.ghostInstances,
             i = 0,
-            l = track.objects.length,
+            l = track.powerups.length,
             ghost, reached = { length: l },
             bikeList, ghostLists = { length: ghosts.length };
         bikeList = {
@@ -174,7 +174,7 @@ export class RaceTrack extends Track {
             length: 35
         };
         for (; i < l; i++) {
-            reached[i] = track.objects[i].reached;
+            reached[i] = track.powerups[i].reached;
         }
         for (let i = 0, l = ghosts.length; i < l; i++) {
             ghost = ghosts[i];
@@ -243,9 +243,9 @@ export class RaceTrack extends Track {
                 for (y in this.grid[x])
                     if (this.grid[x].hasOwnProperty(y)) {
                         box = this.grid[x][y];
-                        for (let i = 0, l = box.objects.length; i < l; i++) {
-                            if (box.objects[i].reached !== undefined) {
-                                box.objects[i].reached = false;
+                        for (let i = 0, l = box.powerups.length; i < l; i++) {
+                            if (box.powerups[i].reached !== undefined) {
+                                box.powerups[i].reached = false;
                             }
                         }
                     }
@@ -513,8 +513,8 @@ export class RaceTrack extends Track {
                 for (let i = 0, l = Ixy.scenery.length; i < l; i++) {
                     Ixy.scenery[i] && del(Ixy.scenery[i]);
                 }
-                for (let i = 0, l = Ixy.objects.length; i < l; i++) {
-                    Ixy.objects[i] && del(Ixy.objects[i]);
+                for (let i = 0, l = Ixy.powerups.length; i < l; i++) {
+                    Ixy.powerups[i] && del(Ixy.powerups[i]);
                 }
             }
             if (Ixy1 !== undefined) {
@@ -524,8 +524,8 @@ export class RaceTrack extends Track {
                 for (let i = 0, l = Ixy1.scenery.length; i < l; i++) {
                     Ixy1.scenery[i] && del(Ixy1.scenery[i]);
                 }
-                for (let i = 0, l = Ixy1.objects.length; i < l; i++) {
-                    Ixy1.objects[i] && del(Ixy1.objects[i]);
+                for (let i = 0, l = Ixy1.powerups.length; i < l; i++) {
+                    Ixy1.powerups[i] && del(Ixy1.powerups[i]);
                 }
             }
         }
@@ -539,8 +539,8 @@ export class RaceTrack extends Track {
                 for (let i = 0, l = Ix1y.scenery.length; i < l; i++) {
                     Ix1y.scenery[i] && del(Ix1y.scenery[i]);
                 }
-                for (let i = 0, l = Ix1y.objects.length; i < l; i++) {
-                    Ix1y.objects[i] && del(Ix1y.objects[i]);
+                for (let i = 0, l = Ix1y.powerups.length; i < l; i++) {
+                    Ix1y.powerups[i] && del(Ix1y.powerups[i]);
                 }
             }
             if (Ix1y1 !== undefined) {
@@ -550,14 +550,14 @@ export class RaceTrack extends Track {
                 for (let i = 0, l = Ix1y1.scenery.length; i < l; i++) {
                     Ix1y1.scenery[i] && del(Ix1y1.scenery[i]);
                 }
-                for (let i = 0, l = Ix1y1.objects.length; i < l; i++) {
-                    Ix1y1.objects[i] && del(Ix1y1.objects[i]);
+                for (let i = 0, l = Ix1y1.powerups.length; i < l; i++) {
+                    Ix1y1.powerups[i] && del(Ix1y1.powerups[i]);
                 }
             }
         }
-        for (let i = 0, l = this.objects.length; i < l; i++) {
-            if (this.objects[i] && this.objects[i].doRemove !== undefined) {
-                deleted.push(this.objects.splice(i--, 1)[0]);
+        for (let i = 0, l = this.powerups.length; i < l; i++) {
+            if (this.powerups[i] && this.powerups[i].doRemove !== undefined) {
+                deleted.push(this.powerups.splice(i--, 1)[0]);
             }
         }
         return deleted;
@@ -663,8 +663,8 @@ export class RaceTrack extends Track {
                             scenery += this.grid[x][y].scenery[v].a + this.grid[x][y].scenery[v].getEnd() + ',';
                         }
                     }
-                    for (let j = 0; j < this.grid[x][y].objects.length; j++) {
-                        objects += this.grid[x][y].objects[j] + ',';
+                    for (let j = 0; j < this.grid[x][y].powerups.length; j++) {
+                        objects += this.grid[x][y].powerups[j] + ',';
                     }
                 }
         }

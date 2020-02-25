@@ -317,6 +317,7 @@ export class RaceTrack extends Track {
             mousePx = mousePos.toPixel(this);
         drawer.clearRect(0, 0, canvas.width, canvas.height);
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
+        drawer.setProperty('lineJoin', 'round');
         if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
                 this.currentTool === TOOL.BRUSH || this.currentTool === TOOL.SBRUSH)) {
             if (mousePx.x < 50) {

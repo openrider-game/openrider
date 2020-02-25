@@ -259,43 +259,6 @@ export class RaceTrack extends Track {
         return this;
     }
 
-    touch(part) {
-        let x = Math.floor(part.pos.x / this.gridSize - 0.5),
-            y = Math.floor(part.pos.y / this.gridSize - 0.5),
-            grid = this.grid;
-        if (grid[x] !== undefined) {
-            if (grid[x][y] !== undefined) {
-                grid[x][y].untouch();
-            }
-            if (grid[x][y + 1] !== undefined) {
-                grid[x][y + 1].untouch();
-            }
-        }
-        if (grid[x + 1] !== undefined) {
-            if (grid[x + 1][y] !== undefined) {
-                grid[x + 1][y].untouch();
-            }
-            if (grid[x + 1][y + 1] !== undefined) {
-                grid[x + 1][y + 1].untouch();
-            }
-        }
-        if (grid[x] !== undefined && grid[x][y] !== undefined) {
-            grid[x][y].touch(part);
-        }
-        if (grid[x + 1] !== undefined) {
-            if (grid[x + 1][y] !== undefined) {
-                grid[x + 1][y].touch(part);
-            }
-            if (grid[x + 1][y + 1] !== undefined) {
-                grid[x + 1][y + 1].touch(part);
-            }
-        }
-        if (grid[x] !== undefined && grid[x][y + 1] !== undefined) {
-            grid[x][y + 1].touch(part);
-        }
-        return this;
-    }
-
     update() {
         let i = 0;
         if (!this.paused) {

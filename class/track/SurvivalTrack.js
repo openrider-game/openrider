@@ -15,42 +15,6 @@ export class SurvivalTrack extends Track {
         return this;
     }
 
-    touch(part) {
-        let x = Math.floor(part.pos.x / this.gridSize - 0.5),
-            y = Math.floor(part.pos.y / this.gridSize - 0.5);
-        if (this.grid[x] !== undefined) {
-            if (this.grid[x][y] !== undefined) {
-                this.grid[x][y].untouch();
-            }
-            if (this.grid[x][y + 1] !== undefined) {
-                this.grid[x][y + 1].untouch();
-            }
-        }
-        if (this.grid[x + 1] !== undefined) {
-            if (this.grid[x + 1][y] !== undefined) {
-                this.grid[x + 1][y].untouch();
-            }
-            if (this.grid[x + 1][y + 1] !== undefined) {
-                this.grid[x + 1][y + 1].untouch();
-            }
-        }
-        if (this.grid[x] !== undefined && this.grid[x][y] !== undefined) {
-            this.grid[x][y].touch(part);
-        }
-        if (this.grid[x + 1] !== undefined) {
-            if (this.grid[x + 1][y] !== undefined) {
-                this.grid[x + 1][y].touch(part);
-            }
-            if (this.grid[x + 1][y + 1] !== undefined) {
-                this.grid[x + 1][y + 1].touch(part);
-            }
-        }
-        if (this.grid[x] !== undefined && this.grid[x][y + 1] !== undefined) {
-            this.grid[x][y + 1].touch(part);
-        }
-        return this;
-    }
-
     update() {
         if (!this.paused) {
             this.bike && this.bike.update();

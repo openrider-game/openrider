@@ -15,7 +15,6 @@ import { GridBox } from "./class/track/GridBox.js";
 
 const COMPILED = false;
 export const DEBUG = !COMPILED;
-window.debugMode = DEBUG;
 
 // Error
 if (!document.createElement('canvas').getContext) {
@@ -895,6 +894,8 @@ function changeThumb(on) {
 }
 
 function getTrack() { return track; }
+
+window.debugMode = DEBUG;
 
 export default {
     game: {

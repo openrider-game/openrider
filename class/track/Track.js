@@ -1,4 +1,4 @@
-import { canvas, shadeLines, DEBUG } from "../../bootstrap.js";
+import { canvas, shadeLines } from "../../bootstrap.js";
 import { TOOL } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
@@ -60,7 +60,7 @@ export class Track {
         bottomRight.x = Math.floor(bottomRight.x / this.gridSize);
         bottomRight.y = Math.floor(bottomRight.y / this.gridSize);
 
-        let onScreen = new Set();  // List of gridBoxes that are on the screen
+        let onScreen = new Set(); // List of gridBoxes that are on the screen
         let key;
         // Loop through all the gridBoxes on the screen
         for (let x = topLeft.x; x <= bottomRight.x; x++) {
@@ -69,7 +69,7 @@ export class Track {
                     if (this.grid[x][y].lines.length > 0 || this.grid[x][y].scenery.length > 0) {
                         key = x + '_' + y;
                         onScreen.add(key);
-                        if (this.cache[key] === undefined) {    // If the gridBox is not drawn, draw it.
+                        if (this.cache[key] === undefined) { // If the gridBox is not drawn, draw it.
                             let canvas = this.cache[key] = document.createElement('canvas');
                             let ctx = canvas.getContext('2d');
                             canvas.width = this.gridSize * this.zoomFactor;
@@ -112,7 +112,6 @@ export class Track {
             }
         }
 
-
         if (window.debugMode) {
             drawer.beginPath();
             for (let y = topLeft.y; y <= bottomRight.y; y++) {
@@ -123,7 +122,7 @@ export class Track {
                 drawer.moveTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), 0);
                 drawer.lineTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), canvas.height);
             }
-            drawer.setProperty('strokeStyle', '#0000ff88').setProperty('lineWidth', 2);
+            drawer.setProperty('strokeStyle', '#abc').setProperty('lineWidth', 2);
             drawer.stroke();
         }
     }
@@ -132,7 +131,7 @@ export class Track {
         if (!this.spreadCache[q]) {
             this.spreadCache[q] = {};
         }
-        var key = _from + ';' + _to;
+        let key = _from + ';' + _to;
         if (this.spreadCache[q][key]) {
             return this.spreadCache[q][key];
         }
@@ -141,18 +140,18 @@ export class Track {
         const vector = new Point(_to.x - _from.x, _to.y - _from.y);
         const len = vector.getLength();
         const froms = [
-            new Point(_from.x + (-vector.x - vector.y) / len, _from.y + ( vector.x - vector.y) / len),
+            new Point(_from.x + (-vector.x - vector.y) / len, _from.y + (vector.x - vector.y) / len),
             new Point(_from.x + (-vector.x + vector.y) / len, _from.y + (-vector.x - vector.y) / len)
         ];
         const tos = [
-            new Point(_to.x + ( vector.x - vector.y) / len, _to.y + ( vector.x + vector.y) / len),
-            new Point(_to.x + ( vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
+            new Point(_to.x + (vector.x - vector.y) / len, _to.y + (vector.x + vector.y) / len),
+            new Point(_to.x + (vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
         ];
 
         const lines = this.spreadCache[q][key] = [];
 
         for (let edge = 0; edge < 2; edge++) {
-            var from = new Point(froms[edge].x, froms[edge].y),
+            let from = new Point(froms[edge].x, froms[edge].y),
                 factor = (tos[edge].y - froms[edge].y) / (tos[edge].x - froms[edge].x),
                 direction = new Point(froms[edge].x < tos[edge].x ? 1 : -1, froms[edge].y < tos[edge].y ? 1 : -1),
                 i = 0;
@@ -161,11 +160,11 @@ export class Track {
                 if (Math.floor(from.x / q) === Math.floor(tos[edge].x / q) && Math.floor(from.y / q) === Math.floor(tos[edge].y / q)) {
                     break;
                 }
-                var to1 = new Point(
+                let to1 = new Point(
                     direction.x < 0 ? Math.round(Math.ceil((from.x + 1) / q + direction.x) * q) - 1 : Math.round(Math.floor(from.x / q + direction.x) * q), 0
                 );
                 to1.y = Math.round(froms[edge].y + (to1.x - froms[edge].x) * factor);
-                var to2 = new Point(
+                let to2 = new Point(
                     0, direction.y < 0 ? Math.round(Math.ceil((from.y + 1) / q + direction.y) * q) - 1 : Math.round(Math.floor(from.y / q + direction.y) * q)
                 );
                 to2.x = Math.round(froms[edge].x + (to2.y - froms[edge].y) / factor);
@@ -186,7 +185,7 @@ export class Track {
     addLineInternal(line) {
         let grids = this.gridSpread(line.a, line.b, this.gridSize),
             x, y;
-        const drawnLines = new WeakSet();   // List of gridBoxes that have the lines, to prevent duplicates
+        const drawnLines = new WeakSet(); // List of gridBoxes that have the lines, to prevent duplicates
         for (let i = 0, l = grids.length; i < l; i++) {
             x = Math.floor(grids[i].x / this.gridSize);
             y = Math.floor(grids[i].y / this.gridSize);

@@ -1,4 +1,4 @@
-import { canvas, shadeLines } from "../../bootstrap.js";
+import { canvas, shadeLines, DEBUG } from "../../bootstrap.js";
 import { TOOL } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
@@ -110,6 +110,21 @@ export class Track {
             if (!onScreen.has(Ay)) {
                 delete this.cache[Ay];
             }
+        }
+
+
+        if (window.debugMode) {
+            drawer.beginPath();
+            for (let y = topLeft.y; y <= bottomRight.y; y++) {
+                drawer.moveTo(0, Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                drawer.lineTo(canvas.width, Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+            }
+            for (let x = topLeft.x; x <= bottomRight.x; x++) {
+                drawer.moveTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), 0);
+                drawer.lineTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), canvas.height);
+            }
+            drawer.setProperty('strokeStyle', '#0000ff88').setProperty('lineWidth', 2);
+            drawer.stroke();
         }
     }
 

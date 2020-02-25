@@ -24,7 +24,7 @@ export class Track {
         this.currentTool = TOOL.CAMERA;
         this.camera = new Point(0, 0);
         drawer.fillText('Loading track... Please wait.', 36, 16);
-        this.powerups = [];
+        this.collectables = [];
         this.checkpoints = [];
         this.left =
             this.right =

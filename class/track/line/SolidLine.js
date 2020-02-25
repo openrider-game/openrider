@@ -6,6 +6,7 @@ export class SolidLine extends Line {
         super(x1, y1, x2, y2, parent);
     }
 
+    // Collision detection.
     touch(object) {
         if (this.touched) {
             return this;
@@ -14,29 +15,30 @@ export class SolidLine extends Line {
         let pos = object.pos,
             vel = object.velocity,
             radius = object.size,
-            N = new Point(0, 0),
-            dist = 0,
+            diff, // The vector from the closest point on the line to the object
+            dist,
             Ap = pos.cloneSub(this.a),
-            Aw = Ap.dot(this.vector) / this.len / this.len;
-        if (Aw >= 0 && Aw <= 1) {
-            let B2 = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - vel.x) * this.vector.y - (Ap.y - vel.y) * this.vector.x) < 0 ? -1 : 1;
-            N = Ap.cloneSub(this.vector.cloneScale(Aw));
-            dist = N.getLength();
-            if ((dist < radius || B2 < 0) && dist !== 0) {
-                pos.selfAdd(N.cloneScale((radius * B2 - dist) / dist));
-                object.drive(new Point(-N.y / dist, N.x / dist));
+            u = Ap.dot(this.vector) / this.len / this.len;  // Named "u" because it is sort of like uv coordinates
+        if (u >= 0 && u <= 1) {
+            // "sign" is negative if the center of the mass has passed through the line.
+            let sign = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - vel.x) * this.vector.y - (Ap.y - vel.y) * this.vector.x) < 0 ? -1 : 1;
+            diff = Ap.cloneSub(this.vector.cloneScale(u));
+            dist = diff.getLength();
+            if ((dist < radius || sign < 0) && dist !== 0) {
+                pos.selfAdd(diff.cloneScale((radius * sign - dist) / dist));
+                object.drive(new Point(-diff.y / dist, diff.x / dist));
                 return this;
             }
         }
-        if (Aw * this.len < -radius || Aw * this.len > this.len + radius) {
+        if (u * this.len < -radius || u * this.len > this.len + radius) {
             return this;
         }
-        let Bp = Aw > 0 ? this.b : this.a;
-        N = pos.cloneSub(Bp);
-        dist = N.getLength();
+        let Bp = u > 0 ? this.b : this.a;
+        diff = pos.cloneSub(Bp);
+        dist = diff.getLength();
         if (dist < radius && dist !== 0) {
-            pos.selfAdd(N.cloneScale((radius - dist) / dist));
-            object.drive(new Point(-N.y / dist, N.x / dist));
+            pos.selfAdd(diff.cloneScale((radius - dist) / dist));
+            object.drive(new Point(-diff.y / dist, diff.x / dist));
             return this;
         }
     }

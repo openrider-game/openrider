@@ -282,7 +282,11 @@ export class RaceTrack extends Track {
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         drawer.setProperty('lineJoin', 'round');
 
+        // Note: Drawing the grid boxes before the camera movement in the following block causes the positions of the
+        //  rider and the track to be out of sync when the screen is moving from dragging lines.
         this.drawGridBoxes(drawer);
+
+        drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
 
         // Draw red line and move camera when using line or brush tool
         if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
@@ -334,10 +338,12 @@ export class RaceTrack extends Track {
                 case 'bomb':
                 case 'slow-mo':
                     drawer.setProperty('fillStyle', this.currentTool === TOOL.GOAL ? '#ff0' : this.currentTool === TOOL.CHECKPOINT ? '#00f' : this.currentTool === TOOL.BOMB ? '#f00' : '#eee');
+                    drawer.setProperty('strokeStyle', '#000');
                     drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
                     break;
                 case 'boost':
                 case 'gravity':
+                    drawer.setProperty('strokeStyle', '#000');
                     drawer.beginPath()
                         .setProperty('fillStyle', this.currentTool === TOOL.BOOST ? '#ff0' : '#0f0');
                     drawer.ctx.save();

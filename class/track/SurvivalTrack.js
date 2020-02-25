@@ -74,44 +74,8 @@ export class SurvivalTrack extends Track {
     render() {
         let drawer = CanvasHelper.getInstance();
         drawer.clearRect(0, 0, canvas.width, canvas.height);
-        let center = new Point(0, 0).normalizeToCanvas(this),
-            border = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
-        center.x = Math.floor(center.x / this.gridSize);
-        center.y = Math.floor(center.y / this.gridSize);
-        border.x = Math.floor(border.x / this.gridSize);
-        border.y = Math.floor(border.y / this.gridSize);
-        let DI = [];
-        for (let x = center.x; x <= border.x; x++) {
-            for (let y = center.y; y <= border.y; y++) {
-                if (this.grid[x] !== undefined && this.grid[x][y] !== undefined) {
-                    if (this.grid[x][y].lines.length > 0) {
-                        DI[x + '_' + y] = 1;
-                        if (this.cache[x + '_' + y] === undefined) {
-                            let el = this.cache[x + '_' + y] = document.createElement('canvas');
-                            el.width = this.gridSize * this.zoomFactor;
-                            el.height = this.gridSize * this.zoomFactor;
-                            let graphic = el.getContext('2d');
-                            graphic.lineCap = 'round';
-                            graphic.lineWidth = Math.max(2 * this.zoomFactor, 0.5);
-                            graphic.strokeStyle = '#000';
-                            for (let i = 0, l = this.grid[x][y].lines.length; i < l; i++) {
-                                this.grid[x][y].lines[i].render(this.cache[x + '_' + y].getContext('2d'), x * this.gridSize * this.zoomFactor, y * this.gridSize * this.zoomFactor);
-                            }
-                        }
-                        drawer.drawImage(this.cache[x + '_' + y], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
-                    }
-                    drawer.setProperty('strokeStyle', '#000');
-                    //~ for(let i  = 0, l = this.grid[x][y].objects.length; i < l; i++) {
-                    //~ this.grid[x][y].objects[i].render();
-                    //~ }
-                }
-            }
-        }
-        for (let Ay in this.cache) {
-            if (DI[Ay] === undefined) {
-                delete this.cache[Ay];
-            }
-        }
+
+        this.drawGridBoxes(drawer, canvas);
 
         drawer.setProperty('lineWidth', 10);
         drawer.setProperty('strokeStyle', '#fff');

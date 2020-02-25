@@ -574,11 +574,11 @@ canvas.onmousedown = function(event) {
             erase();
             break;
         case TOOL.GOAL:
-            track.objects.push(item = new Target(lastClick.x, lastClick.y, track));
+            track.powerups.push(item = new Target(lastClick.x, lastClick.y, track));
             track.numTargets++;
             break;
         case TOOL.CHECKPOINT:
-            track.objects.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
+            track.powerups.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
             break;
         case TOOL.BOMB:
             item = new Bomb(lastClick.x, lastClick.y, track);
@@ -605,12 +605,12 @@ canvas.onmousedown = function(event) {
         if (track.grid[x][y] === undefined) {
             track.grid[x][y] = new GridBox(x, y);
         }
-        track.grid[x][y].objects.push(item);
+        track.grid[x][y].powerups.push(item);
         track.pushUndo(function() {
             item.remove();
         }, function() {
             item instanceof Target && ++track.numTargets;
-            track.grid[x][y].objects.push(item);
+            track.grid[x][y].powerups.push(item);
         });
     }
 };
@@ -672,11 +672,11 @@ canvas.onmouseup = function() {
             if (track.grid[x][y] === undefined) {
                 track.grid[x][y] = new GridBox(x, y);
             }
-            track.grid[x][y].objects.push(item);
+            track.grid[x][y].powerups.push(item);
             track.pushUndo(function() {
                 item.remove();
             }, function() {
-                track.grid[x][y].objects.push(item);
+                track.grid[x][y].powerups.push(item);
             });
         }
     }

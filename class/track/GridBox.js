@@ -4,7 +4,7 @@ export class GridBox {
         this.y = y;
         this.lines = [];
         this.scenery = [];
-        this.objects = [];
+        this.powerups = [];
     }
 
     touch(part) {
@@ -12,8 +12,8 @@ export class GridBox {
             this.lines[i].touch(part);
         }
         if (!part.parnt.dead) {
-            for (let i = this.objects.length - 1; i >= 0; i--) {
-                this.objects[i].touch(part);
+            for (let i = this.powerups.length - 1; i >= 0; i--) {
+                this.powerups[i].touch(part);
             }
         }
         return this;
@@ -38,9 +38,9 @@ export class GridBox {
                 deleted.push(this.scenery.splice(i--, 1)[0]);
             }
         }
-        for (let i = 0, l = this.objects.length; i < l; i++) {
-            if (this.objects[i] && this.objects[i].doRemove) {
-                deleted.push(this.objects.splice(i--, 1)[0]);
+        for (let i = 0, l = this.powerups.length; i < l; i++) {
+            if (this.powerups[i] && this.powerups[i].doRemove) {
+                deleted.push(this.powerups.splice(i--, 1)[0]);
             }
         }
         return deleted;

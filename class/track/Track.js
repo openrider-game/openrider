@@ -136,6 +136,11 @@ export class Track {
             return this.spreadCache[q][key];
         }
 
+        // If it's a powerup, skip the algorithm.
+        if (_from.x === _to.x && _from.y === _to.y) {
+            return this.spreadCache[q][key] = [new Point(_from.x, _from.y)];
+        }
+
         // To fix thin lines, go through the edges of the line, rather than the center of the line.
         const vector = new Point(_to.x - _from.x, _to.y - _from.y);
         const len = vector.getLength();
@@ -148,14 +153,14 @@ export class Track {
             new Point(_to.x + (vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
         ];
 
-        const lines = this.spreadCache[q][key] = [];
+        const gridPoints = this.spreadCache[q][key] = [];
 
         for (let edge = 0; edge < 2; edge++) {
             let from = new Point(froms[edge].x, froms[edge].y),
                 factor = (tos[edge].y - froms[edge].y) / (tos[edge].x - froms[edge].x),
                 direction = new Point(froms[edge].x < tos[edge].x ? 1 : -1, froms[edge].y < tos[edge].y ? 1 : -1),
                 i = 0;
-            lines.push(froms[edge]);
+            gridPoints.push(froms[edge]);
             while (i < 5000) {
                 if (Math.floor(from.x / q) === Math.floor(tos[edge].x / q) && Math.floor(from.y / q) === Math.floor(tos[edge].y / q)) {
                     break;
@@ -174,12 +179,12 @@ export class Track {
                 } else {
                     from = to2;
                 }
-                lines.push(from);
+                gridPoints.push(from);
 
                 i++;
             }
         }
-        return lines;
+        return gridPoints;
     }
 
     addLineInternal(line) {

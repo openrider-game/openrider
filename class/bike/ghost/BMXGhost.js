@@ -11,14 +11,14 @@ export class BMXGhost extends BMXRenderer(GhostBike) {
         this.backWheel.size = 11.7;
         this.frontWheel.size = 11.7;
         this.headToBack.lengthTowards = 45;
-        this.headToBack.BC = 0.35;
-        this.headToBack.BE = 0.3;
+        this.headToBack.springConstant = 0.35;
+        this.headToBack.dampConstant = 0.3;
         this.frontToBack.lengthTowards = 42;
-        this.frontToBack.BC = 0.35;
-        this.frontToBack.BE = 0.3;
+        this.frontToBack.springConstant = 0.35;
+        this.frontToBack.dampConstant = 0.3;
         this.headToFront.lengthTowards = 45;
-        this.headToFront.BC = 0.35;
-        this.headToFront.BE = 0.3;
+        this.headToFront.springConstant = 0.35;
+        this.headToFront.dampConstant = 0.3;
         this.rotationFactor = 6;
     }
 

@@ -14,14 +14,14 @@ export class Harley extends PlayerBike {
         this.backWheel.size = 14;
         this.frontWheel.size = 14;
         this.headToBack.lengthTowards = 35;
-        this.headToBack.BC = 0.5;
-        this.headToBack.BE = 0.7;
+        this.headToBack.springConstant = 0.5;
+        this.headToBack.dampConstant = 0.7;
         this.frontToBack.lengthTowards = 45;
-        this.frontToBack.BC = 0.2;
-        this.frontToBack.BE = 0.3;
+        this.frontToBack.springConstant = 0.2;
+        this.frontToBack.dampConstant = 0.3;
         this.headToFront.lengthTowards = 45;
-        this.headToFront.BC = 0.2;
-        this.headToFront.BE = 0.3;
+        this.headToFront.springConstant = 0.2;
+        this.headToFront.dampConstant = 0.3;
         this.rotationFactor = 10;
     }
 

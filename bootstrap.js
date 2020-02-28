@@ -22,7 +22,7 @@ if (!document.createElement('canvas').getContext) {
 }
 
 // Initialize canvas
-export var canvas = document.getElementById('canvas_rider');
+export var canvas = document.querySelector('[data-play=openrider]');
 
 new CanvasHelper(canvas.getContext('2d'));
 let drawer = CanvasHelper.getInstance();
@@ -78,34 +78,38 @@ toolbar1.style.display = 'block';
 toolbar2.style.top = canvas.offsetTop + 'px';
 toolbar2.style.left = canvas.offsetLeft + canvas.width - 22 + 'px';
 
-function canvas_ride(id, ghosts) {
+function newGame(id, ghosts) {
     game = new Game(id, ghosts);
     track = game.track;
     game.run();
 }
 
 export function watchGhost(ID, track) {
-    if (track.ghostIDs !== undefined && !track.ghostIDs.contains(ID)) {
-        fetch(new Request('ghost/load', { method: 'POST', body: 'id=' + ID })).then(function(ghostStr) {
-            var ghostArr = GhostString.parse(ghostStr);
-            track.ghostKeys.push(ghostArr);
-            ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
-            track.ghostIDs.push(ID);
-            track.reset();
-        });
-    }
-}
-
-function watchGhostString(ghostStr) {
-    if (track.ghostKeys !== undefined) {
-        var ghostArr = GhostString.parse(ghostStr);
+    function initGhost(ghostStr, id) {
+        let ghostArr = GhostString.parse(ghostStr);
+        if (id) {
+            track.ghostIDs.push(id);
+        }
         track.ghostKeys.push(ghostArr);
-        track.ghostIDs.push(1);
         ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
+        track.ghostIDs.push(ID);
         track.reset();
     }
+
+    if (isNaN(parseInt(ID))) {
+        initGhost(ID);
+    } else {
+        if (track.ghostIDs !== undefined && !track.ghostIDs.contains(ID)) {
+            new Request('ghost/load', {
+                method: 'POST',
+                data: { id: ID },
+                onSuccess: initGhost
+            }).send();
+        }
+    }
 }
 
+// TODO: Should be a tool
 function switchBikes() {
     track.currentBike = track.currentBike === BIKE_BMX ? BIKE_MTB : BIKE_BMX;
     track.reset();
@@ -164,11 +168,6 @@ window.onresize = function() {
 function toggleFullscreen() {
     (canvas.width === 700 ? big : small)();
     afterResize();
-}
-
-function fixTyping(el) {
-    el.addEventListener('focus', rmEvts);
-    el.addEventListener('blur', addEvts);
 }
 
 document.onkeydown = function(event) {
@@ -266,7 +265,7 @@ document.onkeydown = function(event) {
                 break;
             }
     }
-    if (!track.id) {
+    if (track.id === undefined) {
         switch (event.keyCode) {
             case 65:
                 // A
@@ -341,27 +340,6 @@ document.onkeydown = function(event) {
         }
     }
 };
-document.onkeypress = function(event) {
-    switch (event.keyCode) {
-        case 13: // enter
-        case 37: // left
-        case 39: // right
-        case 38: // up
-        case 40: // down
-            event.preventDefault();
-            break;
-        case 8: // backspace
-        case 32: // space
-            if (canvas.width !== 250) {
-                event.preventDefault();
-            }
-            break;
-        case 113: // Q
-            track.bike.doSave = DEBUG;
-        default:
-            ;
-    }
-};
 document.onkeyup = function(event) {
     switch (event.keyCode) {
         case 70: // f
@@ -425,7 +403,7 @@ document.onkeyup = function(event) {
         case 56: // 8
         case 57: // 9
         case 58: // 0
-            if (track.id) {
+            if (track.id !== undefined) {
                 track.watchGhost(event.keyCode - 48);
             }
             break;
@@ -492,7 +470,7 @@ toolbar1.onmousedown = function(event) {
     }
 };
 toolbar2.onmousedown = function(event) {
-    if (track.id) return false;
+    if (track.id !== undefined) return false;
     track.focalPoint = false;
     switch (Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
         case 1:
@@ -690,17 +668,28 @@ canvas.onmouseout = function() {
     document.body.style.cursor = 'default';
 };
 
+// Starting from here stuff can stay in this file
+
 newButton && (newButton.onclick = function() {
     if (confirm('Do you really want to start a new track?')) {
-        track = canvas_ride(TRACK_DEFAULT, []);
-        charcount.innerHTML = 'trackcode';
+        track = newGame(TRACK_DEFAULT, []);
+        charcount.innerHTML = 'Trackcode';
         trackcode.value = null;
         track.reset();
     }
 });
+
 loadButton && (loadButton.onclick = function() {
-    if (trackcode.value.length > 10) {
-        track = canvas_ride(trackcode.value, []);
+    if (trackcode.value.length > 0) {
+        let code = trackcode.value;
+        let i = 0;
+        let hashes = 0;
+        while (i = code.indexOf('#', i) + 1) ++hashes;
+        if (code.length < 7 || hashes < 3) {
+            return alert('Invalid trackcode!');
+        }
+        // TODO: parse track code here instead of in Track
+        track = newGame(code, []);
         charcount.innerHTML = "Trackcode";
         trackcode.value = null;
         track.reset();
@@ -708,13 +697,18 @@ loadButton && (loadButton.onclick = function() {
         alert("No trackcode to load!");
     }
 });
+
 saveButton && (saveButton.onclick = function() {
-    if (!track.id) {
+    if (track.id === undefined) {
+        // TODO: generate track code here instead of in Track
         trackcode.value = track.toString();
         trackcode.select();
-        charcount.innerHTML = "Trackcode - " + Math.round(trackcode.value.length / 1000) + "k - CTRL + C to copy";
+        let code = trackcode.value;
+        let codeDisplay = code >= 1000 ? Math.round(code.length / 1000) + 'k' : code.length;
+        charcount.innerHTML = "Trackcode - " + codeDisplay + " - CTRL + C to copy";
     }
 });
+
 uploadButton && (uploadButton.onclick = function() {
     var trackcode = track.toString();
     if (trackcode.length > MIN_SIZE) {
@@ -725,94 +719,40 @@ uploadButton && (uploadButton.onclick = function() {
         changeThumb(true);
         toolbar1.style.display = 'none';
         toolbar2.style.display = 'none';
+        document.getElementById('track-menu').style.display = 'none';
         drawer.setProperty('lineCap', 'round');
         drawer.setProperty('lineJoin', 'round');
-        document.getElementById('track_menu').style.display = 'none';
 
-        // build options & messages DOM
-        // var inputName = dom(['input#name.input-block-level', { type: 'text', size: 18, maxlength: 20, placeholder: 'Name...' }]),
-        //     inputDesc = dom(['textarea.input-block-level', { rows: 4, placeholder: 'Description...' }]),
-        //     submit = dom(['input.btn.btn-primary.btn-block.btn-large', { type: 'submit', value: 'Save track' }]),
-        //     optVisibility = dom(['div.span3', 'Visibility:']),
-        //     optVisibilities = dom(['div.btn-group.span9', { 'data-toggle': 'buttons-radio' },
-        //         ['button.btn#optPublic.active', ['i.icon-globe'], ' Public'],
-        //         ['button.btn#optHidden', ['i.icon-eye-close'], ' Hidden'],
-        //         ['button.btn#optPrivate', ['i.icon-lock'], ' Private']
-        //     ]),
-        //     listTags = dom(['input.span12', { placeholder: 'Partners...', type: 'text' }]),
-        //     optCollabTarget = dom(['div.span5']),
-        //     optCollab = dom([
-        //         'label.hide.row-fluid', ['div.span3', 'Collaboration with: '],
-        //         ['div.span4', [listTags]],
-        //         [optCollabTarget]
-        //     ]),
-        //     optsRadios = dom(['div.row-fluid']),
-        //     adjustMessage = dom(['div']),
-        //     well = dom(['div.well.row-fluid#track_menu']);
-
-        // styling of new elements
-        adjustMessage.style.color = canvas.style.borderColor = '#f00';
-        adjustMessage.innerHTML = 'Use your mouse to drag & fit an interesting part of your track in the thumbnail';
-        optCollab.style.lineHeight = optVisibility.style.lineHeight = '30px';
-
-        function appendChild(el) {
-            var args = [].slice.call(arguments, 1),
-                i = 0,
-                l = args.length;
-            for (; i < l; i++) {
-                el.appendChild(args[i]);
-            }
-            return el;
-        }
-        // footer
-        appendChild(well, inputName, inputDesc,
-            appendChild(optsRadios, optVisibility, optVisibilities),
-            //~ optCollab,
-            submit);
-        // header piece before canvas, footer piece below canvas.
-        contentElement.insertBefore(well, canvas.nextSibling);
-        contentElement.insertBefore(adjustMessage, canvas);
+        // TODO: build html elements
 
         // add events
-        fixTyping(inputName);
-        inputName.addEventListener('keypress', function(e) {
-            e.stopPropagation();
-        }, false);
         inputName.focus();
 
-        fixTyping(listTags);
-        fixTyping(inputDesc);
-
         submit.addEventListener('click', function() {
-            var thumb = document.createElement('canvas');
-            var name, image, desc, tmp, trackID, request;
-
-            // get proper upsized thumbnail
-            thumb.width = 500;
-            thumb.height = 300;
-            // Caching the track cache. How meta.
-            track.zoomFactor = track.zoomFactor * 2;
-            tmp = track.cache;
-            track.cache = {};
-            changeThumb(false);
-            track.render();
-            thumb.getContext('2d')
-                .drawImage(canvas,
-                    (canvas.width - 500) / 2, (canvas.height - 300) / 2,
-                    500, 300,
-                    0, 0,
-                    500, 300);
-            track.zoomFactor = track.zoomFactor / 2;
-            track.cache = tmp;
-
-            image = thumb.toDataURL('image/png');
-            if (image === 'asdf') { alert('The thumbnail is blank!\nDrag & fit an interesting part of your track inside.'); return false; }
+            var name, image, desc, trackID, request;
 
             name = inputName.value;
             if (name.length < 4) { alert('The track name is too short!'); return false; }
 
+            // TODO: Should be its own method, also move it to Track or Game
+            var thumb = document.createElement('canvas');
+            // get proper upsized thumbnail
+            thumb.width = 500;
+            thumb.height = 300;
+            track.zoomFactor = track.zoomFactor * 2;
+            changeThumb(false);
+            track.render();
+            thumb.getContext('2d').drawImage(
+                canvas,
+                (canvas.width - 500) / 2, (canvas.height - 300) / 2,
+                500, 300,
+                0, 0,
+                500, 300
+            );
+            track.zoomFactor = track.zoomFactor / 2;
+            image = thumb.toDataURL('image/png');
+
             desc = inputDesc.value;
-            //~ partners = tagif.getTags().map(function (n) { return map[n].parseInt(); });
 
             submit.disabled = true;
             request = new XMLHttpRequest();
@@ -822,7 +762,7 @@ uploadButton && (uploadButton.onclick = function() {
                 'n=' + encodeURIComponent(name) +
                 '&c=' + encodeURIComponent(trackcode) +
                 '&d=' + encodeURIComponent(desc) +
-                '&p=' + encodeURIComponent($(optVisibilities).getElement('.active').get('id'))
+                '&p=' + encodeURIComponent( /*$(optVisibilities).getElement('.active').get('id')*/ 0)
             );
             trackID = JSON.parse(request.responseText);
             if (typeof trackID === 'string') { alert('Your track was refused: ' + trackID); return false; }
@@ -846,15 +786,25 @@ function zoom(way) {
 }
 
 function onScroll(e) {
+    let zin = e.detail < 0 || e.wheelDelta > 0;
+    let zout = e.detail > 0 || e.wheelDelta < 0;
     e.preventDefault();
     if (shift) {
         if (track.currentTool === TOOL.ERASER) {
-            if ((e.detail > 0 || e.wheelDelta < 0) && eraserSize > 5) { eraserSize -= 5; } else if ((e.detail < 0 || e.wheelDelta > 0) && eraserSize < 40) { eraserSize += 5; }
+            if ((zout) && eraserSize > 5) {
+                eraserSize -= 5;
+            } else if ((zin) && eraserSize < 40) {
+                eraserSize += 5;
+            }
         } else if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
-            if ((e.detail > 0 || e.wheelDelta < 0) && drawingSize > 4) { drawingSize -= 8; } else if ((e.detail < 0 || e.wheelDelta > 0) && drawingSize < 200) { drawingSize += 8; }
+            if ((zout) && drawingSize > 4) {
+                drawingSize -= 8;
+            } else if ((zin) && drawingSize < 200) {
+                drawingSize += 8;
+            }
         }
     } else {
-        if (e.detail > 0 || e.wheelDelta < 0) { zoom(-1); } else if (e.detail < 0 || e.wheelDelta > 0) { zoom(1); }
+        if (zout) { zoom(-1); } else if (zin) { zoom(1); }
     }
     var Cw = new Point(
         e.clientX - canvas.offsetLeft,
@@ -867,28 +817,6 @@ function onScroll(e) {
 canvas.addEventListener('DOMMouseScroll', onScroll, false);
 canvas.addEventListener('mousewheel', onScroll, false);
 
-var evts;
-
-function rmEvts() {
-    evts = {
-        kd: document.onkeydown,
-        kp: document.onkeypress,
-        ku: document.onkeyup
-    };
-
-    document.onkeydown = document.onkeypress = document.onkeyup = function() {};
-}
-
-function addEvts() {
-    if (evts) {
-        document.onkeydown = evts.kd;
-        document.onkeypress = evts.kp;
-        document.onkeyup = evts.ku;
-
-        evts = false;
-    }
-}
-
 function changeThumb(on) {
     track.changingThumb = on !== false;
 }
@@ -899,11 +827,8 @@ window.debugMode = DEBUG;
 
 export default {
     game: {
-        'ride': canvas_ride,
+        'ride': newGame,
         'watchGhost': watchGhost,
-        'watchGhostString': watchGhostString,
-        'detach': rmEvts,
-        'attach': addEvts,
         'changeThumb': changeThumb
     },
     track: getTrack,

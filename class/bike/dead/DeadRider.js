@@ -42,8 +42,8 @@ export class DeadRider {
         }
         this.head.size = this.hip.size = 8;
         for (let i = 0, l = this.joints.$length; i < l; i++) {
-            this.joints[i].BC = 0.4;
-            this.joints[i].BE = 0.7;
+            this.joints[i].springConstant = 0.4;
+            this.joints[i].dampConstant = 0.7;
         }
         for (i in guy)
             if (guy.hasOwnProperty(i)) {

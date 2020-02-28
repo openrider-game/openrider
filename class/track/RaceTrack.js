@@ -32,9 +32,10 @@ export class RaceTrack extends Track {
 
         if (!this.id) {
             rawTrack = TRACK_DEFAULT;
+            this.id = undefined;
             toolbar2.style.display = 'block';
             this.currentTool = TOOL.LINE;
-        } else if (this.id.length > 7) { // change to detect an int
+        } else if (isNaN(parseInt(this.id))) {
             rawTrack = this.id;
             this.id = undefined;
             toolbar2.style.display = 'block';
@@ -409,7 +410,6 @@ export class RaceTrack extends Track {
         } else if (this.bike && this.bike.dead) {
             text = 'Press ENTER to restart' + (this.checkpoints.length ? ' or BACKSPACE to cancel Checkpoint' : '');
         } else if (this.id === undefined) {
-            //~ text = 'BLACK HAT RIDER';
             if (gridDetail === 10 && (this.currentTool === 'line' || this.currentTool === 'scenery line' || this.currentTool === 'brush' || this.currentTool === 'scenery brush')) {
                 text += ' - Grid ';
             }

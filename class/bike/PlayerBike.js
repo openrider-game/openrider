@@ -43,7 +43,7 @@ export class PlayerBike extends Bike {
         if (this.doSave & SAVE_TARGET) {
             this.emit('hitGoal');
             if (track.numTargets && track.targetsReached === track.numTargets) {
-                if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id) {
+                if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id !== undefined) {
                     if (confirm("You just set a new Track record!\nYour run will be saved for others to enjoy.")) {
                         let keystring = '';
                         for (let q, i = 0, l = this.keys.length; i < l; i++) {
@@ -68,7 +68,7 @@ export class PlayerBike extends Bike {
         } else if (this.doSave & SAVE_CHECKPOINT) {
             this.emit('hitCheckpoint');
             track.save();
-            if (track.id && 0) {
+            if (track.id !== undefined && 0) {
 
                 fetch(new Request('/ghost/checkpoint', {
                     method: 'POST',

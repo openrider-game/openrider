@@ -14,7 +14,7 @@ export class Game {
             this.track = new SurvivalTrack();
         } else {
             this.track = new RaceTrack(id);
-            this.track.ghosts = ghosts;
+            this.track.ghostIDs = ghosts || [];
         }
         this.track.bike = new({ BMX: BMX, MTB: MTB, HAR: Harley }[this.track.currentBike] || BMX)(this.track);
         this.track.focalPoint = this.track.bike.head;

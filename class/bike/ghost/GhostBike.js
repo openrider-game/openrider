@@ -19,7 +19,7 @@ export class GhostBike extends Bike {
     }
 
     update() {
-        let bikeTime = this.parnt.currentTime;
+        let bikeTime = this.track.currentTime;
         if (bikeTime > this.time) {
             return;
         }

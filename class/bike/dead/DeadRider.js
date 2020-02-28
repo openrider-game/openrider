@@ -9,8 +9,8 @@ export class DeadRider {
         let U = new Point(0, 0),
             i = 0;
         this.direction = 1;
-        this.parnt = parent;
-        this.track = parent.parnt;
+        this.bike = parent;
+        this.track = parent.track;
         this.points = {
             0: this.head = new BodyPart(U, this),
             1: this.hip = new BodyPart(U, this),

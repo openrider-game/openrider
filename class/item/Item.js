@@ -16,20 +16,20 @@ export class Item {
 
     constructor(x, y, parent) {
         this.pos = new Point(x, y);
-        this.parnt = parent;
+        this.track = parent;
         this.$id = Item.$id++;
     }
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        let track = this.parnt,
+        let track = this.track,
             pos = this.pos.toPixel(track);
         drawer.setProperty('fillStyle', this.$color);
         drawer.beginPath().moveTo(pos.x + 7 * track.zoomFactor, pos.y).arc(pos.x, pos.y, 7 * track.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
     }
 
     touch(part) {
-        if (part.pos.distanceToSquared(this.pos) < 500 && !part.parnt.isGhost) {
+        if (part.pos.distanceToSquared(this.pos) < 500 && !part.bike.isGhost) {
             this.onTouch(part);
         }
     }
@@ -44,7 +44,7 @@ export class Item {
 
     remove() {
         this.doRemove = true;
-        this.parnt.remove(this.pos);
+        this.track.remove(this.pos);
         this.onDelete();
         return this;
     }

@@ -8,12 +8,12 @@ export class Line {
         this.vector = this.b.cloneSub(this.a);
         this.len = this.vector.getLength();
         this.doRemove = false;
-        this.parnt = parent;
+        this.track = parent;
     }
 
     render(context, offsetLeft, offsetTop) {
-        context.moveTo(this.a.x * this.parnt.zoomFactor - offsetLeft, this.a.y * this.parnt.zoomFactor - offsetTop);
-        context.lineTo(this.b.x * this.parnt.zoomFactor - offsetLeft, this.b.y * this.parnt.zoomFactor - offsetTop);
+        context.moveTo(this.a.x * this.track.zoomFactor - offsetLeft, this.a.y * this.track.zoomFactor - offsetTop);
+        context.lineTo(this.b.x * this.track.zoomFactor - offsetLeft, this.b.y * this.track.zoomFactor - offsetTop);
     }
 
     checkDelete(eraserPoint) {
@@ -37,12 +37,12 @@ export class Line {
 
     remove() {
         this.doRemove = true;
-        this.parnt.remove(this.a, this.b);
+        this.track.remove(this.a, this.b);
         return this;
     }
 
     reAdd() {
-        this.parnt.addLineInternal(this);
+        this.track.addLineInternal(this);
         return this;
     }
 

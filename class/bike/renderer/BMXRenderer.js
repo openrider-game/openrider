@@ -4,7 +4,7 @@ import { Point } from "../../Point.js";
 export const BMXRenderer = (Base) => class extends Base {
     renderInternal(color, opacityFactor) {
         let drawer = CanvasHelper.getInstance();
-        let track = this.parnt,
+        let track = this.track,
             backWheel = this.backWheel.pos.toPixel(track),
             frontWheel = this.frontWheel.pos.toPixel(track),
             head = this.head.pos.toPixel(track),

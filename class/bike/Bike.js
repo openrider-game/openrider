@@ -1,13 +1,13 @@
-import { Evts } from "../Evts.js";
+import { EventEmitter } from "../EventEmitter.js";
 import { Joint } from "../Joint.js";
 import { Point } from "../Point.js";
 import { BodyPart } from "./part/BodyPart.js";
 import { Wheel } from "./part/Wheel.js";
 
-export class Bike extends Evts {
+export class Bike extends EventEmitter {
     constructor(parent) {
         super();
-        this.parnt = parent;
+        this.track = parent;
         this.cap = 'hat';
         this.doSave =
             this.dead = false;
@@ -17,6 +17,8 @@ export class Bike extends Evts {
             this.upPressed =
             this.downPressed = 0;
         this.rotationFactor = 1;
+
+        this.controls = this.track.controls;
     }
 
     restore(last) {

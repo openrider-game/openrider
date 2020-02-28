@@ -10,7 +10,7 @@ export class SlowMo extends Item {
 
     touch(part) {
         if (part.pos.distanceToSquared(this.pos) < 500) {
-            part.parnt.slow = true;
+            part.bike.slow = true;
         }
     }
 }

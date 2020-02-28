@@ -9,10 +9,14 @@ import { BMX } from "../bike/BMX.js";
 import { MTB } from "../bike/MTB.js";
 import { Harley } from "../bike/Harley.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
+import Controls from "../helper/Controls.js";
 
 export class Track {
-    constructor() {
+    constructor(canvas) {
         let drawer = CanvasHelper.getInstance();
+
+        this.canvas = canvas;
+        this.controls = new Controls(document);
         this.grid = {};
         this.gridSize = 100;
         this.cache = {};
@@ -30,6 +34,26 @@ export class Track {
             this.right =
             this.up =
             this.down = 0;
+        this.initControls();
+    }
+
+    initControls() {
+        let controls = {
+            'brake': [40, Controls.NONE],
+            'accelerate': [38, Controls.NONE],
+            'left': [37, Controls.NONE],
+            'right': [39, Controls.NONE],
+            'turn': [90, Controls.NONE],
+            'camera-left': [37, Controls.SHIFT],
+            'camera-right': [39, Controls.SHIFT],
+            'camera-up': [38, Controls.SHIFT],
+            'camera-down': [40, Controls.SHIFT]
+        };
+
+        for (let controlName in controls) {
+            let control = controls[controlName];
+            this.controls.registerControl(controlName, control[0], control[1]);
+        }
     }
 
     reset() {

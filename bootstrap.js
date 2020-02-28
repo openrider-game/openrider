@@ -92,11 +92,10 @@ export function watchGhost(ID, track) {
         }
         track.ghostKeys.push(ghostArr);
         ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
-        track.ghostIDs.push(ID);
         track.reset();
     }
 
-    if (isNaN(parseInt(ID))) {
+    if (isNaN(ID)) {
         initGhost(ID);
     } else {
         if (track.ghostIDs !== undefined && !track.ghostIDs.contains(ID)) {
@@ -141,17 +140,6 @@ function big() {
     document.body.style.overflowY = 'hidden';
 }
 
-function small() {
-    canvas.width = 700;
-    canvas.height = 400;
-    canvas.style.position = 'static';
-    canvas.style.border = '1px solid black';
-    toolbar2.style.left = (canvas.offsetLeft + canvas.width - 22) + 'px';
-    label[2] = hints[0][7] = 'Enable fullscreen ( F )';
-    canvas.style.zIndex = toolbar1.style.zIndex = toolbar2.style.zIndex = 2;
-    document.body.style.overflowY = 'scroll';
-}
-
 function afterResize() {
     drawer.setProperty('lineCap', 'round');
     drawer.setProperty('lineJoin', 'round');
@@ -161,12 +149,12 @@ function afterResize() {
 }
 
 window.onresize = function() {
-    (canvas.width === 700 ? small : big)();
+    (canvas.width === 700 ? game.small : big)();
     afterResize();
 };
 
 function toggleFullscreen() {
-    (canvas.width === 700 ? big : small)();
+    (canvas.width === 700 ? big : game.small)();
     afterResize();
 }
 
@@ -190,46 +178,6 @@ document.onkeydown = function(event) {
                 track.restart();
                 break;
             }
-        case 37:
-            {
-                // left
-                if (track.bike) {
-                    event.preventDefault();
-                    track.focalPoint = track.bike.head;
-                    track.left = 1;
-                }
-                break;
-            }
-        case 39:
-            {
-                // right
-                if (track.bike) {
-                    event.preventDefault();
-                    track.focalPoint = track.bike.head;
-                    track.right = 1;
-                }
-                break;
-            }
-        case 38:
-            {
-                // up
-                if (track.bike) {
-                    event.preventDefault();
-                    track.focalPoint = track.bike.head;
-                    track.up = 1;
-                }
-                break;
-            }
-        case 40:
-            {
-                // down
-                if (track.bike) {
-                    event.preventDefault();
-                    track.focalPoint = track.bike.head;
-                    track.down = 1;
-                }
-                break;
-            }
         case 109:
         case 189:
             {
@@ -242,17 +190,6 @@ document.onkeydown = function(event) {
             {
                 // plus
                 zoom(1);
-                break;
-            }
-        case 90:
-        case 222:
-            {
-                // Z
-                if (!track.focalPoint && track.id === undefined) {
-                    track.shortenLastLineSet();
-                } else {
-                    track.bike.doTurn = 1;
-                }
                 break;
             }
         case 32:
@@ -348,21 +285,6 @@ document.onkeyup = function(event) {
             break;
         case 66: // B
             switchBikes();
-            break;
-        case 37: // left
-            track.left = 0;
-            break;
-        case 39: // right
-            track.right = 0;
-            break;
-        case 38: // up
-            track.up = 0;
-            break;
-        case 40: // down
-            track.down = 0;
-            break;
-        case 90:
-        case 222: // Z
             break;
         case 71: // (G)
             // ghost lock

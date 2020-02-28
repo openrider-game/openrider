@@ -3,9 +3,9 @@ import { track } from "../../../bootstrap.js";
 
 export class Wheel {
     /**
-     * 
-     * @param {Point} center 
-     * @param {(BMX|MTB|DeadRider)} parent 
+     *
+     * @param {Point} center
+     * @param {(BMX|MTB|DeadRider)} parent
      */
     constructor(center, parent) {
         /** @type {Point} */
@@ -15,14 +15,14 @@ export class Wheel {
         /** @type {Point} */
         this.velocity = new Point(0, 0);
         /** @type {(BMX|MTB|DeadRider)} */
-        this.parnt = parent;
+        this.bike = parent;
         /** @type {Number} */
         this.size = 10;
         /** @type {Number} */
         this.friction = 0;
         /** @type {Boolean} */
         this.touch = true;
-        this.gravity = true;  // from what I can tell, this is never used.
+        this.gravity = true; // from what I can tell, this is never used.
         /** @type {Number} */
         this.rotationSpeed = 0;
         /** @type {Number} */
@@ -31,7 +31,7 @@ export class Wheel {
 
     /** @param {Point} point */
     drive(point) {
-        this.pos.selfAdd(point.cloneScale(this.speedValue * this.parnt.direction));
+        this.pos.selfAdd(point.cloneScale(this.speedValue * this.bike.direction));
         if (this.downPressed) {
             this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * 0.3));
         }
@@ -40,7 +40,7 @@ export class Wheel {
     }
 
     update() {
-        this.velocity.selfAdd(this.parnt.gravity).selfScale(0.99);
+        this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;
         if (this.touch) {
@@ -51,7 +51,7 @@ export class Wheel {
     }
 
     clone() {
-        let clone = new Wheel(this.pos, this.parnt);
+        let clone = new Wheel(this.pos, this.bike);
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.speedValue = this.speedValue;

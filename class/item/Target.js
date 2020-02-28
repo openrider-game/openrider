@@ -10,18 +10,18 @@ export class Target extends ReachableItem {
     }
 
     onReach(part) {
-        let track = this.parnt;
+        let track = this.track;
         track.targetsReached++;
         if (track.numTargets && track.targetsReached === track.numTargets) {
-            part.parnt.doSave |= SAVE_TARGET;
+            part.bike.doSave |= SAVE_TARGET;
         }
     }
 
     onReachGhost(part) {
-        if (!part.parnt.reached[this.$id]) {
-            part.parnt.reached[this.$id] = ++part.parnt.targetsReached;
+        if (!part.bike.reached[this.$id]) {
+            part.bike.reached[this.$id] = ++part.bike.targetsReached;
         }
     }
 
-    onDelete() { this.parnt.numTargets--; }
+    onDelete() { this.track.numTargets--; }
 }

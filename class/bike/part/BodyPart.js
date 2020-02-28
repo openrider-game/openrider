@@ -10,7 +10,7 @@ export class BodyPart {
         /** @type {Point} */
         this.velocity = new Point(0, 0);
         /** @type {(BMX|MTB|DeadRider)} */
-        this.parnt = parent;
+        this.bike = parent;
         /** @type {number} */
         this.size = 10;
         /** @type {number} */
@@ -28,7 +28,7 @@ export class BodyPart {
     }
 
     update() {
-        this.velocity.selfAdd(this.parnt.gravity).selfScale(0.99);
+        this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
         //~ this.velocity = this.velocity.cloneScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;
@@ -40,7 +40,7 @@ export class BodyPart {
     }
 
     clone() {
-        let clone = new BodyPart(this.pos, this.parnt);
+        let clone = new BodyPart(this.pos, this.bike);
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.size = this.size;

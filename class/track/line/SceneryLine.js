@@ -9,7 +9,7 @@ export class SceneryLine extends Line {
     getEnd() {
         this.stringGot = true;
         let end = ' ' + this.b.toString(),
-            next = this.parnt.grid[Math.floor(this.b.x / this.parnt.gridSize)][Math.floor(this.b.y / this.parnt.gridSize)].search(this.b, 'sline');
+            next = this.track.grid[Math.floor(this.b.x / this.track.gridSize)][Math.floor(this.b.y / this.track.gridSize)].search(this.b, 'sline');
         if (next !== undefined) {
             end += next.getEnd();
         }

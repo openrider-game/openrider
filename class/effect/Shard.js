@@ -10,8 +10,8 @@ export class Shard {
         /** @type {Point} */
         this.velocity = new Point(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()));
         /** @type {Object} */
-        this.parnt = parent;
-        this.track = parent.parnt;
+        this.bike = parent;
+        this.track = parent.track;
         /** @type {number} */
         this.size = 2 + Math.random() * 9;
         /** @type {number} */
@@ -59,7 +59,7 @@ export class Shard {
 
     update() {
         this.rotation += this.rotationSpeed;
-        this.velocity.selfAdd(this.parnt.gravity);
+        this.velocity.selfAdd(this.bike.gravity);
         this.velocity = this.velocity.cloneScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;

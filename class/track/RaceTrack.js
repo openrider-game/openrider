@@ -35,7 +35,7 @@ export class RaceTrack extends Track {
             this.id = undefined;
             toolbar2.style.display = 'block';
             this.currentTool = TOOL.LINE;
-        } else if (isNaN(parseInt(this.id))) {
+        } else if (isNaN(this.id)) {
             rawTrack = this.id;
             this.id = undefined;
             toolbar2.style.display = 'block';
@@ -227,7 +227,7 @@ export class RaceTrack extends Track {
         this.runningGhosts = [];
         let ghost;
         let cp = this.checkpoints[this.checkpoints.length - 1];
-        for (let i = 0; i < this.ghostIDs.length; i++) {
+        for (let i = 0; i < this.ghostKeys.length; i++) {
             this.ghostInstances[i] = ghost =
                 new(this.ghostKeys[i][6] === BIKE_BMX ? BMXGhost : MTBGhost)(this, this.ghostKeys[i], cp && cp.ghostLists[i]);
             ghost.color = this.ghostKeys[i].color;
@@ -254,9 +254,7 @@ export class RaceTrack extends Track {
     }
 
     watchGhost(g) {
-        if (g = typeof g === 'string' && g.charAt(0) === 'g' ? parseInt(g.substr(1), 10) : this.ghosts[parseInt(g, 10) - 1]) {
-            watchGhost(g, this);
-        }
+        watchGhost(g, this);
         return this;
     }
 

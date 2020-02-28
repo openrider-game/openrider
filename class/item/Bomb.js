@@ -10,6 +10,6 @@ export class Bomb extends Item {
     }
 
     onTouch(part) {
-        this.parnt.bike = new Explosion(this.pos, part.parnt.gravity, part.parnt.time, this.parnt);
+        this.track.bike = new Explosion(this.pos, part.bike.gravity, part.bike.time, this.track);
     }
 }

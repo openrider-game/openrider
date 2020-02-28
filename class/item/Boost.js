@@ -8,7 +8,7 @@ export class Boost extends DirectionalItem {
     }
 
     onTouch(part) {
-        for (let p = part.parnt.points, i = 0, l = p.$length; i < l; i++) {
+        for (let p = part.bike.points, i = 0, l = p.$length; i < l; i++) {
             p[i].pos.selfAdd(this.direction);
         }
     }

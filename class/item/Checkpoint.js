@@ -10,7 +10,7 @@ export class Checkpoint extends ReachableItem {
     }
 
     onReach(part) {
-        part.parnt.doSave |= SAVE_CHECKPOINT;
-        window.debugMode && console.log('cp', part.parnt.time, JSON.stringify(part.parnt));
+        part.bike.doSave |= SAVE_CHECKPOINT;
+        window.debugMode && console.log('cp', part.bike.time, JSON.stringify(part.bike));
     }
 }

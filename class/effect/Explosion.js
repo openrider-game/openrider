@@ -5,7 +5,7 @@ import { CanvasHelper } from "../helper/CanvasHelper.js";
 export class Explosion {
     constructor(pos, gravity, time, parent) {
         this.dead = true;
-        this.parnt = parent;
+        this.track = parent;
         this.speedValue = 30 + 20 * Math.random();
         this.pointsf = 0;
         this.pieces = [
@@ -26,7 +26,7 @@ export class Explosion {
         let drawer = CanvasHelper.getInstance();
         if (this.speedValue > 0) {
             this.speedValue -= 10;
-            let center = this.pos.toPixel(this.parnt),
+            let center = this.pos.toPixel(this.track),
                 angle = Math.random() * 2 * Math.PI,
                 dist = this.speedValue / 2,
                 x = center.x + dist * Math.cos(angle),

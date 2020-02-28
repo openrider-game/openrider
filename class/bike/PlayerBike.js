@@ -9,14 +9,40 @@ export class PlayerBike extends Bike {
     constructor(parent) {
         super(parent);
         this.keys = [{}, {}, {}, {}, {}];
+
+        this.controls.on('leftDown', e => {
+            this.track.focalPoint = this.head;
+            e.preventDefault();
+        });
+        this.controls.on('rightDown', e => {
+            this.track.focalPoint = this.head;
+            e.preventDefault();
+        });
+        this.controls.on('accelerateDown', e => {
+            this.track.focalPoint = this.head;
+            e.preventDefault();
+        });
+        this.controls.on('brakeDown', e => {
+            this.track.focalPoint = this.head;
+            e.preventDefault();
+        });
+        this.controls.on('turnDown', e => {
+            this.track.focalPoint = this.head;
+            this.doTurn = true;
+            e.preventDefault();
+        });
+        this.controls.on('leftUp', e => e.preventDefault());
+        this.controls.on('rightUp', e => e.preventDefault());
+        this.controls.on('accelerateUp', e => e.preventDefault());
+        this.controls.on('brakeUp', e => e.preventDefault());
     }
 
     restore(last) {
         super.restore(last);
         this.head.drive = () => this.die();
-        this.parnt.targetsReached = last[27];
-        for (let i = 0, l = this.parnt.objects.length; i < l; i++) {
-            this.parnt.objects[i].reached = last[28][i];
+        this.track.targetsReached = last[27];
+        for (let i = 0, l = this.track.objects.length; i < l; i++) {
+            this.track.objects[i].reached = last[28][i];
         }
         this.time = last[29];
         if (this.time) {
@@ -38,7 +64,7 @@ export class PlayerBike extends Bike {
     }
 
     hitTarget() {
-        let track = this.parnt;
+        let track = this.track;
         this.emit('hitTarget');
         if (this.doSave & SAVE_TARGET) {
             this.emit('hitGoal');
@@ -62,7 +88,7 @@ export class PlayerBike extends Bike {
                             alert('Server responded: ' + request.responseText);
                         }
                     }
-                    this.parnt.left = this.parnt.right = this.parnt.up = this.parnt.down = 0;
+                    this.track.left = this.track.right = this.track.up = this.track.down = 0;
                 }
             }
         } else if (this.doSave & SAVE_CHECKPOINT) {
@@ -89,7 +115,7 @@ export class PlayerBike extends Bike {
         this.backWheel.downPressed = false;
         this.frontWheel.downPressed = false;
         this.head.touch = false;
-        let bike = this.parnt.bike = new DeadBike(this, this.getRider(), this.parnt);
+        let bike = this.track.bike = new DeadBike(this, this.getRider(), this.track);
         bike.hat = new Shard(this.head.pos.clone(), this);
         bike.hat.velocity = this.head.velocity.clone();
         bike.hat.size = 10;
@@ -97,30 +123,36 @@ export class PlayerBike extends Bike {
     }
 
     update() {
+        const accelerating = this.controls.isDown('accelerate') ? 1 : 0;
+        const left = this.controls.isDown('left') ? 1 : 0;
+        const right = this.controls.isDown('right') ? 1 : 0;
+        const braking = this.controls.isDown('brake') ? 1 : 0;
+
         if (this.doSave) {
             this.hitTarget();
         }
-        let time = this.parnt.currentTime;
-        if (this.parnt.left !== this.leftPressed) {
+        let time = this.track.currentTime;
+        if (left !== this.leftPressed) {
             this.keys[0][time] = 1;
-            this.leftPressed = this.parnt.left;
+            this.leftPressed = left;
         }
-        if (this.parnt.right !== this.rightPressed) {
+        if (right !== this.rightPressed) {
             this.keys[1][time] = 1;
-            this.rightPressed = this.parnt.right;
+            this.rightPressed = right;
         }
-        if (this.parnt.up !== this.upPressed) {
+        if (accelerating !== this.upPressed) {
             this.keys[2][time] = 1;
-            this.upPressed = this.parnt.up;
+            this.upPressed = accelerating;
         }
-        if (this.parnt.down !== this.downPressed) {
+        if (braking !== this.downPressed) {
             this.keys[3][time] = 1;
-            this.downPressed = this.parnt.down;
+            this.downPressed = braking;
         }
         if (this.doTurn) {
             this.keys[4][time] = 1;
         }
-        super.update(this.parnt.left, this.parnt.right, this.parnt.up, this.parnt.down);
+
+        super.update(left, right, accelerating, braking);
     }
 
     render() {

@@ -27,7 +27,7 @@ export class Harley extends PlayerBike {
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        let track = this.parnt;
+        let track = this.track;
         let backWheel = this.backWheel.pos.toPixel(track);
         let pos = this.frontWheel.pos.toPixel(track);
         let head = this.head.pos.toPixel(track);

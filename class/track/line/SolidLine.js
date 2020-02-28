@@ -44,7 +44,7 @@ export class SolidLine extends Line {
     getEnd() {
         this.stringGot = true;
         let end = ' ' + this.b.toString(),
-            next = this.parnt.grid[Math.floor(this.b.x / this.parnt.gridSize)][Math.floor(this.b.y / this.parnt.gridSize)].search(this.b, 'line');
+            next = this.track.grid[Math.floor(this.b.x / this.track.gridSize)][Math.floor(this.b.y / this.track.gridSize)].search(this.b, 'line');
         if (next !== undefined) {
             end += next.getEnd();
         }

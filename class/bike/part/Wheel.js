@@ -6,7 +6,7 @@ export class Wheel {
         this.pos = center.clone();
         this.oldPos = center.clone();
         this.velocity = new Point(0, 0);
-        this.parnt = parent;
+        this.bike = parent;
         this.size = 10;
         this.B6 = 0;
         this.touch = true;
@@ -16,7 +16,7 @@ export class Wheel {
     }
 
     drive(point) {
-        this.pos.selfAdd(point.cloneScale(this.speedValue * this.parnt.direction));
+        this.pos.selfAdd(point.cloneScale(this.speedValue * this.bike.direction));
         if (this.downPressed) {
             this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * 0.3));
         }
@@ -25,7 +25,7 @@ export class Wheel {
     }
 
     update() {
-        this.velocity.selfAdd(this.parnt.gravity).selfScale(0.99);
+        this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;
         if (this.touch) {
@@ -36,7 +36,7 @@ export class Wheel {
     }
 
     clone() {
-        let clone = new Wheel(this.pos, this.parnt);
+        let clone = new Wheel(this.pos, this.bike);
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.speedValue = this.speedValue;

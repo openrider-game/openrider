@@ -12,7 +12,7 @@ export class DirectionalItem extends Item {
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        let track = this.parnt,
+        let track = this.track,
             pos = this.pos.toPixel(track);
         drawer.setProperty('fillStyle', this.$color);
         drawer.beginPath()

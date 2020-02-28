@@ -9,7 +9,7 @@ export class ReachableItem extends Item {
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        let track = this.parnt,
+        let track = this.track,
             pos = this.pos.toPixel(track);
         drawer.setProperty('fillStyle', this.reached ? this.$reachedColor : this.$color);
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
@@ -23,7 +23,7 @@ export class ReachableItem extends Item {
     }
 
     onTouch(part) {
-        if (part.parnt.isGhost) {
+        if (part.bike.isGhost) {
             this.onReachGhost(part);
         } else if (!this.reached) {
             this.reached = true;

@@ -11,7 +11,7 @@ export class GridBox {
         for (let i = this.lines.length - 1; i >= 0; i--) {
             this.lines[i].touch(part);
         }
-        if (!part.parnt.dead) {
+        if (!part.bike.dead) {
             for (let i = this.objects.length - 1; i >= 0; i--) {
                 this.objects[i].touch(part);
             }

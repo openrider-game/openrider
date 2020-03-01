@@ -14,7 +14,7 @@ export class BodyPart {
         /** @type {number} */
         this.size = 10;
         /** @type {number} */
-        this.B6 = 0;
+        this.friction = 0;
         /** @type {boolean} */
         this.touch = true;
     }
@@ -23,7 +23,7 @@ export class BodyPart {
      * @param {Point} point
      */
     drive(point) {
-        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.B6));
+        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));
         this.driving = true;
     }
 
@@ -44,7 +44,7 @@ export class BodyPart {
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.size = this.size;
-        clone.B6 = this.B6;
+        clone.friction = this.friction;
         return clone;
     }
 

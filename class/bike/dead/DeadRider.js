@@ -38,7 +38,7 @@ export class DeadRider {
         };
         for (let i = 0, l = this.points.$length; i < l; i++) {
             this.points[i].size = 3;
-            this.points[i].B6 = 0.05;
+            this.points[i].friction = 0.05;
         }
         this.head.size = this.hip.size = 8;
         for (let i = 0, l = this.joints.$length; i < l; i++) {

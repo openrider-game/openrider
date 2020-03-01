@@ -19,7 +19,7 @@ export class Shard {
         /** @type {number} */
         this.rotationSpeed = Math.random() - Math.random();
         /** @type {number} */
-        this.B6 = 0.05;
+        this.friction = 0.05;
         /** @type {boolean} */
         this.touch = true;
         /** @type {Array.<number>} */
@@ -48,7 +48,7 @@ export class Shard {
     /** @param {Point} point */
     drive(point) {
         this.rotationSpeed = point.dot(this.velocity) / this.size;
-        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.B6));
+        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));
         this.rotation += this.rotationSpeed;
         let pos = point.getLength();
         if (pos > 0) {

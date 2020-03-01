@@ -2,19 +2,34 @@ import { Point } from "../../Point.js";
 import { track } from "../../../bootstrap.js";
 
 export class Wheel {
+    /**
+     * 
+     * @param {Point} center 
+     * @param {(BMX|MTB|DeadRider)} parent 
+     */
     constructor(center, parent) {
+        /** @type {Point} */
         this.pos = center.clone();
+        /** @type {Point} */
         this.oldPos = center.clone();
+        /** @type {Point} */
         this.velocity = new Point(0, 0);
+        /** @type {(BMX|MTB|DeadRider)} */
         this.parnt = parent;
+        /** @type {Number} */
         this.size = 10;
-        this.B6 = 0;
+        /** @type {Number} */
+        this.friction = 0;
+        /** @type {Boolean} */
         this.touch = true;
-        this.gravity = true;
+        this.gravity = true;  // from what I can tell, this is never used.
+        /** @type {Number} */
         this.rotationSpeed = 0;
+        /** @type {Number} */
         this.speedValue = 0;
     }
 
+    /** @param {Point} point */
     drive(point) {
         this.pos.selfAdd(point.cloneScale(this.speedValue * this.parnt.direction));
         if (this.downPressed) {
@@ -52,7 +67,7 @@ export class Wheel {
             speedValue: this.speedValue,
             rotationSpeed: this.rotationSpeed,
             size: this.size,
-            B6: this.B6
+            friction: this.friction
         };
     }
 }

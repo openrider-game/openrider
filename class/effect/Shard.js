@@ -1,14 +1,14 @@
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Shard {
     constructor(pos, parent) {
-        /** @type {Point} */
-        this.pos = new Point(pos.x + 5 * (Math.random() - Math.random()), pos.y + 5 * (Math.random() - Math.random()));
-        /** @type {Point} */
-        this.oldPos = new Point(this.pos.x, this.pos.y);
-        /** @type {Point} */
-        this.velocity = new Point(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()));
+        /** @type {Vector} */
+        this.pos = new Vector(pos.x + 5 * (Math.random() - Math.random()), pos.y + 5 * (Math.random() - Math.random()));
+        /** @type {Vector} */
+        this.oldPos = new Vector(this.pos.x, this.pos.y);
+        /** @type {Vector} */
+        this.velocity = new Vector(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()));
         /** @type {Object} */
         this.bike = parent;
         this.track = parent.track;
@@ -45,14 +45,14 @@ export class Shard {
         drawer.fill();
     }
 
-    /** @param {Point} point */
+    /** @param {Vector} point */
     drive(point) {
         this.rotationSpeed = point.dot(this.velocity) / this.size;
         this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));
         this.rotation += this.rotationSpeed;
         let pos = point.getLength();
         if (pos > 0) {
-            let AS = new Point(-point.y / pos, point.x / pos);
+            let AS = new Vector(-point.y / pos, point.x / pos);
             this.oldPos.selfAdd(AS.cloneScale(AS.dot(this.velocity) * 0.8));
         }
     }

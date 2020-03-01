@@ -1,5 +1,5 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 
 export const BMXRenderer = (Base) => class extends Base {
     renderInternal(color, opacityFactor) {
@@ -19,7 +19,7 @@ export const BMXRenderer = (Base) => class extends Base {
             // (back wheel)
             .moveTo(frontWheel.x + 10 * z, frontWheel.y).arc(frontWheel.x, frontWheel.y, 10 * z, 0, 2 * Math.PI, true).stroke();
         let length = frontWheel.cloneSub(backWheel),
-            AC = new Point((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction),
+            AC = new Vector((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction),
             crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25)),
             shadowSteer = backWheel.cloneAdd(length.cloneScale(0.84)).cloneAdd(AC.cloneScale(0.42)),
             steer = backWheel.cloneAdd(length.cloneScale(0.84)).cloneAdd(AC.cloneScale(0.37)),
@@ -27,7 +27,7 @@ export const BMXRenderer = (Base) => class extends Base {
         // Frame
         drawer.setProperty('lineWidth', 3 * z);
         drawer.beginPath().moveTo(backWheel.x, backWheel.y).lineTo(crossFrameSaddle.x, crossFrameSaddle.y).lineTo(shadowSteer.x, shadowSteer.y).moveTo(steer.x, steer.y).lineTo(pedalHinge.x, pedalHinge.y).lineTo(backWheel.x, backWheel.y);
-        let CY = new Point(6 * z * Math.cos(this.distance), 6 * z * Math.sin(this.distance)),
+        let CY = new Vector(6 * z * Math.cos(this.distance), 6 * z * Math.sin(this.distance)),
             pedal = pedalHinge.cloneAdd(CY),
             shadowPedal = pedalHinge.cloneSub(CY),
             saddle = backWheel.cloneAdd(length.cloneScale(0.17)).cloneAdd(AC.cloneScale(0.38)),
@@ -50,10 +50,10 @@ export const BMXRenderer = (Base) => class extends Base {
         AC = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         let hip = crossFrameSaddle.cloneSub(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.3));
         let Ar = pedal.cloneSub(hip);
-        let BA = new Point(Ar.y * this.direction, -Ar.x * this.direction).cloneScale(z * z);
+        let BA = new Vector(Ar.y * this.direction, -Ar.x * this.direction).cloneScale(z * z);
         let knee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
         Ar = shadowPedal.cloneSub(hip);
-        BA = new Point(Ar.y * this.direction, -Ar.x * this.direction).cloneScale(z * z);
+        BA = new Vector(Ar.y * this.direction, -Ar.x * this.direction).cloneScale(z * z);
         let shadowKnee = hip.cloneAdd(Ar.cloneScale(0.5)).cloneAdd(BA.cloneScale(200 / Ar.lengthSquared()));
         // Shadow Leg
         drawer.beginPath()
@@ -129,7 +129,7 @@ export const BMXRenderer = (Base) => class extends Base {
                 drawer.lineTo(headBandBack.x - (8 + Math.random()) * z * this.direction, headBandBack.y - (4 + Math.random()) * z * this.direction).moveTo(headBandBack.x, headBandBack.y).lineTo(headBandBack.x - (8 + Math.random()) * z * this.direction, headBandBack.y + (4 + Math.random()) * z * this.direction).stroke();
         }
         length = head.cloneSub(steerCenter);
-        AC = new Point(length.y * this.direction, -length.x * this.direction).cloneScale(z * z);
+        AC = new Vector(length.y * this.direction, -length.x * this.direction).cloneScale(z * z);
         let elbow = steerCenter.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(130 / length.lengthSquared()));
         // Arm
         drawer.beginPath()

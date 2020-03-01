@@ -4,7 +4,7 @@ import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
 import { SceneryLine } from "./line/SceneryLine.js";
 import { SolidLine } from "./line/SolidLine.js";
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { BMX } from "../bike/BMX.js";
 import { MTB } from "../bike/MTB.js";
 import { Harley } from "../bike/Harley.js";
@@ -26,7 +26,7 @@ export class Track {
         this.currentBike = BIKE_BMX;
         this.paused = false;
         this.currentTool = TOOL.CAMERA;
-        this.camera = new Point(0, 0);
+        this.camera = new Vector(0, 0);
         drawer.fillText('Loading track... Please wait.', 36, 16);
         this.collectables = [];
         this.checkpoints = [];
@@ -77,8 +77,8 @@ export class Track {
 
     drawGridBoxes(drawer) {
         // Coordinates of top left, and bottom right, gridBoxes.
-        let topLeft = new Point(0, 0).normalizeToCanvas(this);
-        let bottomRight = new Point(canvas.width, canvas.height).normalizeToCanvas(this);
+        let topLeft = new Vector(0, 0).normalizeToCanvas(this);
+        let bottomRight = new Vector(canvas.width, canvas.height).normalizeToCanvas(this);
         topLeft.x = Math.floor(topLeft.x / this.gridSize);
         topLeft.y = Math.floor(topLeft.y / this.gridSize);
         bottomRight.x = Math.floor(bottomRight.x / this.gridSize);
@@ -162,38 +162,38 @@ export class Track {
 
         // If it's a powerup, skip the algorithm.
         if (_from.x === _to.x && _from.y === _to.y) {
-            return this.spreadCache[q][key] = [new Point(_from.x, _from.y)];
+            return this.spreadCache[q][key] = [new Vector(_from.x, _from.y)];
         }
 
         // To fix thin lines, go through the edges of the line, rather than the center of the line.
-        const vector = new Point(_to.x - _from.x, _to.y - _from.y);
+        const vector = new Vector(_to.x - _from.x, _to.y - _from.y);
         const len = vector.getLength();
         const froms = [
-            new Point(_from.x + (-vector.x - vector.y) / len, _from.y + (vector.x - vector.y) / len),
-            new Point(_from.x + (-vector.x + vector.y) / len, _from.y + (-vector.x - vector.y) / len)
+            new Vector(_from.x + (-vector.x - vector.y) / len, _from.y + (vector.x - vector.y) / len),
+            new Vector(_from.x + (-vector.x + vector.y) / len, _from.y + (-vector.x - vector.y) / len)
         ];
         const tos = [
-            new Point(_to.x + (vector.x - vector.y) / len, _to.y + (vector.x + vector.y) / len),
-            new Point(_to.x + (vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
+            new Vector(_to.x + (vector.x - vector.y) / len, _to.y + (vector.x + vector.y) / len),
+            new Vector(_to.x + (vector.x + vector.y) / len, _to.y + (-vector.x + vector.y) / len)
         ];
 
         const gridPoints = this.spreadCache[q][key] = [];
 
         for (let edge = 0; edge < 2; edge++) {
-            let from = new Point(froms[edge].x, froms[edge].y),
+            let from = new Vector(froms[edge].x, froms[edge].y),
                 factor = (tos[edge].y - froms[edge].y) / (tos[edge].x - froms[edge].x),
-                direction = new Point(froms[edge].x < tos[edge].x ? 1 : -1, froms[edge].y < tos[edge].y ? 1 : -1),
+                direction = new Vector(froms[edge].x < tos[edge].x ? 1 : -1, froms[edge].y < tos[edge].y ? 1 : -1),
                 i = 0;
             gridPoints.push(froms[edge]);
             while (i < 5000) {
                 if (Math.floor(from.x / q) === Math.floor(tos[edge].x / q) && Math.floor(from.y / q) === Math.floor(tos[edge].y / q)) {
                     break;
                 }
-                let to1 = new Point(
+                let to1 = new Vector(
                     direction.x < 0 ? Math.round(Math.ceil((from.x + 1) / q + direction.x) * q) - 1 : Math.round(Math.floor(from.x / q + direction.x) * q), 0
                 );
                 to1.y = Math.round(froms[edge].y + (to1.x - froms[edge].x) * factor);
-                let to2 = new Point(
+                let to2 = new Vector(
                     0, direction.y < 0 ? Math.round(Math.ceil((from.y + 1) / q + direction.y) * q) - 1 : Math.round(Math.floor(from.y / q + direction.y) * q)
                 );
                 to2.x = Math.round(froms[edge].x + (to2.y - froms[edge].y) / factor);

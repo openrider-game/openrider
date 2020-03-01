@@ -1,14 +1,14 @@
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 import { track } from "../../../bootstrap.js";
 
 export class BodyPart {
     constructor(pos, parent) {
-        /** @type {Point} */
+        /** @type {Vector} */
         this.pos = pos.clone();
-        /** @type {Point} */
+        /** @type {Vector} */
         this.oldPos = pos.clone();
-        /** @type {Point} */
-        this.velocity = new Point(0, 0);
+        /** @type {Vector} */
+        this.velocity = new Vector(0, 0);
         /** @type {(BMX|MTB|DeadRider)} */
         this.bike = parent;
         /** @type {number} */
@@ -20,7 +20,7 @@ export class BodyPart {
     }
 
     /**
-     * @param {Point} point
+     * @param {Vector} point
      */
     drive(point) {
         this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));

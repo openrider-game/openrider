@@ -1,6 +1,6 @@
 import { EventEmitter } from "../EventEmitter.js";
 import { Joint } from "../Joint.js";
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { BodyPart } from "./part/BodyPart.js";
 import { Wheel } from "./part/Wheel.js";
 
@@ -23,18 +23,18 @@ export class Bike extends EventEmitter {
 
     restore(last) {
         this.points = {
-            0: this.head = new BodyPart(new Point(last[0], last[1]), this),
-            1: this.backWheel = new Wheel(new Point(last[6], last[7]), this),
-            2: this.frontWheel = new Wheel(new Point(last[13], last[14]), this),
+            0: this.head = new BodyPart(new Vector(last[0], last[1]), this),
+            1: this.backWheel = new Wheel(new Vector(last[6], last[7]), this),
+            2: this.frontWheel = new Wheel(new Vector(last[13], last[14]), this),
             $length: 3
         };
-        this.head.oldPos = new Point(last[2], last[3]);
-        this.head.velocity = new Point(last[4], last[5]);
-        this.backWheel.oldPos = new Point(last[8], last[9]);
-        this.backWheel.velocity = new Point(last[10], last[11]);
+        this.head.oldPos = new Vector(last[2], last[3]);
+        this.head.velocity = new Vector(last[4], last[5]);
+        this.backWheel.oldPos = new Vector(last[8], last[9]);
+        this.backWheel.velocity = new Vector(last[10], last[11]);
         this.backWheel.speedValue = last[12];
-        this.frontWheel.oldPos = new Point(last[15], last[16]);
-        this.frontWheel.velocity = new Point(last[17], last[18]);
+        this.frontWheel.oldPos = new Vector(last[15], last[16]);
+        this.frontWheel.velocity = new Vector(last[17], last[18]);
         this.frontWheel.speedValue = last[19];
         this.joints = {
             0: this.headToBack = new Joint(this.head, this.backWheel, this),
@@ -46,7 +46,7 @@ export class Bike extends EventEmitter {
         this.frontToBack.len = last[21];
         this.headToFront.len = last[22];
         this.direction = last[23];
-        this.gravity = new Point(last[24], last[25]);
+        this.gravity = new Vector(last[24], last[25]);
         this.slow = last[26];
         this.leftPressed = last[30] || 0;
         this.rightPressed = last[31] || 0;

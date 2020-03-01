@@ -1,12 +1,12 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
 import { Joint } from "../../Joint.js";
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 import { BodyPart } from "../part/BodyPart.js";
 
 export class DeadRider {
     constructor(guy, parent) {
         this.dead = true;
-        let U = new Point(0, 0),
+        let U = new Vector(0, 0),
             i = 0;
         this.direction = 1;
         this.bike = parent;
@@ -83,9 +83,9 @@ export class DeadRider {
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
         drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true).stroke();
         let A6 = head.cloneSub(hip),
-            A7 = new Point(A6.y, -A6.x),
-            AY = new Point(0, 0),
-            Aa = new Point(0, 0);
+            A7 = new Vector(A6.y, -A6.x),
+            AY = new Vector(0, 0),
+            Aa = new Vector(0, 0);
         if (this.direction === 1) {
             AY = head.cloneAdd(A7.cloneScale(0.15)).cloneAdd(A6.cloneScale(-0.05));
             Aa = head.cloneAdd(A7.cloneScale(-0.35)).cloneAdd(A6.cloneScale(0.15));

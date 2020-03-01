@@ -1,6 +1,6 @@
 import { BIKE_HAR, HAR_INITIAL_STATE } from "../constant/BikeConstants.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { PlayerBike } from "./PlayerBike.js";
 
 export class Harley extends PlayerBike {
@@ -32,7 +32,7 @@ export class Harley extends PlayerBike {
         let pos = this.frontWheel.pos.toPixel(track);
         let head = this.head.pos.toPixel(track);
         let length = pos.cloneSub(backWheel);
-        let AC = new Point((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
+        let AC = new Vector((pos.y - backWheel.y) * this.direction, (backWheel.x - pos.x) * this.direction);
         let middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         drawer.beginPath();
         drawer.setProperty('strokeStyle', '#000');
@@ -82,7 +82,7 @@ export class Harley extends PlayerBike {
         drawer.setProperty('lineWidth', 3 * track.zoomFactor);
         drawer.moveTo(pos.x, pos.y);
         drawer.lineTo(backWheel.x + length.x * 0.56 + middle.x * 0.73, backWheel.y + length.y * 0.56 + middle.y * 0.73);
-        let Ap = new Point(6 * Math.cos(this.distance) * track.zoomFactor, 6 * Math.sin(this.distance) * track.zoomFactor);
+        let Ap = new Vector(6 * Math.cos(this.distance) * track.zoomFactor, 6 * Math.sin(this.distance) * track.zoomFactor);
         drawer.lineTo(backWheel.x + length.x * 0.58 + middle.x * 0.77, backWheel.y + length.y * 0.58 + middle.y * 0.77);
         drawer.lineTo(backWheel.x + length.x * 0.55 + middle.x * 0.8, backWheel.y + length.y * 0.55 + middle.y * 0.8);
         drawer.stroke();
@@ -97,11 +97,11 @@ export class Harley extends PlayerBike {
         let A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
         let AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
         let Aa = Bp.cloneSub(AY);
-        middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
+        middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
         let CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         Aa = A6.cloneSub(AY);
-        middle = new Point(Aa.y * this.direction, -Aa.x * this.direction);
+        middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction);
         middle = middle.cloneScale(track.zoomFactor * track.zoomFactor);
         let CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         drawer.beginPath();
@@ -157,7 +157,7 @@ export class Harley extends PlayerBike {
                 drawer.fill();
         }
         length = BX.cloneSub(A7);
-        AC = new Point(length.y * this.direction, -length.x * this.direction);
+        AC = new Vector(length.y * this.direction, -length.x * this.direction);
         AC = AC.cloneScale(track.zoomFactor * track.zoomFactor);
         let CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
         drawer.beginPath();

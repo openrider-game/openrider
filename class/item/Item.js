@@ -1,4 +1,4 @@
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { eraserSize } from "../../bootstrap.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
@@ -15,7 +15,7 @@ export class Item {
     static $id = 0;
 
     constructor(x, y, parent) {
-        this.pos = new Point(x, y);
+        this.pos = new Vector(x, y);
         this.track = parent;
         this.$id = Item.$id++;
     }

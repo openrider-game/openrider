@@ -1,10 +1,10 @@
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 import { eraserSize } from "../../../bootstrap.js";
 
 export class Line {
     constructor(x1, y1, x2, y2, parent) {
-        this.a = x1 instanceof Point ? x1 : new Point(x1, y1);
-        this.b = y1 instanceof Point ? y1 : new Point(x2, y2);
+        this.a = x1 instanceof Vector ? x1 : new Vector(x1, y1);
+        this.b = y1 instanceof Vector ? y1 : new Vector(x2, y2);
         this.vector = this.b.cloneSub(this.a);
         this.len = this.vector.getLength();
         this.doRemove = false;
@@ -19,7 +19,7 @@ export class Line {
     checkDelete(eraserPoint) {
         let C4 = eraserPoint.cloneSub(this.a);
         let B8 = C4.dot(this.vector.cloneReciprocalScale(this.len));
-        let Bi = new Point(0, 0);
+        let Bi = new Vector(0, 0);
         if (B8 <= 0) {
             Bi.copy(this.a);
         } else if (B8 >= this.len) {

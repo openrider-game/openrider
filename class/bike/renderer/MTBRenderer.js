@@ -1,5 +1,5 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 
 export const MTBRenderer = (Base) => class extends Base {
     renderInternal(color, opacityFactor) {
@@ -9,7 +9,7 @@ export const MTBRenderer = (Base) => class extends Base {
             frontWheel = this.frontWheel.pos.toPixel(track),
             head = this.head.pos.toPixel(track);
         let length = frontWheel.cloneSub(backWheel);
-        let AC = new Point((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction);
+        let AC = new Vector((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction);
         let middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
         // Wheels
         drawer.setProperty('strokeStyle', color);
@@ -29,7 +29,7 @@ export const MTBRenderer = (Base) => class extends Base {
             //
             .beginPath()
             .setProperty('lineWidth', 2 * track.zoomFactor);
-        let Ap = new Point(6 * Math.cos(this.distance) * track.zoomFactor, 6 * Math.sin(this.distance) * track.zoomFactor);
+        let Ap = new Vector(6 * Math.cos(this.distance) * track.zoomFactor, 6 * Math.sin(this.distance) * track.zoomFactor);
         drawer.moveTo(backWheel.x + length.x * 0.72 + middle.x * 0.64, backWheel.y + length.y * 0.72 + middle.y * 0.64).lineTo(backWheel.x + length.x * 0.43 + AC.x * 0.05, backWheel.y + length.y * 0.43 + AC.y * 0.05).moveTo(backWheel.x + length.x * 0.45 + middle.x * 0.3, backWheel.y + length.y * 0.45 + middle.y * 0.3).lineTo(backWheel.x + length.x * 0.3 + middle.x * 0.4, backWheel.y + length.y * 0.3 + middle.y * 0.4).lineTo(backWheel.x + length.x * 0.25 + middle.x * 0.6, backWheel.y + length.y * 0.25 + middle.y * 0.6).moveTo(backWheel.x + length.x * 0.17 + middle.x * 0.6, backWheel.y + length.y * 0.17 + middle.y * 0.6).lineTo(backWheel.x + length.x * 0.3 + middle.x * 0.6, backWheel.y + length.y * 0.3 + middle.y * 0.6).moveTo(backWheel.x + length.x * 0.43 + AC.x * 0.05 + Ap.x, backWheel.y + length.y * 0.43 + AC.y * 0.05 + Ap.y).lineTo(backWheel.x + length.x * 0.43 + AC.x * 0.05 - Ap.x, backWheel.y + length.y * 0.43 + AC.y * 0.05 - Ap.y).stroke()
             //
             .beginPath()
@@ -49,10 +49,10 @@ export const MTBRenderer = (Base) => class extends Base {
         let A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
         let AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
         let Aa = Bp.cloneSub(AY);
-        middle = new Point(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
+        middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
         let CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         Aa = A6.cloneSub(AY);
-        middle = new Point(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
+        middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
         let CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
         drawer.beginPath()
             .setProperty('lineWidth', 6 * track.zoomFactor);
@@ -88,7 +88,7 @@ export const MTBRenderer = (Base) => class extends Base {
                 drawer.moveTo(hatFrontBottom.x, hatFrontBottom.y).lineTo(hatFront.x, hatFront.y).lineTo(hatFrontTop.x, hatFrontTop.y).lineTo(hatBackTop.x, hatBackTop.y).lineTo(hatBack.x, hatBack.y).lineTo(hatBackBottom.x, hatBackBottom.y).stroke().fill();
         }
         length = BX.cloneSub(A7);
-        AC = new Point(length.y * this.direction, -length.x * this.direction);
+        AC = new Vector(length.y * this.direction, -length.x * this.direction);
         AC = AC.cloneScale(track.zoomFactor * track.zoomFactor);
         let CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
         drawer.setProperty('lineWidth', 5 * track.zoomFactor);

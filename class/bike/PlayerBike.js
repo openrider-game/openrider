@@ -1,6 +1,6 @@
 import { MIN_TIME, SAVE_CHECKPOINT, SAVE_TARGET } from "../constant/TrackConstants.js";
 import { GhostString } from "../helper/GhostString.js";
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { Shard } from "../effect/Shard.js";
 import { Bike } from "./Bike.js";
 import { DeadBike } from "./dead/DeadBike.js";
@@ -183,21 +183,21 @@ export class PlayerBike extends Bike {
         let rider = {},
             length = this.frontWheel.pos.cloneSub(this.backWheel.pos),
             pos = this.head.pos.cloneSub(this.frontWheel.pos.cloneAdd(this.backWheel.pos).cloneScale(0.5)),
-            AS = new Point(length.y * this.direction, -length.x * this.direction);
+            AS = new Vector(length.y * this.direction, -length.x * this.direction);
         rider.head = this.backWheel.pos.cloneAdd(length.cloneScale(0.35)).cloneAdd(pos.cloneScale(1.2));
         rider.hand = rider.shadowHand = this.backWheel.pos.cloneAdd(length.cloneScale(0.8)).cloneAdd(AS.cloneScale(0.68));
         let N = rider.head.cloneSub(rider.hand);
-        N = new Point(N.y * this.direction, -N.x * this.direction);
+        N = new Vector(N.y * this.direction, -N.x * this.direction);
         rider.elbow = rider.shadowElbow = rider.head.cloneAdd(rider.hand).cloneScale(0.5).cloneAdd(N.cloneScale(130 / N.lengthSquared()));
         rider.hip = this.backWheel.pos.cloneAdd(length.cloneScale(0.2)).cloneAdd(AS.cloneScale(0.5));
-        let direction = new Point(6 * Math.cos(this.distance), 6 * Math.sin(this.distance));
+        let direction = new Vector(6 * Math.cos(this.distance), 6 * Math.sin(this.distance));
         rider.foot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneAdd(direction);
         N = rider.hip.cloneSub(rider.foot);
-        N = new Point(-N.y * this.direction, N.x * this.direction);
+        N = new Vector(-N.y * this.direction, N.x * this.direction);
         rider.knee = rider.hip.cloneAdd(rider.foot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
         rider.shadowFoot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneSub(direction);
         N = rider.hip.cloneSub(rider.shadowFoot);
-        N = new Point(-N.y * this.direction, N.x * this.direction);
+        N = new Vector(-N.y * this.direction, N.x * this.direction);
         rider.shadowKnee = rider.hip.cloneAdd(rider.shadowFoot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
         return rider;
     }

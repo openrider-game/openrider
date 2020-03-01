@@ -1,4 +1,4 @@
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { canvas } from "../../bootstrap.js";
 import { Track } from "./Track.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
@@ -22,9 +22,9 @@ export class SurvivalTrack extends Track {
         }
         let p, line = this.lines[this.lines.length - 1];
         //~ while (this.bike.frontWheel.pos.distanceTo(p = line ? line.b : { x: -50, y: 50 }) < 2000) {
-        p = line ? line.b : new Point(-50, 50);
+        p = line ? line.b : new Vector(-50, 50);
         if (!this.bike.dead && p.distanceTo(this.bike.frontWheel.pos) < 2000) {
-            this.addLine(p, p.cloneAdd(new Point(Math.floor(Math.random() * 100 / this.difficulty), Math.floor((Math.random() - 0.5) * 20 * this.difficulty))));
+            this.addLine(p, p.cloneAdd(new Vector(Math.floor(Math.random() * 100 / this.difficulty), Math.floor((Math.random() - 0.5) * 20 * this.difficulty))));
             //~ line = this.lines[this.lines.length - 1];
             this.difficulty += 0.001;
         }

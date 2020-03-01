@@ -13,7 +13,7 @@ import { Checkpoint } from "../item/Checkpoint.js";
 import { Gravity } from "../item/Gravity.js";
 import { SlowMo } from "../item/SlowMo.js";
 import { Target } from "../item/Target.js";
-import { Point } from "../Point.js";
+import { Vector } from "../Vector.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 

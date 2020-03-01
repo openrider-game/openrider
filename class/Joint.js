@@ -1,4 +1,4 @@
-import { Point } from "./Point.js";
+import { Vector } from "./Vector.js";
 
 export class Joint {
     constructor(a, b, parent) {
@@ -21,7 +21,7 @@ export class Joint {
         // one way for a and the other way for b
         let vector = this.b.pos.cloneSub(this.a.pos);
         // probably timescale the len?
-        let perpendicular = new Point(-vector.y / this.len, vector.x / this.len);
+        let perpendicular = new Vector(-vector.y / this.len, vector.x / this.len);
         this.a.pos.selfAdd(perpendicular.cloneScale(rad));
         this.b.pos.selfAdd(perpendicular.cloneScale(-rad));
     }
@@ -43,7 +43,7 @@ export class Joint {
     }
 
     turn() {
-        let tmp = new Point();
+        let tmp = new Vector();
 
         tmp.copy(this.a.pos);
         this.a.pos.copy(this.b.pos);

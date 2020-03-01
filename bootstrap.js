@@ -10,7 +10,7 @@ import { Checkpoint } from "./class/item/Checkpoint.js";
 import { Gravity } from "./class/item/Gravity.js";
 import { SlowMo } from "./class/item/SlowMo.js";
 import { Target } from "./class/item/Target.js";
-import { Point } from "./class/Point.js";
+import { Vector } from "./class/Vector.js";
 import { GridBox } from "./class/track/GridBox.js";
 
 const COMPILED = false;
@@ -36,8 +36,8 @@ export var track, game,
     // Snapping
     snapFromPrevLine = false,
     // Last Clicks
-    lastClick = new Point(40, 50),
-    mousePos = new Point(0, 0),
+    lastClick = new Vector(40, 50),
+    mousePos = new Vector(0, 0),
     // Drawing sizes
     drawingSize = 20,
     eraserSize = 15,
@@ -58,8 +58,8 @@ export var track, game,
         ['Brush ( A - Hold to snap, hold & scroll to adjust size )', 'Scenery brush ( S - Hold to snap, hold & scroll to adjust size )', 'Lines ( backWheel - Hold to snap )', 'Scenery lines ( W - Hold to snap )', 'Eraser ( E - Hold & scroll to adjust size )', 'Camera ( R - Release or press again to switch back, scroll to zoom )', 'Enable grid snapping ( G )', '', 'Goal', 'Checkpoint', 'Boost', 'Gravity modifier', 'Bomb', 'Slow-Mo', '', 'Shorten last line ( Z )']
     ],
     // Last clicks
-    lastForeground = new Point(40, 50),
-    lastScenery = new Point(-40, 50),
+    lastForeground = new Vector(40, 50),
+    lastScenery = new Vector(-40, 50),
     // DOM
     trackcode = document.getElementById('trackcode'),
     charcount = document.getElementById('charcount'),
@@ -521,7 +521,7 @@ document.onmousemove = function(event) {
     if (track.currentTool !== TOOL.CAMERA) {
         track.focalPoint = false;
     }
-    mousePos = new Point(
+    mousePos = new Vector(
         event.clientX - canvas.offsetLeft,
         event.clientY - canvas.offsetTop + window.pageYOffset
     ).normalizeToCanvas(track);
@@ -728,7 +728,7 @@ function onScroll(e) {
     } else {
         if (zout) { zoom(-1); } else if (zin) { zoom(1); }
     }
-    var Cw = new Point(
+    var Cw = new Vector(
         e.clientX - canvas.offsetLeft,
         e.clientY - canvas.offsetTop + window.pageYOffset
     ).normalizeToCanvas(track);

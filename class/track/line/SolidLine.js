@@ -1,4 +1,4 @@
-import { Point } from "../../Point.js";
+import { Vector } from "../../Vector.js";
 import { Line } from "./Line.js";
 
 export class SolidLine extends Line {
@@ -26,7 +26,7 @@ export class SolidLine extends Line {
             dist = diff.getLength();
             if ((dist < radius || sign < 0) && dist !== 0) {
                 pos.selfAdd(diff.cloneScale((radius * sign - dist) / dist));
-                object.drive(new Point(-diff.y / dist, diff.x / dist));
+                object.drive(new Vector(-diff.y / dist, diff.x / dist));
                 return this;
             }
         }
@@ -38,7 +38,7 @@ export class SolidLine extends Line {
         dist = diff.getLength();
         if (dist < radius && dist !== 0) {
             pos.selfAdd(diff.cloneScale((radius - dist) / dist));
-            object.drive(new Point(-diff.y / dist, diff.x / dist));
+            object.drive(new Vector(-diff.y / dist, diff.x / dist));
             return this;
         }
     }

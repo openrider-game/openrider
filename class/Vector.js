@@ -1,6 +1,6 @@
 import { track, canvas } from "../bootstrap.js";
 
-export class Point {
+export class Vector {
     constructor(x, y) {
         /** @type {?number} */
         this.x = x;
@@ -8,67 +8,67 @@ export class Point {
         this.y = y;
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     toPixel(track) {
-        return new Point((this.x - track.camera.x) * track.zoomFactor + canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + canvas.height / 2);
+        return new Vector((this.x - track.camera.x) * track.zoomFactor + canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + canvas.height / 2);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     normalizeToCanvas(track) {
-        return new Point((this.x - canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - canvas.height / 2) / track.zoomFactor + track.camera.y);
+        return new Vector((this.x - canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - canvas.height / 2) / track.zoomFactor + track.camera.y);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     copy(point) {
         this.x = point.x;
         this.y = point.y;
         return this;
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     selfAdd(point) {
         this.x += point.x;
         this.y += point.y;
         return this;
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     selfSub(point) {
         this.x -= point.x;
         this.y -= point.y;
         return this;
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     selfScale(factor) {
         this.x *= factor;
         this.y *= factor;
         return this;
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     clone() {
-        return new Point(this.x, this.y);
+        return new Vector(this.x, this.y);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     cloneAdd(point) {
-        return new Point(this.x + point.x, this.y + point.y);
+        return new Vector(this.x + point.x, this.y + point.y);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     cloneSub(point) {
-        return new Point(this.x - point.x, this.y - point.y);
+        return new Vector(this.x - point.x, this.y - point.y);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     cloneScale(factor) {
-        return new Point(this.x * factor, this.y * factor);
+        return new Vector(this.x * factor, this.y * factor);
     }
 
-    /** @return {Point} */
+    /** @return {Vector} */
     cloneReciprocalScale(factor) {
-        return new Point(this.x / factor, this.y / factor);
+        return new Vector(this.x / factor, this.y / factor);
     }
 
     /** @return {number} */

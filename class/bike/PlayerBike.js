@@ -181,24 +181,24 @@ export class PlayerBike extends Bike {
 
     getRider() {
         let rider = {},
-            length = this.frontWheel.pos.cloneSub(this.backWheel.pos),
-            pos = this.head.pos.cloneSub(this.frontWheel.pos.cloneAdd(this.backWheel.pos).cloneScale(0.5)),
+            length = this.frontWheel.pos.sub(this.backWheel.pos),
+            pos = this.head.pos.sub(this.frontWheel.pos.add(this.backWheel.pos).scale(0.5)),
             AS = new Vector(length.y * this.direction, -length.x * this.direction);
-        rider.head = this.backWheel.pos.cloneAdd(length.cloneScale(0.35)).cloneAdd(pos.cloneScale(1.2));
-        rider.hand = rider.shadowHand = this.backWheel.pos.cloneAdd(length.cloneScale(0.8)).cloneAdd(AS.cloneScale(0.68));
-        let N = rider.head.cloneSub(rider.hand);
+        rider.head = this.backWheel.pos.add(length.scale(0.35)).add(pos.scale(1.2));
+        rider.hand = rider.shadowHand = this.backWheel.pos.add(length.scale(0.8)).add(AS.scale(0.68));
+        let N = rider.head.sub(rider.hand);
         N = new Vector(N.y * this.direction, -N.x * this.direction);
-        rider.elbow = rider.shadowElbow = rider.head.cloneAdd(rider.hand).cloneScale(0.5).cloneAdd(N.cloneScale(130 / N.lengthSquared()));
-        rider.hip = this.backWheel.pos.cloneAdd(length.cloneScale(0.2)).cloneAdd(AS.cloneScale(0.5));
+        rider.elbow = rider.shadowElbow = rider.head.add(rider.hand).scale(0.5).add(N.scale(130 / N.lengthSquared()));
+        rider.hip = this.backWheel.pos.add(length.scale(0.2)).add(AS.scale(0.5));
         let direction = new Vector(6 * Math.cos(this.distance), 6 * Math.sin(this.distance));
-        rider.foot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneAdd(direction);
-        N = rider.hip.cloneSub(rider.foot);
+        rider.foot = this.backWheel.pos.add(length.scale(0.4)).add(AS.scale(0.05)).add(direction);
+        N = rider.hip.sub(rider.foot);
         N = new Vector(-N.y * this.direction, N.x * this.direction);
-        rider.knee = rider.hip.cloneAdd(rider.foot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
-        rider.shadowFoot = this.backWheel.pos.cloneAdd(length.cloneScale(0.4)).cloneAdd(AS.cloneScale(0.05)).cloneSub(direction);
-        N = rider.hip.cloneSub(rider.shadowFoot);
+        rider.knee = rider.hip.add(rider.foot).scale(0.5).add(N.scale(160 / N.lengthSquared()));
+        rider.shadowFoot = this.backWheel.pos.add(length.scale(0.4)).add(AS.scale(0.05)).sub(direction);
+        N = rider.hip.sub(rider.shadowFoot);
         N = new Vector(-N.y * this.direction, N.x * this.direction);
-        rider.shadowKnee = rider.hip.cloneAdd(rider.shadowFoot).cloneScale(0.5).cloneAdd(N.cloneScale(160 / N.lengthSquared()));
+        rider.shadowKnee = rider.hip.add(rider.shadowFoot).scale(0.5).add(N.scale(160 / N.lengthSquared()));
         return rider;
     }
 

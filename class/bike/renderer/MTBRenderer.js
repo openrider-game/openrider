@@ -8,9 +8,9 @@ export const MTBRenderer = (Base) => class extends Base {
             backWheel = this.backWheel.pos.toPixel(track),
             frontWheel = this.frontWheel.pos.toPixel(track),
             head = this.head.pos.toPixel(track);
-        let length = frontWheel.cloneSub(backWheel);
+        let length = frontWheel.sub(backWheel);
         let AC = new Vector((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction);
-        let middle = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
+        let middle = head.sub(backWheel.add(length.scale(0.5)));
         // Wheels
         drawer.setProperty('strokeStyle', color);
         drawer.setProperty('globalAlpha', opacityFactor);
@@ -41,19 +41,19 @@ export const MTBRenderer = (Base) => class extends Base {
             return;
         }
         drawer.setProperty('lineCap', 'round');
-        AC = head.cloneSub(backWheel.cloneAdd(length.cloneScale(0.5)));
-        let crossFrameSaddle = backWheel.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(0.25));
-        let B2 = backWheel.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(0.05));
-        let Bp = B2.cloneAdd(Ap);
-        let A6 = B2.cloneSub(Ap);
-        let A7 = backWheel.cloneAdd(length.cloneScale(0.67)).cloneAdd(AC.cloneScale(0.8));
-        let AY = crossFrameSaddle.cloneAdd(length.cloneScale(-0.05)).cloneAdd(AC.cloneScale(0.42));
-        let Aa = Bp.cloneSub(AY);
+        AC = head.sub(backWheel.add(length.scale(0.5)));
+        let crossFrameSaddle = backWheel.add(length.scale(0.3)).add(AC.scale(0.25));
+        let B2 = backWheel.add(length.scale(0.4)).add(AC.scale(0.05));
+        let Bp = B2.add(Ap);
+        let A6 = B2.sub(Ap);
+        let A7 = backWheel.add(length.scale(0.67)).add(AC.scale(0.8));
+        let AY = crossFrameSaddle.add(length.scale(-0.05)).add(AC.scale(0.42));
+        let Aa = Bp.sub(AY);
         middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
-        let CZ = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
-        Aa = A6.cloneSub(AY);
+        let CZ = AY.add(Aa.scale(0.5)).add(middle.scale(200 / Aa.lengthSquared()));
+        Aa = A6.sub(AY);
         middle = new Vector(Aa.y * this.direction, -Aa.x * this.direction).selfScale(track.zoomFactor * track.zoomFactor);
-        let CX = AY.cloneAdd(Aa.cloneScale(0.5)).cloneAdd(middle.cloneScale(200 / Aa.lengthSquared()));
+        let CX = AY.add(Aa.scale(0.5)).add(middle.scale(200 / Aa.lengthSquared()));
         drawer.beginPath()
             .setProperty('lineWidth', 6 * track.zoomFactor);
         drawer.setProperty('strokeStyle', color);
@@ -63,9 +63,9 @@ export const MTBRenderer = (Base) => class extends Base {
         drawer.setProperty('globalAlpha', opacityFactor);
         drawer.moveTo(Bp.x, Bp.y).lineTo(CZ.x, CZ.y).lineTo(AY.x, AY.y).stroke()
             .setProperty('lineWidth', 8 * track.zoomFactor);
-        let BX = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(0.93));
-        let Bl = crossFrameSaddle.cloneAdd(length.cloneScale(0.2)).cloneAdd(AC.cloneScale(1.09));
-        let CT = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15));
+        let BX = crossFrameSaddle.add(length.scale(0.1)).add(AC.scale(0.93));
+        let Bl = crossFrameSaddle.add(length.scale(0.2)).add(AC.scale(1.09));
+        let CT = crossFrameSaddle.add(length.scale(0.4)).add(AC.scale(1.15));
         drawer.beginPath().moveTo(AY.x, AY.y).lineTo(BX.x, BX.y).stroke().beginPath()
             .setProperty('lineWidth', 2 * track.zoomFactor);
         drawer.moveTo(Bl.x + 5 * track.zoomFactor, Bl.y).arc(Bl.x, Bl.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true).stroke()
@@ -73,24 +73,24 @@ export const MTBRenderer = (Base) => class extends Base {
             .beginPath();
         switch (this.cap) {
             case 'cap':
-                let Ch = crossFrameSaddle.cloneAdd(length.cloneScale(0.4)).cloneAdd(AC.cloneScale(1.15)),
-                    Cd = crossFrameSaddle.cloneAdd(length.cloneScale(0.1)).cloneAdd(AC.cloneScale(1.05));
+                let Ch = crossFrameSaddle.add(length.scale(0.4)).add(AC.scale(1.15)),
+                    Cd = crossFrameSaddle.add(length.scale(0.1)).add(AC.scale(1.05));
                 drawer.moveTo(Ch.x, Ch.y).lineTo(Cd.x, Cd.y).stroke();
                 break;
             case 'hat':
-                let hatFrontBottom = crossFrameSaddle.cloneAdd(length.cloneScale(0.37)).cloneAdd(AC.cloneScale(1.19)),
-                    hatBackBottom = crossFrameSaddle.cloneSub(length.cloneScale(0.02)).cloneAdd(AC.cloneScale(1.14)),
-                    hatFront = crossFrameSaddle.cloneAdd(length.cloneScale(0.28)).cloneAdd(AC.cloneScale(1.17)),
-                    hatBack = crossFrameSaddle.cloneAdd(length.cloneScale(0.09)).cloneAdd(AC.cloneScale(1.15)),
-                    hatFrontTop = hatFrontBottom.cloneSub(length.cloneScale(0.1)).selfAdd(AC.cloneScale(0.2)),
-                    hatBackTop = hatBackBottom.cloneAdd(length.cloneScale(0.02)).selfAdd(AC.cloneScale(0.2));
+                let hatFrontBottom = crossFrameSaddle.add(length.scale(0.37)).add(AC.scale(1.19)),
+                    hatBackBottom = crossFrameSaddle.sub(length.scale(0.02)).add(AC.scale(1.14)),
+                    hatFront = crossFrameSaddle.add(length.scale(0.28)).add(AC.scale(1.17)),
+                    hatBack = crossFrameSaddle.add(length.scale(0.09)).add(AC.scale(1.15)),
+                    hatFrontTop = hatFrontBottom.sub(length.scale(0.1)).selfAdd(AC.scale(0.2)),
+                    hatBackTop = hatBackBottom.add(length.scale(0.02)).selfAdd(AC.scale(0.2));
                 drawer.setProperty('fillStyle', color);
                 drawer.moveTo(hatFrontBottom.x, hatFrontBottom.y).lineTo(hatFront.x, hatFront.y).lineTo(hatFrontTop.x, hatFrontTop.y).lineTo(hatBackTop.x, hatBackTop.y).lineTo(hatBack.x, hatBack.y).lineTo(hatBackBottom.x, hatBackBottom.y).stroke().fill();
         }
-        length = BX.cloneSub(A7);
+        length = BX.sub(A7);
         AC = new Vector(length.y * this.direction, -length.x * this.direction);
-        AC = AC.cloneScale(track.zoomFactor * track.zoomFactor);
-        let CU = A7.cloneAdd(length.cloneScale(0.3)).cloneAdd(AC.cloneScale(80 / length.lengthSquared()));
+        AC = AC.scale(track.zoomFactor * track.zoomFactor);
+        let CU = A7.add(length.scale(0.3)).add(AC.scale(80 / length.lengthSquared()));
         drawer.setProperty('lineWidth', 5 * track.zoomFactor);
         drawer.beginPath().moveTo(BX.x, BX.y).lineTo(CU.x, CU.y).lineTo(A7.x, A7.y).stroke();
         drawer.setProperty('strokeStyle', '#000').setProperty('globalAlpha', 1);

@@ -531,7 +531,7 @@ document.onmousemove = function(event) {
     }
     if (snapFromPrevLine) {
         if (track.currentTool === TOOL.CAMERA) {
-            track.camera.selfAdd(lastClick.cloneSub(mousePos));
+            track.camera.selfAdd(lastClick.sub(mousePos));
             mousePos.copy(lastClick);
         } else if (track.currentTool === TOOL.ERASER || event.button === 2) {
             erase();
@@ -733,7 +733,7 @@ function onScroll(e) {
         e.clientY - canvas.offsetTop + window.pageYOffset
     ).normalizeToCanvas(track);
     if (!track.focalPoint) {
-        track.camera.selfAdd(mousePos.cloneSub(Cw));
+        track.camera.selfAdd(mousePos.sub(Cw));
     }
 }
 canvas.addEventListener('DOMMouseScroll', onScroll, false);

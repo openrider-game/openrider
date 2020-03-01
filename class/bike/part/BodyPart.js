@@ -23,19 +23,19 @@ export class BodyPart {
      * @param {Vector} point
      */
     drive(point) {
-        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));
+        this.pos.selfAdd(point.scale(-point.dot(this.velocity) * this.friction));
         this.driving = true;
     }
 
     update() {
         this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
-        //~ this.velocity = this.velocity.cloneScale(0.99);
+        //~ this.velocity = this.velocity.scale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;
         if (this.touch) {
             track.touch(this);
         }
-        this.velocity = this.pos.cloneSub(this.oldPos);
+        this.velocity = this.pos.sub(this.oldPos);
         this.oldPos.copy(this.pos);
     }
 

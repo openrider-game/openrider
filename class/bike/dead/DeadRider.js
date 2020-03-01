@@ -79,22 +79,22 @@ export class DeadRider {
         drawer.setProperty('lineWidth', 8 * track.zoomFactor);
         drawer.beginPath().moveTo(hip.x, hip.y).lineTo(head.x, head.y).stroke();
         // Head
-        head.selfAdd(head.cloneSub(hip).cloneScale(0.25));
+        head.selfAdd(head.sub(hip).scale(0.25));
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
         drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true).stroke();
-        let A6 = head.cloneSub(hip),
+        let A6 = head.sub(hip),
             A7 = new Vector(A6.y, -A6.x),
             AY = new Vector(0, 0),
             Aa = new Vector(0, 0);
         if (this.direction === 1) {
-            AY = head.cloneAdd(A7.cloneScale(0.15)).cloneAdd(A6.cloneScale(-0.05));
-            Aa = head.cloneAdd(A7.cloneScale(-0.35)).cloneAdd(A6.cloneScale(0.15));
+            AY = head.add(A7.scale(0.15)).add(A6.scale(-0.05));
+            Aa = head.add(A7.scale(-0.35)).add(A6.scale(0.15));
         } else {
-            AY = head.cloneAdd(A7.cloneScale(-0.15)).cloneAdd(A6.cloneScale(0.15));
-            Aa = head.cloneAdd(A7.cloneScale(0.35)).cloneAdd(A6.cloneScale(-0.05));
+            AY = head.add(A7.scale(-0.15)).add(A6.scale(0.15));
+            Aa = head.add(A7.scale(0.35)).add(A6.scale(-0.05));
         }
-        AY = head.cloneAdd(A7.cloneScale(0.15 * this.direction)).cloneAdd(A6.cloneScale(-0.05));
-        Aa = head.cloneAdd(A7.cloneScale(-0.35 * this.direction)).cloneAdd(A6.cloneScale(0.15));
+        AY = head.add(A7.scale(0.15 * this.direction)).add(A6.scale(-0.05));
+        Aa = head.add(A7.scale(-0.35 * this.direction)).add(A6.scale(0.15));
         // Cap
         // drawer.beginPath();
         // drawer.moveTo(AY.x, AY.y);
@@ -129,13 +129,13 @@ export class DeadRider {
         upper = [this.head, this.elbow, this.shadowElbow, this.hand, this.shadowHand],
             lower = [this.hip, this.knee, this.shadowKnee, this.foot, this.shadowFoot];
         for (let i = 0, l = upper.length; i < l; i++) {
-            upper[i].oldPos = upper[i].pos.cloneSub(upperForce);
+            upper[i].oldPos = upper[i].pos.sub(upperForce);
         }
         for (let i = 0, l = lower.length; i < l; i++) {
-            lower[i].oldPos = lower[i].pos.cloneSub(lowerForce);
+            lower[i].oldPos = lower[i].pos.sub(lowerForce);
         }
         for (let i = this.points.$length - 1; i >= 0; i--) {
-            this.points[i].velocity.copy(this.points[i].pos.cloneSub(this.points[i].oldPos));
+            this.points[i].velocity.copy(this.points[i].pos.sub(this.points[i].oldPos));
             this.points[i].velocity.x += Math.random() - Math.random();
             this.points[i].velocity.y += Math.random() - Math.random();
         }

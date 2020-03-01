@@ -5,7 +5,7 @@ export class Line {
     constructor(x1, y1, x2, y2, parent) {
         this.a = x1 instanceof Vector ? x1 : new Vector(x1, y1);
         this.b = y1 instanceof Vector ? y1 : new Vector(x2, y2);
-        this.vector = this.b.cloneSub(this.a);
+        this.vector = this.b.sub(this.a);
         this.len = this.vector.getLength();
         this.doRemove = false;
         this.track = parent;
@@ -17,17 +17,17 @@ export class Line {
     }
 
     checkDelete(eraserPoint) {
-        let C4 = eraserPoint.cloneSub(this.a);
-        let B8 = C4.dot(this.vector.cloneReciprocalScale(this.len));
+        let C4 = eraserPoint.sub(this.a);
+        let B8 = C4.dot(this.vector.recipScale(this.len));
         let Bi = new Vector(0, 0);
         if (B8 <= 0) {
             Bi.copy(this.a);
         } else if (B8 >= this.len) {
             Bi.copy(this.b);
         } else {
-            Bi.copy(this.a.cloneAdd(this.vector.cloneReciprocalScale(this.len).cloneScale(B8)));
+            Bi.copy(this.a.add(this.vector.recipScale(this.len).scale(B8)));
         }
-        let DA = eraserPoint.cloneSub(Bi);
+        let DA = eraserPoint.sub(Bi);
         if (DA.getLength() <= eraserSize) {
             this.remove();
             return this;

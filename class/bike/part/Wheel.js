@@ -31,9 +31,9 @@ export class Wheel {
 
     /** @param {Vector} point */
     drive(point) {
-        this.pos.selfAdd(point.cloneScale(this.speedValue * this.bike.direction));
+        this.pos.selfAdd(point.scale(this.speedValue * this.bike.direction));
         if (this.downPressed) {
-            this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * 0.3));
+            this.pos.selfAdd(point.scale(-point.dot(this.velocity) * 0.3));
         }
         this.rotationSpeed = point.dot(this.velocity) / this.size;
         this.driving = true;
@@ -46,7 +46,7 @@ export class Wheel {
         if (this.touch) {
             track.touch(this);
         }
-        this.velocity = this.pos.cloneSub(this.oldPos);
+        this.velocity = this.pos.sub(this.oldPos);
         this.oldPos.copy(this.pos);
     }
 

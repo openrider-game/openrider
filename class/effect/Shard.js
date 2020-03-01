@@ -48,25 +48,25 @@ export class Shard {
     /** @param {Vector} point */
     drive(point) {
         this.rotationSpeed = point.dot(this.velocity) / this.size;
-        this.pos.selfAdd(point.cloneScale(-point.dot(this.velocity) * this.friction));
+        this.pos.selfAdd(point.scale(-point.dot(this.velocity) * this.friction));
         this.rotation += this.rotationSpeed;
         let pos = point.getLength();
         if (pos > 0) {
             let AS = new Vector(-point.y / pos, point.x / pos);
-            this.oldPos.selfAdd(AS.cloneScale(AS.dot(this.velocity) * 0.8));
+            this.oldPos.selfAdd(AS.scale(AS.dot(this.velocity) * 0.8));
         }
     }
 
     update() {
         this.rotation += this.rotationSpeed;
         this.velocity.selfAdd(this.bike.gravity);
-        this.velocity = this.velocity.cloneScale(0.99);
+        this.velocity = this.velocity.scale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;
         if (this.touch) {
             this.track.touch(this);
         }
-        this.velocity = this.pos.cloneSub(this.oldPos);
+        this.velocity = this.pos.sub(this.oldPos);
         this.oldPos.copy(this.pos);
     }
 }

@@ -17,15 +17,15 @@ export class SolidLine extends Line {
             radius = object.size,
             diff, // The vector from the closest point on the line to the object
             dist,
-            Ap = pos.cloneSub(this.a),
+            Ap = pos.sub(this.a),
             u = Ap.dot(this.vector) / this.len / this.len;  // Named "u" because it is sort of like uv coordinates
         if (u >= 0 && u <= 1) {
             // "sign" is negative if the center of the mass has passed through the line.
             let sign = (Ap.x * this.vector.y - Ap.y * this.vector.x) * ((Ap.x - vel.x) * this.vector.y - (Ap.y - vel.y) * this.vector.x) < 0 ? -1 : 1;
-            diff = Ap.cloneSub(this.vector.cloneScale(u));
+            diff = Ap.sub(this.vector.scale(u));
             dist = diff.getLength();
             if ((dist < radius || sign < 0) && dist !== 0) {
-                pos.selfAdd(diff.cloneScale((radius * sign - dist) / dist));
+                pos.selfAdd(diff.scale((radius * sign - dist) / dist));
                 object.drive(new Vector(-diff.y / dist, diff.x / dist));
                 return this;
             }
@@ -34,10 +34,10 @@ export class SolidLine extends Line {
             return this;
         }
         let Bp = u > 0 ? this.b : this.a;
-        diff = pos.cloneSub(Bp);
+        diff = pos.sub(Bp);
         dist = diff.getLength();
         if (dist < radius && dist !== 0) {
-            pos.selfAdd(diff.cloneScale((radius - dist) / dist));
+            pos.selfAdd(diff.scale((radius - dist) / dist));
             object.drive(new Vector(-diff.y / dist, diff.x / dist));
             return this;
         }

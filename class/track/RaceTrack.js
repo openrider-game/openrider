@@ -268,7 +268,7 @@ export class RaceTrack extends Track {
             this.currentTime += 40;
         }
         if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
+            this.camera.selfAdd(this.focalPoint.pos.sub(this.camera).scale(1 / 5));
         }
         return this;
     }

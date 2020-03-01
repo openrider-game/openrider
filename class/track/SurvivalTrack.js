@@ -24,13 +24,13 @@ export class SurvivalTrack extends Track {
         //~ while (this.bike.frontWheel.pos.distanceTo(p = line ? line.b : { x: -50, y: 50 }) < 2000) {
         p = line ? line.b : new Vector(-50, 50);
         if (!this.bike.dead && p.distanceTo(this.bike.frontWheel.pos) < 2000) {
-            this.addLine(p, p.cloneAdd(new Vector(Math.floor(Math.random() * 100 / this.difficulty), Math.floor((Math.random() - 0.5) * 20 * this.difficulty))));
+            this.addLine(p, p.add(new Vector(Math.floor(Math.random() * 100 / this.difficulty), Math.floor((Math.random() - 0.5) * 20 * this.difficulty))));
             //~ line = this.lines[this.lines.length - 1];
             this.difficulty += 0.001;
         }
         //~ }
         if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.cloneSub(this.camera).cloneScale(1 / 5));
+            this.camera.selfAdd(this.focalPoint.pos.sub(this.camera).scale(1 / 5));
         }
         return this;
     }

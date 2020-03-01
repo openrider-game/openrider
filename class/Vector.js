@@ -52,22 +52,22 @@ export class Vector {
     }
 
     /** @return {Vector} */
-    cloneAdd(point) {
+    add(point) {
         return new Vector(this.x + point.x, this.y + point.y);
     }
 
     /** @return {Vector} */
-    cloneSub(point) {
+    sub(point) {
         return new Vector(this.x - point.x, this.y - point.y);
     }
 
     /** @return {Vector} */
-    cloneScale(factor) {
+    scale(factor) {
         return new Vector(this.x * factor, this.y * factor);
     }
 
     /** @return {Vector} */
-    cloneReciprocalScale(factor) {
+    recipScale(factor) {
         return new Vector(this.x / factor, this.y / factor);
     }
 

@@ -19,25 +19,25 @@ export class Joint {
     rotate(rad) {
         // this function basically adds a little bit of the perpendicular distance vector
         // one way for a and the other way for b
-        let vector = this.b.pos.cloneSub(this.a.pos);
+        let vector = this.b.pos.sub(this.a.pos);
         // probably timescale the len?
         let perpendicular = new Vector(-vector.y / this.len, vector.x / this.len);
-        this.a.pos.selfAdd(perpendicular.cloneScale(rad));
-        this.b.pos.selfAdd(perpendicular.cloneScale(-rad));
+        this.a.pos.selfAdd(perpendicular.scale(rad));
+        this.b.pos.selfAdd(perpendicular.scale(-rad));
     }
 
     update() {
-        let vector = this.b.pos.cloneSub(this.a.pos);
+        let vector = this.b.pos.sub(this.a.pos);
         let length = vector.getLength();
         if (length < 1) {
             return this;
         }
-        vector = vector.cloneScale(1 / length);
+        vector = vector.scale(1 / length);
         // multiply springConstant with a timescale when we refactor the update system
-        let force = vector.cloneScale((length - this.len) * this.springConstant);
-        let normalVelocity = this.b.velocity.cloneSub(this.a.velocity).dot(vector) * this.dampConstant;
-        force.selfAdd(vector.cloneScale(normalVelocity));
-        this.b.velocity.selfAdd(force.cloneScale(-1));
+        let force = vector.scale((length - this.len) * this.springConstant);
+        let normalVelocity = this.b.velocity.sub(this.a.velocity).dot(vector) * this.dampConstant;
+        force.selfAdd(vector.scale(normalVelocity));
+        this.b.velocity.selfAdd(force.scale(-1));
         this.a.velocity.selfAdd(force);
         return this;
     }
@@ -63,7 +63,7 @@ export class Joint {
     }
 
     getLength() {
-        return this.b.pos.cloneSub(this.a.pos).getLength();
+        return this.b.pos.sub(this.a.pos).getLength();
     }
 
     clone() {

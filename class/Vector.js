@@ -1,5 +1,3 @@
-import { track, canvas } from "../bootstrap.js";
-
 export class Vector {
     constructor(x, y) {
         /** @type {?number} */
@@ -10,32 +8,32 @@ export class Vector {
 
     /** @return {Vector} */
     toPixel(track) {
-        return new Vector((this.x - track.camera.x) * track.zoomFactor + canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + canvas.height / 2);
+        return new Vector((this.x - track.camera.x) * track.zoomFactor + track.canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + track.canvas.height / 2);
     }
 
     /** @return {Vector} */
     normalizeToCanvas(track) {
-        return new Vector((this.x - canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - canvas.height / 2) / track.zoomFactor + track.camera.y);
+        return new Vector((this.x - track.canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - track.canvas.height / 2) / track.zoomFactor + track.camera.y);
     }
 
     /** @return {Vector} */
-    copy(point) {
-        this.x = point.x;
-        this.y = point.y;
+    copy(vector) {
+        this.x = vector.x;
+        this.y = vector.y;
         return this;
     }
 
     /** @return {Vector} */
-    selfAdd(point) {
-        this.x += point.x;
-        this.y += point.y;
+    selfAdd(vector) {
+        this.x += vector.x;
+        this.y += vector.y;
         return this;
     }
 
     /** @return {Vector} */
-    selfSub(point) {
-        this.x -= point.x;
-        this.y -= point.y;
+    selfSub(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
         return this;
     }
 
@@ -52,13 +50,13 @@ export class Vector {
     }
 
     /** @return {Vector} */
-    add(point) {
-        return new Vector(this.x + point.x, this.y + point.y);
+    add(vector) {
+        return new Vector(this.x + vector.x, this.y + vector.y);
     }
 
     /** @return {Vector} */
-    sub(point) {
-        return new Vector(this.x - point.x, this.y - point.y);
+    sub(vector) {
+        return new Vector(this.x - vector.x, this.y - vector.y);
     }
 
     /** @return {Vector} */
@@ -72,8 +70,8 @@ export class Vector {
     }
 
     /** @return {number} */
-    dot(point) {
-        return this.x * point.x + this.y * point.y;
+    dot(vector) {
+        return this.x * vector.x + this.y * vector.y;
     }
 
     /** @return {number} */
@@ -87,16 +85,16 @@ export class Vector {
     }
 
     /** @return {number} */
-    distanceTo(point) {
-        let dx = this.x - point.x,
-            dy = this.y - point.y;
+    distanceTo(vector) {
+        let dx = this.x - vector.x,
+            dy = this.y - vector.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
     /** @return {number} */
-    distanceToSquared(point) {
-        let dx = this.x - point.x,
-            dy = this.y - point.y;
+    distanceToSquared(vector) {
+        let dx = this.x - vector.x,
+            dy = this.y - vector.y;
         return dx * dx + dy * dy;
     }
 

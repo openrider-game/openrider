@@ -91,7 +91,7 @@ export function watchGhost(ID, track) {
             track.ghostIDs.push(id);
         }
         track.ghostKeys.push(ghostArr);
-        ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.$length];
+        ghostArr.color = GHOST_COLORS[track.ghostInstances.length % GHOST_COLORS.length];
         track.reset();
     }
 

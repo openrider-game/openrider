@@ -5,9 +5,9 @@ import { BodyPart } from "./part/BodyPart.js";
 import { Wheel } from "./part/Wheel.js";
 
 export class Bike extends EventEmitter {
-    constructor(parent) {
+    constructor(track) {
         super();
-        this.track = parent;
+        this.track = track;
         this.cap = 'hat';
         this.doSave =
             this.dead = false;
@@ -21,37 +21,35 @@ export class Bike extends EventEmitter {
         this.controls = this.track.controls;
     }
 
-    restore(last) {
-        this.points = {
-            0: this.head = new BodyPart(new Vector(last[0], last[1]), this),
-            1: this.backWheel = new Wheel(new Vector(last[6], last[7]), this),
-            2: this.frontWheel = new Wheel(new Vector(last[13], last[14]), this),
-            $length: 3
-        };
-        this.head.oldPos = new Vector(last[2], last[3]);
-        this.head.velocity = new Vector(last[4], last[5]);
-        this.backWheel.oldPos = new Vector(last[8], last[9]);
-        this.backWheel.velocity = new Vector(last[10], last[11]);
-        this.backWheel.speedValue = last[12];
-        this.frontWheel.oldPos = new Vector(last[15], last[16]);
-        this.frontWheel.velocity = new Vector(last[17], last[18]);
-        this.frontWheel.speedValue = last[19];
-        this.joints = {
-            0: this.headToBack = new Joint(this.head, this.backWheel, this),
-            1: this.frontToBack = new Joint(this.backWheel, this.frontWheel, this),
-            2: this.headToFront = new Joint(this.frontWheel, this.head, this),
-            $length: 3
-        };
-        this.headToBack.len = last[20];
-        this.frontToBack.len = last[21];
-        this.headToFront.len = last[22];
-        this.direction = last[23];
-        this.gravity = new Vector(last[24], last[25]);
-        this.slow = last[26];
-        this.leftPressed = last[30] || 0;
-        this.rightPressed = last[31] || 0;
-        this.upPressed = last[32] || 0;
-        this.downPressed = last[33] || 0;
+    restore(checkpoint) {
+        this.points = [
+            this.head = new BodyPart(new Vector(checkpoint[0], checkpoint[1]), this),
+            this.backWheel = new Wheel(new Vector(checkpoint[6], checkpoint[7]), this),
+            this.frontWheel = new Wheel(new Vector(checkpoint[13], checkpoint[14]), this)
+        ];
+        this.head.oldPos = new Vector(checkpoint[2], checkpoint[3]);
+        this.head.velocity = new Vector(checkpoint[4], checkpoint[5]);
+        this.backWheel.oldPos = new Vector(checkpoint[8], checkpoint[9]);
+        this.backWheel.velocity = new Vector(checkpoint[10], checkpoint[11]);
+        this.backWheel.speedValue = checkpoint[12];
+        this.frontWheel.oldPos = new Vector(checkpoint[15], checkpoint[16]);
+        this.frontWheel.velocity = new Vector(checkpoint[17], checkpoint[18]);
+        this.frontWheel.speedValue = checkpoint[19];
+        this.joints = [
+            this.headToBack = new Joint(this.head, this.backWheel, this),
+            this.frontToBack = new Joint(this.backWheel, this.frontWheel, this),
+            this.headToFront = new Joint(this.frontWheel, this.head, this)
+        ];
+        this.headToBack.len = checkpoint[20];
+        this.frontToBack.len = checkpoint[21];
+        this.headToFront.len = checkpoint[22];
+        this.direction = checkpoint[23];
+        this.gravity = new Vector(checkpoint[24], checkpoint[25]);
+        this.slow = checkpoint[26];
+        this.leftPressed = checkpoint[30] || 0;
+        this.rightPressed = checkpoint[31] || 0;
+        this.upPressed = checkpoint[32] || 0;
+        this.downPressed = checkpoint[33] || 0;
     }
 
     turn() {
@@ -90,10 +88,10 @@ export class Bike extends EventEmitter {
             if (!this.dead) {
                 this.updateControls(left, right, up, down);
             }
-            for (let t = this.joints.$length - 1; t >= 0; t--) {
+            for (let t = this.joints.length - 1; t >= 0; t--) {
                 this.joints[t].update();
             }
-            for (let u = this.points.$length - 1; u >= 0; u--) {
+            for (let u = this.points.length - 1; u >= 0; u--) {
                 this.points[u].update();
             }
         }

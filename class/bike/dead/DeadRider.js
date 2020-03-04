@@ -11,37 +11,35 @@ export class DeadRider {
         this.direction = 1;
         this.bike = parent;
         this.track = parent.track;
-        this.points = {
-            0: this.head = new BodyPart(U, this),
-            1: this.hip = new BodyPart(U, this),
-            2: this.elbow = new BodyPart(U, this),
-            3: this.shadowElbow = new BodyPart(U, this),
-            4: this.hand = new BodyPart(U, this),
-            5: this.shadowHand = new BodyPart(U, this),
-            6: this.knee = new BodyPart(U, this),
-            7: this.shadowKnee = new BodyPart(U, this),
-            8: this.foot = new BodyPart(U, this),
-            9: this.shadowFoot = new BodyPart(U, this),
-            $length: 10
-        };
-        this.joints = {
-            0: new Joint(this.head, this.hip, this),
-            1: new Joint(this.head, this.elbow, this),
-            2: new Joint(this.elbow, this.hand, this),
-            3: new Joint(this.head, this.shadowElbow, this),
-            4: new Joint(this.shadowElbow, this.shadowHand, this),
-            5: new Joint(this.hip, this.knee, this),
-            6: new Joint(this.knee, this.foot, this),
-            7: new Joint(this.hip, this.shadowKnee, this),
-            8: new Joint(this.shadowKnee, this.shadowFoot, this),
-            $length: 9
-        };
-        for (let i = 0, l = this.points.$length; i < l; i++) {
+        this.points = [
+            this.head = new BodyPart(U, this),
+            this.hip = new BodyPart(U, this),
+            this.elbow = new BodyPart(U, this),
+            this.shadowElbow = new BodyPart(U, this),
+            this.hand = new BodyPart(U, this),
+            this.shadowHand = new BodyPart(U, this),
+            this.knee = new BodyPart(U, this),
+            this.shadowKnee = new BodyPart(U, this),
+            this.foot = new BodyPart(U, this),
+            this.shadowFoot = new BodyPart(U, this)
+        ];
+        this.joints = [
+            new Joint(this.head, this.hip, this),
+            new Joint(this.head, this.elbow, this),
+            new Joint(this.elbow, this.hand, this),
+            new Joint(this.head, this.shadowElbow, this),
+            new Joint(this.shadowElbow, this.shadowHand, this),
+            new Joint(this.hip, this.knee, this),
+            new Joint(this.knee, this.foot, this),
+            new Joint(this.hip, this.shadowKnee, this),
+            new Joint(this.shadowKnee, this.shadowFoot, this)
+        ];
+        for (let i = 0, l = this.points.length; i < l; i++) {
             this.points[i].size = 3;
             this.points[i].friction = 0.05;
         }
         this.head.size = this.hip.size = 8;
-        for (let i = 0, l = this.joints.$length; i < l; i++) {
+        for (let i = 0, l = this.joints.length; i < l; i++) {
             this.joints[i].springConstant = 0.4;
             this.joints[i].dampConstant = 0.7;
         }
@@ -103,10 +101,10 @@ export class DeadRider {
     }
 
     update() {
-        for (let i = this.joints.$length - 1; i >= 0; i--) {
+        for (let i = this.joints.length - 1; i >= 0; i--) {
             this.joints[i].update();
         }
-        for (let i = this.points.$length - 1; i >= 0; i--) {
+        for (let i = this.points.length - 1; i >= 0; i--) {
             this.points[i].update();
         }
     }
@@ -115,7 +113,7 @@ export class DeadRider {
         upperForce.selfScale(0.7);
         lowerForce.selfScale(0.7);
         let len, upper, lower;
-        for (let i = 0, l = this.joints.$length; i < l; i++) {
+        for (let i = 0, l = this.joints.length; i < l; i++) {
             len = this.joints[i].getLength();
             if (len > 20) {
                 len = 20;
@@ -134,7 +132,7 @@ export class DeadRider {
         for (let i = 0, l = lower.length; i < l; i++) {
             lower[i].oldPos = lower[i].pos.sub(lowerForce);
         }
-        for (let i = this.points.$length - 1; i >= 0; i--) {
+        for (let i = this.points.length - 1; i >= 0; i--) {
             this.points[i].velocity.copy(this.points[i].pos.sub(this.points[i].oldPos));
             this.points[i].velocity.x += Math.random() - Math.random();
             this.points[i].velocity.y += Math.random() - Math.random();

@@ -4,24 +4,23 @@ import { Vector } from "../../Vector.js";
 import { BodyPart } from "../part/BodyPart.js";
 
 export class DeadRider {
-    constructor(guy, parent) {
+    constructor(guy, bike) {
         this.dead = true;
-        let U = new Vector(0, 0),
-            i = 0;
-        this.direction = 1;
-        this.bike = parent;
-        this.track = parent.track;
+        let zeroVec = new Vector(0, 0);
+        this.direction = bike.direction;
+        this.bike = bike;
+        this.track = bike.track;
         this.points = [
-            this.head = new BodyPart(U, this),
-            this.hip = new BodyPart(U, this),
-            this.elbow = new BodyPart(U, this),
-            this.shadowElbow = new BodyPart(U, this),
-            this.hand = new BodyPart(U, this),
-            this.shadowHand = new BodyPart(U, this),
-            this.knee = new BodyPart(U, this),
-            this.shadowKnee = new BodyPart(U, this),
-            this.foot = new BodyPart(U, this),
-            this.shadowFoot = new BodyPart(U, this)
+            this.head = new BodyPart(zeroVec, this),
+            this.hip = new BodyPart(zeroVec, this),
+            this.elbow = new BodyPart(zeroVec, this),
+            this.shadowElbow = new BodyPart(zeroVec, this),
+            this.hand = new BodyPart(zeroVec, this),
+            this.shadowHand = new BodyPart(zeroVec, this),
+            this.knee = new BodyPart(zeroVec, this),
+            this.shadowKnee = new BodyPart(zeroVec, this),
+            this.foot = new BodyPart(zeroVec, this),
+            this.shadowFoot = new BodyPart(zeroVec, this)
         ];
         this.joints = [
             new Joint(this.head, this.hip, this),
@@ -34,19 +33,20 @@ export class DeadRider {
             new Joint(this.hip, this.shadowKnee, this),
             new Joint(this.shadowKnee, this.shadowFoot, this)
         ];
-        for (let i = 0, l = this.points.length; i < l; i++) {
-            this.points[i].size = 3;
-            this.points[i].friction = 0.05;
+        for (let point of this.points) {
+            point.size = 3;
+            point.friction = 0.05;
         }
         this.head.size = this.hip.size = 8;
-        for (let i = 0, l = this.joints.length; i < l; i++) {
-            this.joints[i].springConstant = 0.4;
-            this.joints[i].dampConstant = 0.7;
+        for (let joint of this.joints) {
+            joint.springConstant = 0.4;
+            joint.dampConstant = 0.7;
         }
-        for (i in guy)
-            if (guy.hasOwnProperty(i)) {
-                this[i].pos.copy(guy[i]);
+        for (let part in guy) {
+            if (guy.hasOwnProperty(part)) {
+                this[part].pos.copy(guy[part]);
             }
+        }
     }
 
     render() {
@@ -80,23 +80,15 @@ export class DeadRider {
         head.selfAdd(head.sub(hip).scale(0.25));
         drawer.setProperty('lineWidth', 2 * track.zoomFactor);
         drawer.beginPath().moveTo(head.x + 5 * track.zoomFactor, head.y).arc(head.x, head.y, 5 * track.zoomFactor, 0, 2 * Math.PI, true).stroke();
-        let A6 = head.sub(hip),
-            A7 = new Vector(A6.y, -A6.x),
-            AY = new Vector(0, 0),
-            Aa = new Vector(0, 0);
-        if (this.direction === 1) {
-            AY = head.add(A7.scale(0.15)).add(A6.scale(-0.05));
-            Aa = head.add(A7.scale(-0.35)).add(A6.scale(0.15));
-        } else {
-            AY = head.add(A7.scale(-0.15)).add(A6.scale(0.15));
-            Aa = head.add(A7.scale(0.35)).add(A6.scale(-0.05));
-        }
-        AY = head.add(A7.scale(0.15 * this.direction)).add(A6.scale(-0.05));
-        Aa = head.add(A7.scale(-0.35 * this.direction)).add(A6.scale(0.15));
+
         // Cap
+        // let bodyVec = head.sub(hip),
+        //     bodyNormal = new Vector(bodyVec.y, -bodyVec.x),
+        //     capTip = head.add(bodyNormal.scale(0.15 * this.direction)).add(bodyVec.scale(-0.05)),
+        //     capEnd = head.add(bodyNormal.scale(-0.35 * this.direction)).add(bodyVec.scale(0.15));
         // drawer.beginPath();
-        // drawer.moveTo(AY.x, AY.y);
-        // drawer.lineTo(Aa.x, Aa.y);
+        // drawer.moveTo(capTip.x, capTip.y);
+        // drawer.lineTo(capEnd.x, capEnd.y);
         // drawer.stroke();
     }
 
@@ -112,30 +104,29 @@ export class DeadRider {
     pull(upperForce, lowerForce) {
         upperForce.selfScale(0.7);
         lowerForce.selfScale(0.7);
-        let len, upper, lower;
-        for (let i = 0, l = this.joints.length; i < l; i++) {
-            len = this.joints[i].getLength();
+        for (let joint of this.joints) {
+            let len = joint.getLength();
             if (len > 20) {
                 len = 20;
             }
-            this.joints[i].lengthTowards = this.joints[i].len = len;
+            joint.lengthTowards = joint.len = len;
         }
         for (let i = 1; i < 5; i++) {
             this.joints[i].lengthTowards = 13;
             this.joints[i].len = 13;
         }
-        upper = [this.head, this.elbow, this.shadowElbow, this.hand, this.shadowHand],
-            lower = [this.hip, this.knee, this.shadowKnee, this.foot, this.shadowFoot];
-        for (let i = 0, l = upper.length; i < l; i++) {
-            upper[i].oldPos = upper[i].pos.sub(upperForce);
+        let upper = [this.head, this.elbow, this.shadowElbow, this.hand, this.shadowHand];
+        let lower = [this.hip, this.knee, this.shadowKnee, this.foot, this.shadowFoot];
+        for (let point of upper) {
+            point.oldPos = point.pos.sub(upperForce);
         }
-        for (let i = 0, l = lower.length; i < l; i++) {
-            lower[i].oldPos = lower[i].pos.sub(lowerForce);
+        for (let point of lower) {
+            point.oldPos = point.pos.sub(lowerForce);
         }
-        for (let i = this.points.length - 1; i >= 0; i--) {
-            this.points[i].velocity.copy(this.points[i].pos.sub(this.points[i].oldPos));
-            this.points[i].velocity.x += Math.random() - Math.random();
-            this.points[i].velocity.y += Math.random() - Math.random();
+        for (let point of this.points) {
+            point.velocity.copy(point.pos.sub(point.oldPos));
+            point.velocity.x += Math.random() - Math.random();
+            point.velocity.y += Math.random() - Math.random();
         }
     }
 }

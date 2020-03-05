@@ -4,7 +4,7 @@ export class Joint {
     constructor(a, b, parent) {
         this.a = a;
         this.b = b;
-        this.bike = parent;
+        this.parent = parent;
         this.lengthTowards = 40;
         this.len = 40;
         this.dampConstant = 0.5;
@@ -67,7 +67,7 @@ export class Joint {
     }
 
     clone() {
-        let clone = new Joint(this.a, this.b, this.bike);
+        let clone = new Joint(this.a, this.b, this.parent);
         clone.lengthTowards = this.lengthTowards;
         clone.len = this.len;
         clone.dampConstant = this.dampConstant;

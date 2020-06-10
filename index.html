@@ -1,0 +1,48 @@
+<html lang="en" slick-uniqueid="3">
+	<head>
+		<style id="stndz-style"></style>
+		<title>Black Hat Editor</title>
+		<link rel="icon" href="images/icons/icon_128.png">
+		<meta name="description" content="Get on your bike and ride tens of tracks drawn by other players! Black Hat Rider is an addictive game written only in JavaScript &amp; HTML5, using the most of the new canvas element.">
+		<meta name="author" content="Pete &amp; Maxime">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<link href="http://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700,400italic,700italic" type="text/css">
+		<link rel="stylesheet" type="text/css" id="bhr-style" href="css/style-black-o.css">
+		<script src="js/mootools-yui-compressed.js"></script>
+		<script src="js/mootools-more.js"></script>
+		<script src="js/bootstrap.js"></script>
+		<script> window.addEvent('domready', BS.init);
+    	var require = { baseUrl: '/js' }, _gaq = [ ['_setAccount', 'UA-37797683-1'], ['_trackPageview'] ],
+      	bhuser_ = {"id":1,"isAdmin":true,"name":"Guest","online":true,"last online":"never","posts":"none","ghosts":0,"title":null};
+    	window.BHR_RCE_ENABLED=false;
+  		</script>
+		<script src="js/require.js" data-main="init"></script>
+		<style>#previewsvg{position:fixed;top:42px;bottom:0;left:0;width:100%;height:100%;right:0;background:#fff}.tgc .thumbnail{border-color:#00a;}.tgc .thumbnail:hover{border-color:#00a;-webkit-box-shadow:0 1px 4px #00a;-moz-box-shadow:0 1px 4px #00a;box-shadow:0 1px 4px #00a}.donator{-webkit-text-shadow:0 0 1px;-moz-text-shadow:0 0 1px;text-shadow:0 0 1px;font-style:italic}.track-thumb.hidden{display:block;visibility:visible;opacity:0.5}.track-thumb.hidden:hover{opacity:0.9}#descCt {word-wrap: break-word;overflow-wrap: break-word;}</style>
+		<script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="init" src="js/init.js"></script>
+		<script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="options" src="js/options.js"></script>
+	</head>
+	<body data-gr-c-s-loaded="true" style="overflow: auto scroll; cursor: default;">
+		<div id="content" style="justify-content: center;">
+			<canvas id="canvas_rider" width="700" height="400" style="position: static; border: 1px solid black; z-index: 2;"></canvas>
+			<img src="images/toolbar-left.png" class="toolbar" id="toolbar1" style="top: 220px; left: 321px; display: block; z-index: 2;">
+			<img src="images/toolbar-right.png" class="toolbar" id="toolbar2" style="top: 220px; left: 999px; z-index: 2; display: block;">
+			<div id="track_menu" class="well">
+  				<div class="row-fluid">
+    				<div class="span12" id="charcount">Enter your track code below!</div>
+  				</div>
+ 				<div class="row-fluid">
+    				<div class="span10"><textarea id="trackcode" class="input-block-level"></textarea></div>
+    				<div class="btn-group btn-group-vertical span2">
+      					<input class="btn btn-small" id="new" type="button" value="New">
+      					<input class="btn btn-small" id="load" type="button" value="Load">
+      					<input class="btn btn-small" id="save" type="button" value="Save">
+      					<input class="btn btn-small" id="upload" type="button" value="Upload">
+    				</div>
+  				</div>
+			</div>
+			<script src="js/v1.js"></script>
+			<script>(BH.game || cr).ride('-18 1i 18 1i###BMX')</script>
+		</div>
+	</body>
+</html>

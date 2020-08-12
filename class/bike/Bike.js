@@ -83,17 +83,14 @@ export class Bike extends EventEmitter {
         if (this.backWheel.driving && this.frontWheel.driving) {
             this.slow = false;
         }
-        // iterate twice if not slowed or dead
-        for (let j = 0, i = this.slow || this.dead ? 1 : 2; j < i; j++) {
-            if (!this.dead) {
-                this.updateControls(left, right, up, down);
-            }
-            for (let t = this.joints.length - 1; t >= 0; t--) {
-                this.joints[t].update();
-            }
-            for (let u = this.points.length - 1; u >= 0; u--) {
-                this.points[u].update();
-            }
+        if (!this.dead) {
+            this.updateControls(left, right, up, down);
+        }
+        for (let t = this.joints.length - 1; t >= 0; t--) {
+            this.joints[t].update();
+        }
+        for (let u = this.points.length - 1; u >= 0; u--) {
+            this.points[u].update();
         }
     }
 }

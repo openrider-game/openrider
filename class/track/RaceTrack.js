@@ -18,8 +18,8 @@ import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 
 export class RaceTrack extends Track {
-    constructor(ID) {
-        super();
+    constructor(ID, game) {
+        super(null, game);
         let rawTrack, x, y, rawLine;
         this.ghostKeys = [];
         this.ghostIDs = [];
@@ -258,14 +258,14 @@ export class RaceTrack extends Track {
         return this;
     }
 
-    update() {
+    fixedUpdate() {
         let i = 0;
         if (!this.paused) {
-            this.bike && this.bike.update();
+            if (this.bike) this.bike.fixedUpdate();
             for (; i < this.ghostInstances.length; i++) {
-                this.ghostInstances[i].update();
+                this.ghostInstances[i].fixedUpdate();
             }
-            this.currentTime += 40;
+            this.currentTime += this.game.ms;
         }
         if (this.focalPoint) {
             this.camera.selfAdd(this.focalPoint.pos.sub(this.camera).scale(1 / 5));

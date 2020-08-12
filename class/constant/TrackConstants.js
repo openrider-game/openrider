@@ -1,5 +1,5 @@
 export const
-    GAME_UPS = 25,
+    GAME_UPS = 50,
     TRACKSTRING_OLD = 0,
     TRACKSTRING_NEW = 1,
     TRACK_DEFAULT = '-18 1i 18 1i',

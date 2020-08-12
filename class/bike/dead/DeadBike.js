@@ -23,7 +23,7 @@ export class DeadBike {
         }
     }
 
-    update() {
+    fixedUpdate() {
         this.bike.update();
         this.rider.update();
         if (this.hat) {

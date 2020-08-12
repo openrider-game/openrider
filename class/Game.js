@@ -13,7 +13,7 @@ export class Game {
         if (id === 'SURVIVAL') {
             this.track = new SurvivalTrack();
         } else {
-            this.track = new RaceTrack(id);
+            this.track = new RaceTrack(id, this);
             this.track.ghostIDs = ghosts || [];
         }
         this.track.bike = new({ BMX: BMX, MTB: MTB, HAR: Harley }[this.track.currentBike] || BMX)(this.track);
@@ -45,10 +45,11 @@ export class Game {
         this.delta += progress / this.ms;
         this.lastTime = now;
         while (this.delta >= 1) {
-            this.track.update();
+            this.track.fixedUpdate();
             this.updates++;
             this.delta--;
         }
+        this.track.update();
         this.track.render();
         this.frames++;
         if (performance.now() - this.timer > 1000) {

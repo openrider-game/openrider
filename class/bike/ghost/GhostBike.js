@@ -18,7 +18,7 @@ export class GhostBike extends Bike {
         this.color = last[34];
     }
 
-    update() {
+    fixedUpdate() {
         let bikeTime = this.track.currentTime;
         if (bikeTime > this.time) {
             return;

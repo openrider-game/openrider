@@ -122,7 +122,7 @@ export class PlayerBike extends Bike {
         bike.hat.rotationSpeed = 0.1;
     }
 
-    update() {
+    fixedUpdate() {
         const accelerating = this.controls.isDown('accelerate') ? 1 : 0;
         const left = this.controls.isDown('left') ? 1 : 0;
         const right = this.controls.isDown('right') ? 1 : 0;

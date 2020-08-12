@@ -12,9 +12,10 @@ import { CanvasHelper } from "../helper/CanvasHelper.js";
 import Controls from "../helper/Controls.js";
 
 export class Track {
-    constructor(canvas) {
+    constructor(canvas, game) {
         let drawer = CanvasHelper.getInstance();
 
+        this.game = game;
         this.canvas = canvas;
         this.controls = new Controls(document);
         this.grid = {};
@@ -36,6 +37,9 @@ export class Track {
             this.down = 0;
         this.initControls();
     }
+
+    update() {}
+    fixedUpdate() {}
 
     initControls() {
         let controls = {

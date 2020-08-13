@@ -42,7 +42,7 @@ export class Wheel extends Mass {
             track.touch(this);
         }
         this.velocity = this.pos.sub(this.oldPos);
-        this.oldPos.copy(this.pos);
+        this.oldPos.set(this.pos);
     }
 
     clone() {

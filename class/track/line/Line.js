@@ -21,11 +21,11 @@ export class Line {
         let B8 = C4.dot(this.vector.recipScale(this.len));
         let Bi = new Vector(0, 0);
         if (B8 <= 0) {
-            Bi.copy(this.a);
+            Bi.set(this.a);
         } else if (B8 >= this.len) {
-            Bi.copy(this.b);
+            Bi.set(this.b);
         } else {
-            Bi.copy(this.a.add(this.vector.recipScale(this.len).scale(B8)));
+            Bi.set(this.a.add(this.vector.recipScale(this.len).scale(B8)));
         }
         let DA = eraserPoint.sub(Bi);
         if (DA.getLength() <= eraserSize) {

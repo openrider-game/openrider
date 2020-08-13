@@ -44,7 +44,7 @@ export class DeadRider {
         }
         for (let part in guy) {
             if (guy.hasOwnProperty(part)) {
-                this[part].pos.copy(guy[part]);
+                this[part].pos.set(guy[part]);
             }
         }
     }
@@ -130,7 +130,7 @@ export class DeadRider {
             point.oldPos = point.pos.sub(lowerVel);
         }
         for (let point of this.points) {
-            point.velocity.copy(point.pos.sub(point.oldPos));
+            point.velocity.set(point.pos.sub(point.oldPos));
             point.velocity.x += Math.random() - Math.random();
             point.velocity.y += Math.random() - Math.random();
         }

@@ -17,7 +17,7 @@ export class Vector {
     }
 
     /** @return {Vector} */
-    copy(vector) {
+    set(vector) {
         this.x = vector.x;
         this.y = vector.y;
         return this;

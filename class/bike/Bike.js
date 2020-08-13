@@ -18,6 +18,8 @@ export class Bike extends EventEmitter {
             this.downPressed = 0;
         this.rotationFactor = 1;
 
+        this.slowParity = 0;
+
         this.controls = this.track.controls;
     }
 
@@ -45,7 +47,7 @@ export class Bike extends EventEmitter {
         this.headToFront.len = checkpoint[22];
         this.direction = checkpoint[23];
         this.gravity = new Vector(checkpoint[24], checkpoint[25]);
-        this.slow = checkpoint[26];
+        this.setSlow(checkpoint[26]);
         this.leftPressed = checkpoint[30] || 0;
         this.rightPressed = checkpoint[31] || 0;
         this.upPressed = checkpoint[32] || 0;
@@ -77,6 +79,9 @@ export class Bike extends EventEmitter {
     }
 
     update(progress, delta) {
+        if (this.slow) {
+            progress = (progress + this.slowParity) / 2;
+        }
         this.backWheel.update(progress);
         this.frontWheel.update(progress);
         this.head.update(progress);
@@ -85,18 +90,30 @@ export class Bike extends EventEmitter {
         }
     }
 
+    setSlow(val) {
+        if ((!this.slow && val) || !val) {
+            this.slowParity = 0;
+        }
+        this.slow = val;
+    }
+
     fixedUpdate(left, right, up, down) {
         if (this.backWheel.driving && this.frontWheel.driving) {
-            this.slow = false;
+            this.setSlow(false);
         }
         if (!this.dead) {
             this.updateControls(left, right, up, down);
         }
-        for (let t = this.joints.length - 1; t >= 0; t--) {
-            this.joints[t].fixedUpdate();
+        if (this.slow) {
+            this.slowParity = (this.slowParity + 1) % 2;
         }
-        for (let u = this.points.length - 1; u >= 0; u--) {
-            this.points[u].fixedUpdate();
+        if (!this.slow || this.slowParity === 0) {
+            for (let t = this.joints.length - 1; t >= 0; t--) {
+                this.joints[t].fixedUpdate();
+            }
+            for (let u = this.points.length - 1; u >= 0; u--) {
+                this.points[u].fixedUpdate();
+            }
         }
     }
 }

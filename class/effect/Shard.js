@@ -1,21 +1,17 @@
 import { Vector } from "../Vector.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
+import { Mass } from "../bike/part/Mass.js";
 
-export class Shard {
+export class Shard extends Mass {
     constructor(pos, parent) {
-        /** @type {Vector} */
-        this.pos = new Vector(pos.x + 5 * (Math.random() - Math.random()), pos.y + 5 * (Math.random() - Math.random()));
-        /** @type {Vector} */
-        this.oldPos = new Vector(this.pos.x, this.pos.y);
-        /** @type {Vector} */
-        this.velocity = new Vector(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()));
+        super(pos);
         /** @type {Object} */
         this.bike = parent;
         this.track = parent.track;
         /** @type {number} */
         this.size = 2 + Math.random() * 9;
         /** @type {number} */
-        this.rotation = Math.random() * 6.2;
+        this.rotation = Math.random() * 2 * Math.PI;
         /** @type {number} */
         this.rotationSpeed = Math.random() - Math.random();
         /** @type {number} */
@@ -28,7 +24,7 @@ export class Shard {
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        let pos = this.pos.toPixel(this.track),
+        let pos = this.displayPos.toPixel(this.track),
             s = this.size * this.track.zoomFactor,
             dist = this.shape[0] * s,
             x = pos.x + dist * Math.cos(this.rotation),
@@ -57,8 +53,12 @@ export class Shard {
         }
     }
 
-    update() {
-        this.rotation += this.rotationSpeed;
+    update(progress, delta) {
+        super.update(progress);
+        this.rotation += this.rotationSpeed * delta / 40;
+    }
+
+    fixedUpdate() {
         this.velocity.selfAdd(this.bike.gravity);
         this.velocity = this.velocity.scale(0.99);
         this.pos.selfAdd(this.velocity);

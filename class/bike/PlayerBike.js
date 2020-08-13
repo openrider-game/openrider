@@ -152,7 +152,7 @@ export class PlayerBike extends Bike {
             this.keys[4][time] = 1;
         }
 
-        super.update(left, right, accelerating, braking);
+        super.fixedUpdate(left, right, accelerating, braking);
     }
 
     render() {

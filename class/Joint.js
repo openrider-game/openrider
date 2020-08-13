@@ -26,14 +26,14 @@ export class Joint {
         this.b.pos.selfAdd(perpendicular.scale(-rad));
     }
 
-    update() {
+    fixedUpdate() {
         let vector = this.b.pos.sub(this.a.pos);
         let length = vector.getLength();
         if (length < 1) {
             return this;
         }
         vector = vector.scale(1 / length);
-        // multiply springConstant with a timescale when we refactor the update system
+        // multiply springConstant with a timescale when we refactor the fixedUpdate system
         let force = vector.scale((length - this.len) * this.springConstant);
         let normalVelocity = this.b.velocity.sub(this.a.velocity).dot(vector) * this.dampConstant;
         force.selfAdd(vector.scale(normalVelocity));

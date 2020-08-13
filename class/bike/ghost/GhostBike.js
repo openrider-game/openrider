@@ -38,7 +38,7 @@ export class GhostBike extends Bike {
         if (this.ghostKeys[4][bikeTime]) {
             this.turn();
         }
-        super.update(this.leftPressed, this.rightPressed, this.upPressed, this.downPressed);
+        super.fixedUpdate(this.leftPressed, this.rightPressed, this.upPressed, this.downPressed);
         this.currentTime += 40;
     }
 

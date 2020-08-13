@@ -65,9 +65,6 @@ export class Bike extends EventEmitter {
             this.turn();
         }
         this.backWheel.speedValue += (up - this.backWheel.speedValue) / 10;
-        if (up) {
-            this.distance += this.backWheel.rotationSpeed / 5;
-        }
         this.backWheel.downPressed = this.frontWheel.downPressed = down;
         let rotate = left - right;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
@@ -79,7 +76,16 @@ export class Bike extends EventEmitter {
         }
     }
 
-    update(left, right, up, down) {
+    update(progress, delta) {
+        this.backWheel.update(progress);
+        this.frontWheel.update(progress);
+        this.head.update(progress);
+        if (this.upPressed) {
+            this.distance += this.backWheel.rotationSpeed * delta / 100;
+        }
+    }
+
+    fixedUpdate(left, right, up, down) {
         if (this.backWheel.driving && this.frontWheel.driving) {
             this.slow = false;
         }
@@ -87,10 +93,10 @@ export class Bike extends EventEmitter {
             this.updateControls(left, right, up, down);
         }
         for (let t = this.joints.length - 1; t >= 0; t--) {
-            this.joints[t].update();
+            this.joints[t].fixedUpdate();
         }
         for (let u = this.points.length - 1; u >= 0; u--) {
-            this.points[u].update();
+            this.points[u].fixedUpdate();
         }
     }
 }

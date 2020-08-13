@@ -1,5 +1,5 @@
 import { CanvasHelper } from "../../helper/CanvasHelper.js";
-import { Joint } from "../../Joint.js";
+import { Joint } from "../../Spring.js";
 import { Vector } from "../../Vector.js";
 import { BodyPart } from "../part/BodyPart.js";
 

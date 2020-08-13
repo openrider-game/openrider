@@ -5,9 +5,9 @@ export const MTBRenderer = (Base) => class extends Base {
     renderInternal(color, opacityFactor) {
         let drawer = CanvasHelper.getInstance();
         let track = this.track,
-            backWheel = this.backWheel.pos.toPixel(track),
-            frontWheel = this.frontWheel.pos.toPixel(track),
-            head = this.head.pos.toPixel(track);
+            backWheel = this.backWheel.displayPos.toPixel(track),
+            frontWheel = this.frontWheel.displayPos.toPixel(track),
+            head = this.head.displayPos.toPixel(track);
         let length = frontWheel.sub(backWheel);
         let AC = new Vector((frontWheel.y - backWheel.y) * this.direction, (backWheel.x - frontWheel.x) * this.direction);
         let middle = head.sub(backWheel.add(length.scale(0.5)));

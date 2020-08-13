@@ -1,19 +1,15 @@
 import { Vector } from "../../Vector.js";
 import { track } from "../../../bootstrap.js";
+import { Mass } from "./Mass.js";
 
-export class Wheel {
+export class Wheel extends Mass {
     /**
      *
      * @param {Vector} center
      * @param {(BMX|MTB|DeadRider)} parent
      */
     constructor(center, parent) {
-        /** @type {Vector} */
-        this.pos = center.clone();
-        /** @type {Vector} */
-        this.oldPos = center.clone();
-        /** @type {Vector} */
-        this.velocity = new Vector(0, 0);
+        super(center);
         /** @type {(BMX|MTB|DeadRider)} */
         this.bike = parent;
         /** @type {Number} */
@@ -22,7 +18,6 @@ export class Wheel {
         this.friction = 0;
         /** @type {Boolean} */
         this.touch = true;
-        this.gravity = true; // from what I can tell, this is never used.
         /** @type {Number} */
         this.rotationSpeed = 0;
         /** @type {Number} */
@@ -39,7 +34,7 @@ export class Wheel {
         this.driving = true;
     }
 
-    update() {
+    fixedUpdate() {
         this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
         this.pos.selfAdd(this.velocity);
         this.driving = false;

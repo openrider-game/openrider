@@ -1,14 +1,10 @@
 import { Vector } from "../../Vector.js";
 import { track } from "../../../bootstrap.js";
+import { Mass } from "./Mass.js";
 
-export class BodyPart {
+export class BodyPart extends Mass {
     constructor(pos, parent) {
-        /** @type {Vector} */
-        this.pos = pos.clone();
-        /** @type {Vector} */
-        this.oldPos = pos.clone();
-        /** @type {Vector} */
-        this.velocity = new Vector(0, 0);
+        super(pos);
         /** @type {(BMX|MTB|DeadRider)} */
         this.bike = parent;
         /** @type {number} */
@@ -27,7 +23,7 @@ export class BodyPart {
         this.driving = true;
     }
 
-    update() {
+    fixedUpdate() {
         this.velocity.selfAdd(this.bike.gravity).selfScale(0.99);
         //~ this.velocity = this.velocity.scale(0.99);
         this.pos.selfAdd(this.velocity);

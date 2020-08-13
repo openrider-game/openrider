@@ -259,18 +259,26 @@ export class RaceTrack extends Track {
     }
 
     fixedUpdate() {
-        let i = 0;
         if (!this.paused) {
             if (this.bike) this.bike.fixedUpdate();
-            for (; i < this.ghostInstances.length; i++) {
+            for (let i = 0; i < this.ghostInstances.length; i++) {
                 this.ghostInstances[i].fixedUpdate();
             }
             this.currentTime += this.game.ms;
         }
-        if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.sub(this.camera).scale(1 / 5));
-        }
         return this;
+    }
+
+    update(progress, delta) {
+        if (!this.paused) {
+            this.bike.update(progress, delta);
+            for (let i = 0; i < this.ghostInstances.length; i++) {
+                this.ghostInstances[i].update(progress, delta);
+            }
+            if (this.focalPoint) {
+                this.camera.selfAdd(this.focalPoint.displayPos.sub(this.camera).scale(delta / 200));
+            }
+        }
     }
 
     render() {

@@ -1,11 +1,12 @@
 import { DeadRider } from "./DeadRider.js";
+import { Bike } from "../Bike.js";
 
-export class DeadBike {
-    constructor(bike, guy, parent) {
+export class DeadBike extends Bike {
+    constructor(bike, guy, track) {
+        super(track);
         this.dead = true;
-        this.track = parent;
         this.rider = new DeadRider(guy, this);
-        this.rider.pull(bike.head.velocity, bike.backWheel.velocity);
+        this.rider.setVelocity(bike.head.velocity, bike.backWheel.velocity);
         this.rider.direction = bike.direction;
         this.rider.gravity = bike.gravity;
         this.gravity = bike.gravity;
@@ -24,10 +25,18 @@ export class DeadBike {
     }
 
     fixedUpdate() {
-        this.bike.update();
-        this.rider.update();
+        this.bike.fixedUpdate();
+        this.rider.fixedUpdate();
         if (this.hat) {
-            this.hat.update();
+            this.hat.fixedUpdate();
+        }
+    }
+
+    update(progress, delta) {
+        this.bike.update(progress);
+        this.rider.update(progress);
+        if (this.hat) {
+            this.hat.update(progress, delta);
         }
     }
 }

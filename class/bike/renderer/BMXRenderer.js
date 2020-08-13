@@ -5,9 +5,9 @@ export const BMXRenderer = (Base) => class extends Base {
     renderInternal(color, opacityFactor) {
         let drawer = CanvasHelper.getInstance();
         let track = this.track,
-            backWheel = this.backWheel.pos.toPixel(track),
-            frontWheel = this.frontWheel.pos.toPixel(track),
-            head = this.head.pos.toPixel(track),
+            backWheel = this.backWheel.displayPos.toPixel(track),
+            frontWheel = this.frontWheel.displayPos.toPixel(track),
+            head = this.head.displayPos.toPixel(track),
             z = track.zoomFactor;
         // Wheels
         drawer.setProperty('strokeStyle', color);

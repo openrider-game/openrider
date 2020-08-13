@@ -15,9 +15,9 @@ export class SurvivalTrack extends Track {
         return this;
     }
 
-    update() {
+    fixedUpdate() {
         if (!this.paused) {
-            this.bike && this.bike.update();
+            this.bike && this.bike.fixedUpdate();
             this.currentTime += 40;
         }
         let p, line = this.lines[this.lines.length - 1];

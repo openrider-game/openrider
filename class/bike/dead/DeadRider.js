@@ -52,16 +52,16 @@ export class DeadRider {
     render() {
         let drawer = CanvasHelper.getInstance();
         let track = this.track,
-            head = this.head.pos.toPixel(track),
-            elbow = this.elbow.pos.toPixel(track),
-            hand = this.hand.pos.toPixel(track),
-            shadowElbow = this.shadowElbow.pos.toPixel(track),
-            shadowHand = this.shadowHand.pos.toPixel(track),
-            knee = this.knee.pos.toPixel(track),
-            foot = this.foot.pos.toPixel(track),
-            shadowKnee = this.shadowKnee.pos.toPixel(track),
-            shadowFoot = this.shadowFoot.pos.toPixel(track),
-            hip = this.hip.pos.toPixel(track);
+            head = this.head.displayPos.toPixel(track),
+            elbow = this.elbow.displayPos.toPixel(track),
+            hand = this.hand.displayPos.toPixel(track),
+            shadowElbow = this.shadowElbow.displayPos.toPixel(track),
+            shadowHand = this.shadowHand.displayPos.toPixel(track),
+            knee = this.knee.displayPos.toPixel(track),
+            foot = this.foot.displayPos.toPixel(track),
+            shadowKnee = this.shadowKnee.displayPos.toPixel(track),
+            shadowFoot = this.shadowFoot.displayPos.toPixel(track),
+            hip = this.hip.displayPos.toPixel(track);
         drawer.setProperty('lineWidth', 5 * track.zoomFactor);
         drawer.setProperty('strokeStyle', 'rgba(0,0,0,0.5)');
         // Shadow Arm
@@ -92,18 +92,24 @@ export class DeadRider {
         // drawer.stroke();
     }
 
-    update() {
+    fixedUpdate() {
         for (let i = this.joints.length - 1; i >= 0; i--) {
-            this.joints[i].update();
+            this.joints[i].fixedUpdate();
         }
         for (let i = this.points.length - 1; i >= 0; i--) {
-            this.points[i].update();
+            this.points[i].fixedUpdate();
         }
     }
 
-    pull(upperForce, lowerForce) {
-        upperForce.selfScale(0.7);
-        lowerForce.selfScale(0.7);
+    update(progress) {
+        for (let mass of this.points) {
+            mass.update(progress);
+        }
+    }
+
+    setVelocity(upperVel, lowerVel) {
+        upperVel.selfScale(0.7);
+        lowerVel.selfScale(0.7);
         for (let joint of this.joints) {
             let len = joint.getLength();
             if (len > 20) {
@@ -118,10 +124,10 @@ export class DeadRider {
         let upper = [this.head, this.elbow, this.shadowElbow, this.hand, this.shadowHand];
         let lower = [this.hip, this.knee, this.shadowKnee, this.foot, this.shadowFoot];
         for (let point of upper) {
-            point.oldPos = point.pos.sub(upperForce);
+            point.oldPos = point.pos.sub(upperVel);
         }
         for (let point of lower) {
-            point.oldPos = point.pos.sub(lowerForce);
+            point.oldPos = point.pos.sub(lowerVel);
         }
         for (let point of this.points) {
             point.velocity.copy(point.pos.sub(point.oldPos));

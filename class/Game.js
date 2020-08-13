@@ -22,7 +22,7 @@ export class Game {
         this.lastTime = performance.now();
         this.timer = performance.now();
         this.ms = 1000 / GAME_UPS;
-        this.delta = 0;
+        this.progress = 0;
         this.frames = 0;
         this.updates = 0;
     }
@@ -41,15 +41,15 @@ export class Game {
     run() {
         requestAnimationFrame(() => this.run());
         let now = performance.now();
-        let progress = now - this.lastTime;
-        this.delta += progress / this.ms;
+        let delta = now - this.lastTime;
+        this.progress += delta / this.ms;
         this.lastTime = now;
-        while (this.delta >= 1) {
+        while (this.progress >= 1) {
             this.track.fixedUpdate();
             this.updates++;
-            this.delta--;
+            this.progress--;
         }
-        this.track.update();
+        this.track.update(this.progress, delta);
         this.track.render();
         this.frames++;
         if (performance.now() - this.timer > 1000) {

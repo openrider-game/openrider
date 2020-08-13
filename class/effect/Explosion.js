@@ -46,9 +46,9 @@ export class Explosion {
         }
     }
 
-    update() {
+    fixedUpdate() {
         for (let i = this.pieces.length - 1; i >= 0; i--) {
-            this.pieces[i].update();
+            this.pieces[i].fixedUpdate();
         }
     }
 }

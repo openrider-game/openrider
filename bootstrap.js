@@ -212,7 +212,7 @@ document.onkeydown = function(event) {
                     shift = true;
                 } else if (!snapFromPrevLine) {
                     snapFromPrevLine = true;
-                    lastClick.copy(lastForeground);
+                    lastClick.set(lastForeground);
                     shift = true;
                 }
                 break;
@@ -224,7 +224,7 @@ document.onkeydown = function(event) {
                     shift = true;
                 } else if (!snapFromPrevLine) {
                     snapFromPrevLine = true;
-                    lastClick.copy(lastScenery);
+                    lastClick.set(lastScenery);
                     shift = true;
                 }
                 break;
@@ -235,7 +235,7 @@ document.onkeydown = function(event) {
                     document.body.style.cursor = 'none';
                 } else if (!snapFromPrevLine) {
                     snapFromPrevLine = true;
-                    lastClick.copy(lastForeground);
+                    lastClick.set(lastForeground);
                     shift = true;
                 }
                 break;
@@ -246,7 +246,7 @@ document.onkeydown = function(event) {
                     document.body.style.cursor = 'none';
                 } else if (!snapFromPrevLine) {
                     snapFromPrevLine = true;
-                    lastClick.copy(lastScenery);
+                    lastClick.set(lastScenery);
                     shift = true;
                 }
                 break;
@@ -463,7 +463,7 @@ canvas.onmousedown = function(event) {
     }
     var item;
     if (!shift) {
-        lastClick.copy(mousePos);
+        lastClick.set(mousePos);
     }
     switch (track.currentTool) {
         case TOOL.BOOST:
@@ -532,7 +532,7 @@ document.onmousemove = function(event) {
     if (snapFromPrevLine) {
         if (track.currentTool === TOOL.CAMERA) {
             track.camera.selfAdd(lastClick.sub(mousePos));
-            mousePos.copy(lastClick);
+            mousePos.set(lastClick);
         } else if (track.currentTool === TOOL.ERASER || event.button === 2) {
             erase();
         } else if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {

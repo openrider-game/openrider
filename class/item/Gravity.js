@@ -9,6 +9,6 @@ export class Gravity extends DirectionalItem {
     }
 
     onTouch(part) {
-        part.bike.gravity.copy(this.direction);
+        part.bike.gravity.set(this.direction);
     }
 }

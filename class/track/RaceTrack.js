@@ -542,11 +542,11 @@ export class RaceTrack extends Track {
         if (this.currentTool === 'brush' || this.currentTool === 'line' ||
             this.currentTool === 'scenery brush' || this.currentTool === 'scenery line') {
             if (this.currentTool === 'brush' || this.currentTool === 'line') {
-                lastForeground.copy(mousePos);
+                lastForeground.set(mousePos);
             } else {
-                lastScenery.copy(mousePos);
+                lastScenery.set(mousePos);
             }
-            lastClick.copy(mousePos);
+            lastClick.set(mousePos);
         }
     }
 
@@ -602,7 +602,7 @@ export class RaceTrack extends Track {
                 line = this.grid[x][y].scenery[this.grid[x][y].scenery.length - 1];
             if (line && line.b.x === Math.round(lastScenery.x) && line.b.y === Math.round(lastScenery.y)) {
                 line.doRemove = true;
-                lastScenery.copy(line.a);
+                lastScenery.set(line.a);
                 this.remove(line.a, line.b);
             } else {
                 alert('No more scenery line to erase!');
@@ -613,7 +613,7 @@ export class RaceTrack extends Track {
                 line = this.grid[x][y].lines[this.grid[x][y].lines.length - 1];
             if (line !== undefined && line.b.x === Math.round(lastForeground.x) && line.b.y === Math.round(lastForeground.y)) {
                 line.doRemove = true;
-                lastForeground.copy(line.a);
+                lastForeground.set(line.a);
                 this.remove(line.a, line.b);
             } else {
                 alert('No more line to erase!');

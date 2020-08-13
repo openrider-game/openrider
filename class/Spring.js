@@ -45,17 +45,17 @@ export class Joint {
     turn() {
         let tmp = new Vector();
 
-        tmp.copy(this.a.pos);
-        this.a.pos.copy(this.b.pos);
-        this.b.pos.copy(tmp);
+        tmp.set(this.a.pos);
+        this.a.pos.set(this.b.pos);
+        this.b.pos.set(tmp);
 
-        tmp.copy(this.a.oldPos);
-        this.a.oldPos.copy(this.b.oldPos);
-        this.b.oldPos.copy(tmp);
+        tmp.set(this.a.oldPos);
+        this.a.oldPos.set(this.b.oldPos);
+        this.b.oldPos.set(tmp);
 
-        tmp.copy(this.a.velocity);
-        this.a.velocity.copy(this.b.velocity);
-        this.b.velocity.copy(tmp);
+        tmp.set(this.a.velocity);
+        this.a.velocity.set(this.b.velocity);
+        this.b.velocity.set(tmp);
 
         tmp = this.a.rotation;
         this.a.rotation = this.b.rotation;

@@ -26,7 +26,7 @@ export class SolidLine extends Line {
             if (passedThrough === -1) {
                 let measure = (aDiff.y * vel.x - aDiff.x * vel.y) / (pp.y * vel.x - pp.x * vel.y);
                 if (measure < 0 || measure > 1) {
-                    return;
+                    return this;
                 }
             }
             diff = aDiff.sub(this.vector.scale(u));

@@ -4,7 +4,7 @@ import { BMX } from "./bike/BMX.js";
 import { Harley } from "./bike/Harley.js";
 import { MTB } from "./bike/MTB.js";
 import { canvas, label, hints, toolbar2, toolbar1 } from "../bootstrap.js";
-import { GAME_UPS } from "./constant/TrackConstants.js";
+import { GAME_UPS, INTERPOLATE } from "./constant/TrackConstants.js";
 
 
 export class Game {
@@ -22,6 +22,7 @@ export class Game {
         this.lastTime = performance.now();
         this.timer = performance.now();
         this.ms = 1000 / GAME_UPS;
+        this.interpolate = INTERPOLATE;
         this.progress = 0;
         this.frames = 0;
         this.updates = 0;
@@ -48,10 +49,19 @@ export class Game {
             this.track.fixedUpdate();
             this.updates++;
             this.progress--;
+            if (!this.interpolate) {
+                this.track.update(0, this.ms);
+                if (this.progress < 1) {    // Only render on the last update in the frame.
+                    this.track.render();
+                    this.frames++;
+                }
+            }
         }
-        this.track.update(this.progress, delta);
-        this.track.render();
-        this.frames++;
+        if (this.interpolate) {
+            this.track.update(this.progress, delta);
+            this.track.render();
+            this.frames++;
+        }
         if (performance.now() - this.timer > 1000) {
             this.timer += 1000;
             document.title = 'OpenRider - ' + this.updates + " ups, " + this.frames + " fps";

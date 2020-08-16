@@ -33,7 +33,6 @@ export class Joint {
             return this;
         }
         vector = vector.scale(1 / length);
-        // multiply springConstant with a timescale when we refactor the fixedUpdate system
         let force = vector.scale((length - this.len) * this.springConstant);
         let normalVelocity = this.b.velocity.sub(this.a.velocity).dot(vector) * this.dampConstant;
         force.selfAdd(vector.scale(normalVelocity));

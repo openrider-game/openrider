@@ -6,6 +6,7 @@ import { BodyPart } from "../part/BodyPart.js";
 export class DeadRider {
     constructor(guy, bike) {
         this.dead = true;
+        this.slowParity = 0;
         let zeroVec = new Vector(0, 0);
         this.direction = bike.direction;
         this.bike = bike;
@@ -93,15 +94,19 @@ export class DeadRider {
     }
 
     fixedUpdate() {
-        for (let i = this.joints.length - 1; i >= 0; i--) {
-            this.joints[i].fixedUpdate();
-        }
-        for (let i = this.points.length - 1; i >= 0; i--) {
-            this.points[i].fixedUpdate();
+        this.slowParity = 1 - this.slowParity;
+        if (this.slowParity === 0) {
+            for (let i = this.joints.length - 1; i >= 0; i--) {
+                this.joints[i].fixedUpdate();
+            }
+            for (let i = this.points.length - 1; i >= 0; i--) {
+                this.points[i].fixedUpdate();
+            }
         }
     }
 
     update(progress) {
+        progress = (progress + this.slowParity) / 2;
         for (let mass of this.points) {
             mass.update(progress);
         }

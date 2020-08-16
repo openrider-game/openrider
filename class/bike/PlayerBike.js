@@ -110,6 +110,7 @@ export class PlayerBike extends Bike {
 
     die() {
         this.dead = true;
+        this.slow = true;
         this.head.drive = function() {};
         this.backWheel.speedValue = 0;
         this.backWheel.downPressed = false;

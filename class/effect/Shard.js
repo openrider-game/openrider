@@ -4,7 +4,12 @@ import { Mass } from "../bike/part/Mass.js";
 
 export class Shard extends Mass {
     constructor(pos, parent) {
-        super(pos);
+        super(
+            new Vector(pos.x + 5 * (Math.random() - Math.random()), pos.y + 5 * (Math.random() - Math.random())),
+            new Vector(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()))
+        );
+        this.slowParity = 0;
+        this.oldPos = this.pos.clone();
         /** @type {Object} */
         this.bike = parent;
         this.track = parent.track;
@@ -54,19 +59,23 @@ export class Shard extends Mass {
     }
 
     update(progress, delta) {
+        progress = (progress + this.slowParity) / 2;
         super.update(progress);
         this.rotation += this.rotationSpeed * delta / 40;
     }
 
     fixedUpdate() {
-        this.velocity.selfAdd(this.bike.gravity);
-        this.velocity = this.velocity.scale(0.99);
-        this.pos.selfAdd(this.velocity);
-        this.driving = false;
-        if (this.touch) {
-            this.track.touch(this);
+        this.slowParity = 1 - this.slowParity;
+        if (this.slowParity === 0) {
+            this.velocity.selfAdd(this.bike.gravity);
+            this.velocity = this.velocity.scale(0.99);
+            this.pos.selfAdd(this.velocity);
+            this.driving = false;
+            if (this.touch) {
+                this.track.touch(this);
+            }
+            this.velocity = this.pos.sub(this.oldPos);
+            this.oldPos.set(this.pos);
         }
-        this.velocity = this.pos.sub(this.oldPos);
-        this.oldPos.set(this.pos);
     }
 }

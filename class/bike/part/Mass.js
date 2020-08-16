@@ -1,7 +1,7 @@
 import { Vector } from '../../Vector.js';
 
 export class Mass {
-    constructor(pos = new Vector(0, 0), vel = new Vector(0, 0), size) {
+    constructor(pos = new Vector(0, 0), vel = new Vector(0, 0), size = 10) {
         /** @type {Vector} */
         this.pos = pos.clone();
         /** @type {Vector} */
@@ -11,7 +11,7 @@ export class Mass {
         /** @type {Vector} */
         this.velocity = vel.clone();
         /** @type {Number} */
-        this.size = 10;
+        this.size = size;
     }
 
     drive() {}

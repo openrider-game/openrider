@@ -9,7 +9,6 @@ export class Shard extends Mass {
             new Vector(11 * (Math.random() - Math.random()), 11 * (Math.random() - Math.random()))
         );
         this.slowParity = 0;
-        this.oldPos = this.pos.clone();
         /** @type {Object} */
         this.bike = parent;
         this.track = parent.track;

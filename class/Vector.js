@@ -1,5 +1,5 @@
 export class Vector {
-    constructor(x, y) {
+    constructor(x = 0, y = 0) {
         /** @type {?number} */
         this.x = x;
         /** @type {?number} */
@@ -101,6 +101,10 @@ export class Vector {
     /** @return {string} */
     toString() {
         return Math.round(this.x).toString(32) + ' ' + Math.round(this.y).toString(32);
+    }
+
+    toArray() {
+        return [this.x, this.y];
     }
 
     toJSON() {

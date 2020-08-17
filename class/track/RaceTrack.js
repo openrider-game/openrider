@@ -15,6 +15,7 @@ import { SlowMo } from "../item/SlowMo.js";
 import { Target } from "../item/Target.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
+import { LineTool } from "../tools/LineTool.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -27,6 +28,9 @@ export class RaceTrack extends Track {
         this.trackStringVersion = TRACKSTRING_NEW;
         this.undoManager = new UndoManager();
         this.lastTool = TOOL.CAMERA;
+
+        this.lineTool = new LineTool(this);
+
 
         if (!this.id) {
             rawTrack = TRACK_DEFAULT;
@@ -268,6 +272,7 @@ export class RaceTrack extends Track {
     }
 
     update(progress, delta) {
+        this.lineTool.update(delta);
         if (!this.paused) {
             this.bike.update(progress, delta);
             for (let i = 0; i < this.ghostInstances.length; i++) {
@@ -287,38 +292,16 @@ export class RaceTrack extends Track {
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         drawer.setProperty('lineJoin', 'round');
 
-        // Note: Drawing the grid boxes before the camera movement in the following block causes the positions of the
-        //  rider and the track to be out of sync when the screen is moving from dragging lines.
         this.drawGridBoxes(drawer);
 
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
-
-        // Draw red line and move camera when using line or brush tool
-        if (snapFromPrevLine && !secretlyErasing && (this.currentTool === TOOL.LINE || this.currentTool === TOOL.SLINE ||
-                this.currentTool === TOOL.BRUSH || this.currentTool === TOOL.SBRUSH)) {
-            if (mousePx.x < 50) {
-                this.camera.x -= 10 / this.zoomFactor;
-                mousePos.x -= 10 / this.zoomFactor;
-            } else if (mousePx.x > this.canvas.width - 50) {
-                this.camera.x += 10 / this.zoomFactor;
-                mousePos.x += 10 / this.zoomFactor;
-            }
-            if (mousePx.y < 50) {
-                this.camera.y -= 10 / this.zoomFactor;
-                mousePos.y -= 10 / this.zoomFactor;
-            } else if (mousePx.y > this.canvas.height - 50) {
-                this.camera.y += 10 / this.zoomFactor;
-                mousePos.y += 10 / this.zoomFactor;
-            }
-            drawer.setProperty('strokeStyle', '#f00');
-            mousePx = mousePos.toPixel(this);
-            drawer.beginPath().moveTo(lastClick.toPixel(this).x, lastClick.toPixel(this).y).lineTo(mousePx.x, mousePx.y).stroke();
-        }
 
         // Don't show text or tools if you're making a thumbnail.
         if (this.canvas.width === 250) {
             return;
         }
+
+        this.lineTool.render(this.canvas.getContext('2d'));
 
         // Draw tools (crosshairs, eraser, powerups)
         if (secretlyErasing) {
@@ -329,11 +312,11 @@ export class RaceTrack extends Track {
                 case 'scenery line':
                 case 'brush':
                 case 'scenery brush':
-                    drawer.setProperty('lineWidth', 1);
-                    drawer.setProperty('strokeStyle', '#000');
-                    let x = mousePx.x;
-                    let y = mousePx.y;
-                    drawer.beginPath().moveTo(x - 10, y).lineTo(x + 10, y).moveTo(x, y + 10).lineTo(x, y - 10).stroke();
+                    // drawer.setProperty('lineWidth', 1);
+                    // drawer.setProperty('strokeStyle', '#000');
+                    // let x = mousePx.x;
+                    // let y = mousePx.y;
+                    // drawer.beginPath().moveTo(x - 10, y).lineTo(x + 10, y).moveTo(x, y + 10).lineTo(x, y - 10).stroke();
                     break;
                 case 'eraser':
                     this.eraser(mousePx);

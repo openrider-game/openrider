@@ -551,7 +551,7 @@ canvas.onmouseup = function() {
         return secretlyErasing = false;
     }
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL.LINE || track.currentTool === TOOL.SLINE ||
+        if (track.currentTool === TOOL.SLINE ||
             track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
             var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.LINE && track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {

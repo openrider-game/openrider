@@ -10,6 +10,7 @@ import { MTB } from "../bike/MTB.js";
 import { Harley } from "../bike/Harley.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 import Controls from "../helper/Controls.js";
+import { ENABLE_GRID } from "../constant/TrackConstants.js";
 
 export class Track {
     constructor(canvas, game) {
@@ -140,7 +141,7 @@ export class Track {
             }
         }
 
-        if (window.debugMode) {
+        if (ENABLE_GRID) {
             drawer.beginPath();
             for (let y = topLeft.y; y <= bottomRight.y; y++) {
                 drawer.moveTo(0, Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
@@ -269,7 +270,7 @@ export class Track {
         let x = Math.floor(part.pos.x / this.gridSize - 0.5),
             y = Math.floor(part.pos.y / this.gridSize - 0.5),
             grid = this.grid;
-            
+
         // Mark lines as untouched
         if (grid[x] !== undefined) {
             if (grid[x][y] !== undefined) {

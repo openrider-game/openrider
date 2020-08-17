@@ -71,19 +71,10 @@ export class PlayerBike extends Bike {
             if (track.numTargets && track.targetsReached === track.numTargets) {
                 if (track.currentTime > MIN_TIME && (!track.time || this.time < track.time) && track.id !== undefined) {
                     if (confirm("You just set a new Track record!\nYour run will be saved for others to enjoy.")) {
-                        let keystring = '';
-                        for (let q, i = 0, l = this.keys.length; i < l; i++) {
-                            for (q in this.keys[i]) {
-                                if (!isNaN(q)) {
-                                    keystring += q + ' ';
-                                }
-                            }
-                            keystring += ",";
-                        }
                         let request = new XMLHttpRequest();
                         request.open("POST", "/ghost/save", false);
                         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        request.send("tid=" + track.id + "&v=" + this.toString() + "&t=" + track.currentTime + "&c=" + keystring);
+                        request.send("tid=" + track.id + "&v=" + this.toString() + "&t=" + track.currentTime + "&c=" + GhostString.generate(this.keys));
                         if (request.responseText !== 'ok') {
                             alert('Server responded: ' + request.responseText);
                         }

@@ -1,5 +1,6 @@
 import { ReachableItem } from "./ReachableItem.js";
 import { SAVE_CHECKPOINT } from "../constant/TrackConstants.js";
+import { DEBUG } from "../../bootstrap.js";
 
 export class Checkpoint extends ReachableItem {
     constructor(x, y, parent) {
@@ -11,6 +12,6 @@ export class Checkpoint extends ReachableItem {
 
     onReach(part) {
         part.bike.doSave |= SAVE_CHECKPOINT;
-        window.debugMode && console.log('cp', part.bike.time, JSON.stringify(part.bike));
+        DEBUG && console.log('cp', part.bike.time, JSON.stringify(part.bike));
     }
 }

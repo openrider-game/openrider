@@ -745,8 +745,6 @@ function changeThumb(on) {
 
 function getTrack() { return track; }
 
-window.debugMode = DEBUG;
-
 export default {
     game: {
         'ride': newGame,

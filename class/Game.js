@@ -11,7 +11,7 @@ export class Game {
     constructor(id, ghosts) {
         this.small();
         if (id === 'SURVIVAL') {
-            this.track = new SurvivalTrack(canvas);
+            this.track = new SurvivalTrack(canvas, this);
         } else {
             this.track = new RaceTrack(id, canvas, this);
             this.track.ghostIDs = ghosts || [];

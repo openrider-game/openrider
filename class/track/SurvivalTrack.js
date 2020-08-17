@@ -3,8 +3,8 @@ import { Track } from "./Track.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class SurvivalTrack extends Track {
-    constructor(canvas) {
-        super(canvas);
+    constructor(canvas, game) {
+        super(canvas, game);
         this.id = 'SURVIVAL';
         this.lines = [];
         this.difficulty = 0.5;
@@ -17,7 +17,7 @@ export class SurvivalTrack extends Track {
     fixedUpdate() {
         if (!this.paused) {
             this.bike && this.bike.fixedUpdate();
-            this.currentTime += 40;
+            this.currentTime += this.game.ms;
         }
         let p, line = this.lines[this.lines.length - 1];
         //~ while (this.bike.frontWheel.pos.distanceTo(p = line ? line.b : { x: -50, y: 50 }) < 2000) {
@@ -28,10 +28,17 @@ export class SurvivalTrack extends Track {
             this.difficulty += 0.001;
         }
         //~ }
-        if (this.focalPoint) {
-            this.camera.selfAdd(this.focalPoint.pos.sub(this.camera).scale(1 / 5));
-        }
         return this;
+    }
+
+    update(progress, delta) {
+        if (!this.paused) {
+            this.bike.update(progress, delta);
+
+            if (this.focalPoint) {
+                this.camera.selfAdd(this.focalPoint.displayPos.sub(this.camera).scale(delta / 200));
+            }
+        }
     }
 
     render() {

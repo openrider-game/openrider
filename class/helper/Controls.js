@@ -2,11 +2,6 @@ import { EventEmitter } from "../EventEmitter.js";
 
 export default class Controls extends EventEmitter {
 
-    static NONE = 0;
-    static CTRL = 1;
-    static ALT = 2;
-    static SHIFT = 4;
-
     constructor(context) {
         super();
 
@@ -72,3 +67,8 @@ export default class Controls extends EventEmitter {
             }
     }
 }
+
+Controls.NONE = 0;
+Controls.CTRL = 1;
+Controls.ALT = 2;
+Controls.SHIFT = 4;

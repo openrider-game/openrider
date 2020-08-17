@@ -1,4 +1,4 @@
-import { canvas, drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
+import { drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
 import { BIKE_BMX, BIKE_HAR, BIKE_MTB } from "../constant/BikeConstants.js";
@@ -13,18 +13,16 @@ import { Checkpoint } from "../item/Checkpoint.js";
 import { Gravity } from "../item/Gravity.js";
 import { SlowMo } from "../item/SlowMo.js";
 import { Target } from "../item/Target.js";
-import { Vector } from "../Vector.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 
 export class RaceTrack extends Track {
-    constructor(ID, game) {
-        super(null, game);
+    constructor(ID, canvas, game) {
+        super(canvas, game);
         let rawTrack, x, y, rawLine;
         this.ghostKeys = [];
         this.ghostIDs = [];
         this.ghostInstances = [];
-        this.canvas = canvas;
         this.id = ID;
         this.trackStringVersion = TRACKSTRING_NEW;
         this.undoManager = new UndoManager();
@@ -284,7 +282,7 @@ export class RaceTrack extends Track {
     render() {
         let drawer = CanvasHelper.getInstance();
         let mousePx = mousePos.toPixel(this);
-        drawer.clearRect(0, 0, canvas.width, canvas.height);
+        drawer.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         drawer.setProperty('lineWidth', Math.max(2 * this.zoomFactor, 0.5));
         drawer.setProperty('lineJoin', 'round');
@@ -301,14 +299,14 @@ export class RaceTrack extends Track {
             if (mousePx.x < 50) {
                 this.camera.x -= 10 / this.zoomFactor;
                 mousePos.x -= 10 / this.zoomFactor;
-            } else if (mousePx.x > canvas.width - 50) {
+            } else if (mousePx.x > this.canvas.width - 50) {
                 this.camera.x += 10 / this.zoomFactor;
                 mousePos.x += 10 / this.zoomFactor;
             }
             if (mousePx.y < 50) {
                 this.camera.y -= 10 / this.zoomFactor;
                 mousePos.y -= 10 / this.zoomFactor;
-            } else if (mousePx.y > canvas.height - 50) {
+            } else if (mousePx.y > this.canvas.height - 50) {
                 this.camera.y += 10 / this.zoomFactor;
                 mousePos.y += 10 / this.zoomFactor;
             }
@@ -318,7 +316,7 @@ export class RaceTrack extends Track {
         }
 
         // Don't show text or tools if you're making a thumbnail.
-        if (canvas.width === 250) {
+        if (this.canvas.width === 250) {
             return;
         }
 
@@ -371,16 +369,16 @@ export class RaceTrack extends Track {
         this.drawText(drawer);
 
         if (this.changingThumb) {
-            let x0 = (canvas.width - 250) / 2,
+            let x0 = (this.canvas.width - 250) / 2,
                 x1 = x0 + 250,
-                y0 = (canvas.height - 150) / 2,
+                y0 = (this.canvas.height - 150) / 2,
                 y1 = y0 + 150;
             drawer.setProperty('lineWidth', 1);
             drawer.setProperty('strokeStyle', '#fff');
             drawer.setProperty('fillStyle', 'rgba(0, 0, 0, 0.4)');
-            drawer.fillRect(0, 0, canvas.width, y0).fillRect(0, y1, canvas.width, y0).fillRect(0, y0, x0, 150).fillRect(x1, y0, x0, 150).strokeRect(x0, y0, 250, 150);
-            //drawer.fillRect(x0, y1, canvas.width - x1, canvas.height - y1);
-            //drawer.fillRect(x1, y0, canvas.width - x1, 150);
+            drawer.fillRect(0, 0, this.canvas.width, y0).fillRect(0, y1, this.canvas.width, y0).fillRect(0, y0, x0, 150).fillRect(x1, y0, x0, 150).strokeRect(x0, y0, 250, 150);
+            //drawer.fillRect(x0, y1, this.canvas.width - x1, this.canvas.height - y1);
+            //drawer.fillRect(x1, y0, this.canvas.width - x1, 150);
         }
 
         for (let i = 0; i < this.ghostInstances.length; i++) {
@@ -436,8 +434,8 @@ export class RaceTrack extends Track {
             const ghost = this.ghostInstances[i];
             drawer.setProperty('fillStyle', (ghost.color !== '#000' && ghost.color) || '#777');
             text = (this.focalPoint === ghost.head ? '>> ' : '') + (ghost.name || 'Ghost') + (ghost.targetsReached === this.numTargets ? ' finished!' : ': ' + ghost.targetsReached + ' / ' + this.numTargets);
-            drawer.ctx.strokeText(text, canvas.width - 7, 16 + 17 * i);
-            drawer.fillText(text, canvas.width - 7, 16 + 17 * i);
+            drawer.ctx.strokeText(text, this.canvas.width - 7, 16 + 17 * i);
+            drawer.fillText(text, this.canvas.width - 7, 16 + 17 * i);
         }
 
         // Tooltip
@@ -450,11 +448,11 @@ export class RaceTrack extends Track {
             } else {
                 drawer.setProperty('textAlign', 'right');
                 if (document.documentElement.offsetHeight <= window.innerHeight) {
-                    drawer.ctx.strokeText(label[2], canvas.width - 36, 15 + label[1] * 25);
-                    drawer.fillText(label[2], canvas.width - 36, 15 + label[1] * 25);
+                    drawer.ctx.strokeText(label[2], this.canvas.width - 36, 15 + label[1] * 25);
+                    drawer.fillText(label[2], this.canvas.width - 36, 15 + label[1] * 25);
                 } else {
-                    drawer.ctx.strokeText(label[2], canvas.width - 51, 15 + label[1] * 25);
-                    drawer.fillText(label[2], canvas.width - 51, 15 + label[1] * 25);
+                    drawer.ctx.strokeText(label[2], this.canvas.width - 51, 15 + label[1] * 25);
+                    drawer.fillText(label[2], this.canvas.width - 51, 15 + label[1] * 25);
                 }
                 drawer.setProperty('textAlign', 'left');
             }

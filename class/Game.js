@@ -11,9 +11,9 @@ export class Game {
     constructor(id, ghosts) {
         this.small();
         if (id === 'SURVIVAL') {
-            this.track = new SurvivalTrack();
+            this.track = new SurvivalTrack(canvas);
         } else {
-            this.track = new RaceTrack(id, this);
+            this.track = new RaceTrack(id, canvas, this);
             this.track.ghostIDs = ghosts || [];
         }
         this.track.bike = new({ BMX: BMX, MTB: MTB, HAR: Harley }[this.track.currentBike] || BMX)(this.track);
@@ -51,7 +51,7 @@ export class Game {
             this.progress--;
             if (!this.interpolate) {
                 this.track.update(0, this.ms);
-                if (this.progress < 1) {    // Only render on the last update in the frame.
+                if (this.progress < 1) { // Only render on the last update in the frame.
                     this.track.render();
                     this.frames++;
                 }

@@ -1,11 +1,10 @@
 import { Vector } from "../Vector.js";
-import { canvas } from "../../bootstrap.js";
 import { Track } from "./Track.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class SurvivalTrack extends Track {
-    constructor() {
-        super();
+    constructor(canvas) {
+        super(canvas);
         this.id = 'SURVIVAL';
         this.lines = [];
         this.difficulty = 0.5;
@@ -37,9 +36,9 @@ export class SurvivalTrack extends Track {
 
     render() {
         let drawer = CanvasHelper.getInstance();
-        drawer.clearRect(0, 0, canvas.width, canvas.height);
+        drawer.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.drawGridBoxes(drawer, canvas);
+        this.drawGridBoxes(drawer, this.canvas);
 
         drawer.setProperty('lineWidth', 10);
         drawer.setProperty('strokeStyle', '#fff');

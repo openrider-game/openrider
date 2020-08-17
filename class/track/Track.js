@@ -1,4 +1,4 @@
-import { canvas, shadeLines } from "../../bootstrap.js";
+import { shadeLines } from "../../bootstrap.js";
 import { TOOL } from "../constant/ToolConstants.js";
 import { BIKE_BMX } from "../constant/BikeConstants.js";
 import { GridBox } from "./GridBox.js";
@@ -83,7 +83,7 @@ export class Track {
     drawGridBoxes(drawer) {
         // Coordinates of top left, and bottom right, gridBoxes.
         let topLeft = new Vector(0, 0).normalizeToCanvas(this);
-        let bottomRight = new Vector(canvas.width, canvas.height).normalizeToCanvas(this);
+        let bottomRight = new Vector(this.canvas.width, this.canvas.height).normalizeToCanvas(this);
         topLeft.x = Math.floor(topLeft.x / this.gridSize);
         topLeft.y = Math.floor(topLeft.y / this.gridSize);
         bottomRight.x = Math.floor(bottomRight.x / this.gridSize);
@@ -124,7 +124,7 @@ export class Track {
                             }
                             ctx.stroke();
                         }
-                        drawer.drawImage(this.cache[key], Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                        drawer.drawImage(this.cache[key], Math.floor(this.canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), Math.floor(this.canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
                     }
                     drawer.setProperty('strokeStyle', '#000');
                     for (let i = 0, l = this.grid[x][y].powerups.length; i < l; i++) {
@@ -144,12 +144,12 @@ export class Track {
         if (ENABLE_GRID) {
             drawer.beginPath();
             for (let y = topLeft.y; y <= bottomRight.y; y++) {
-                drawer.moveTo(0, Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
-                drawer.lineTo(canvas.width, Math.floor(canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                drawer.moveTo(0, Math.floor(this.canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
+                drawer.lineTo(this.canvas.width, Math.floor(this.canvas.height / 2 - this.camera.y * this.zoomFactor + y * this.gridSize * this.zoomFactor));
             }
             for (let x = topLeft.x; x <= bottomRight.x; x++) {
-                drawer.moveTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), 0);
-                drawer.lineTo(Math.floor(canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), canvas.height);
+                drawer.moveTo(Math.floor(this.canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), 0);
+                drawer.lineTo(Math.floor(this.canvas.width / 2 - this.camera.x * this.zoomFactor + x * this.gridSize * this.zoomFactor), this.canvas.height);
             }
             drawer.setProperty('strokeStyle', '#abc').setProperty('lineWidth', 2);
             drawer.stroke();

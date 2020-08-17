@@ -51,4 +51,10 @@ export class Explosion {
             this.pieces[i].fixedUpdate();
         }
     }
+
+    update(progress, delta) {
+        for (let i = this.pieces.length - 1; i >= 0; i--) {
+            this.pieces[i].update(progress, delta);
+        }
+    }
 }

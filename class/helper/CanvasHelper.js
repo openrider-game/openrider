@@ -1,5 +1,4 @@
 export class CanvasHelper {
-    static instance;
 
     constructor(ctx) {
         this.ctx = ctx;

@@ -3,16 +3,6 @@ import { eraserSize } from "../../bootstrap.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Item {
-    static TYPES = {
-        f: "Boost",
-        g: "Gravity",
-        t: "Target",
-        c: "Checkpoint",
-        e: "Bomb",
-        s: "SlowMo"
-    };
-
-    static $id = 0;
 
     constructor(x, y, parent) {
         this.pos = new Vector(x, y);
@@ -56,3 +46,14 @@ export class Item {
     onTouch() {}
     onDelete() {}
 }
+
+Item.TYPES = {
+    f: "Boost",
+    g: "Gravity",
+    t: "Target",
+    c: "Checkpoint",
+    e: "Bomb",
+    s: "SlowMo"
+};
+
+Item.$id = 0;

@@ -61,6 +61,20 @@ export class Track {
         }
     }
 
+    /**
+     * @param {Vector} point 
+     * @param {number} direction 
+     */
+    zoom(point, direction) {
+        const px = point.toPixel(this);
+        this.zoomFactor = Math.round(this.zoomFactor * 10 + 2 * direction) / 10;
+        this.zoomFactor = Math.min(4, Math.max(0.2, this.zoomFactor));
+        this.camera.x = point.x - (px.x - this.canvas.width / 2) / this.zoomFactor;
+        this.camera.y = point.y - (px.y - this.canvas.height / 2) / this.zoomFactor;
+
+        this.cache = {};
+    }
+
     reset() {
         this.checkpoints = [];
         this.restart();

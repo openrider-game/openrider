@@ -684,10 +684,10 @@ uploadButton && (uploadButton.onclick = function() {
 });
 
 function zoom(way) {
-    if ((way < 0 && track.zoomFactor > 0.2) || (way > 0 && track.zoomFactor < 4)) {
-        track.zoomFactor = Math.round(track.zoomFactor * 10 + 2 * way) / 10;
-        track.cache = {};
-    }
+    // if ((way < 0 && track.zoomFactor > 0.2) || (way > 0 && track.zoomFactor < 4)) {
+    //     track.zoomFactor = Math.round(track.zoomFactor * 10 + 2 * way) / 10;
+    //     track.cache = {};
+    // }
 }
 
 function onScroll(e) {
@@ -708,15 +708,6 @@ function onScroll(e) {
                 drawingSize += 8;
             }
         }
-    } else {
-        if (zout) { zoom(-1); } else if (zin) { zoom(1); }
-    }
-    var Cw = new Vector(
-        e.clientX - canvas.offsetLeft,
-        e.clientY - canvas.offsetTop + window.pageYOffset
-    ).normalizeToCanvas(track);
-    if (!track.focalPoint) {
-        track.camera.selfAdd(mousePos.sub(Cw));
     }
 }
 canvas.addEventListener('DOMMouseScroll', onScroll, false);

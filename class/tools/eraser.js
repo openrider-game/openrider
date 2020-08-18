@@ -13,9 +13,12 @@ export class Eraser extends Tool {
     }
 
     scroll(e) {
+        const direction = -Math.sign(e.deltaY);
         if (e.shiftKey) {
-            const direction = -Math.sign(e.deltaY);
             this.size = Math.max(this.minSize, Math.min(this.maxSize, this.size + 5 * direction));
+        }
+        else {
+            this.track.zoom(mousePos, direction);
         }
     }
 

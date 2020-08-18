@@ -11,5 +11,7 @@ export class Tool {
     mouseUp() {
         this.isMouseDown = false;
     }
-    scroll() {}
+    scroll(e) {
+        this.track.zoom(mousePos, -Math.sign(e.deltaY));
+    }
 }

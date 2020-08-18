@@ -16,6 +16,7 @@ import { Target } from "../item/Target.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 import { LineTool } from "../tools/LineTool.js";
+import { Eraser } from "../tools/eraser.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -30,6 +31,7 @@ export class RaceTrack extends Track {
         this.lastTool = TOOL.CAMERA;
 
         this.lineTool = new LineTool(this);
+        this.eraser = new Eraser(this);
 
 
         if (!this.id) {
@@ -272,7 +274,14 @@ export class RaceTrack extends Track {
     }
 
     update(progress, delta) {
-        this.lineTool.update(delta);
+        switch(this.currentTool) {
+            case 'line':
+            case 'scenery line':
+                this.lineTool.update(delta);
+                break;
+            case 'eraser':
+                this.eraser.update(delta);
+        }
         if (!this.paused) {
             this.bike.update(progress, delta);
             for (let i = 0; i < this.ghostInstances.length; i++) {
@@ -301,8 +310,7 @@ export class RaceTrack extends Track {
             return;
         }
 
-        this.lineTool.render(this.canvas.getContext('2d'));
-
+        
         // Draw tools (crosshairs, eraser, powerups)
         if (secretlyErasing) {
             this.eraser(mousePx);
@@ -312,14 +320,10 @@ export class RaceTrack extends Track {
                 case 'scenery line':
                 case 'brush':
                 case 'scenery brush':
-                    // drawer.setProperty('lineWidth', 1);
-                    // drawer.setProperty('strokeStyle', '#000');
-                    // let x = mousePx.x;
-                    // let y = mousePx.y;
-                    // drawer.beginPath().moveTo(x - 10, y).lineTo(x + 10, y).moveTo(x, y + 10).lineTo(x, y - 10).stroke();
+                    this.lineTool.render(this.canvas.getContext('2d'));
                     break;
                 case 'eraser':
-                    this.eraser(mousePx);
+                    this.eraser.render(this.canvas.getContext('2d'));
                     break;
                 case 'goal':
                 case 'checkpoint':
@@ -442,11 +446,11 @@ export class RaceTrack extends Track {
         }
     }
 
-    eraser(mousePx) {
-        let drawer = CanvasHelper.getInstance();
-        drawer.setProperty('fillStyle', '#ffb6c1');
-        drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, 2 * Math.PI, true).fill();
-    }
+    // eraser(mousePx) {
+    //     let drawer = CanvasHelper.getInstance();
+    //     drawer.setProperty('fillStyle', '#ffb6c1');
+    //     drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, 2 * Math.PI, true).fill();
+    // }
 
     checkDelete(eraserPoint) {
         let x = Math.floor(eraserPoint.x / this.gridSize - 0.5),

@@ -114,17 +114,6 @@ function switchBikes() {
     track.reset();
 }
 
-function erase() {
-    var deleted = track.checkDelete(mousePos);
-    deleted.length && track.pushUndo(function() {
-        track.selfAdd(deleted, true);
-    }, function() {
-        for (var i = 0, l = deleted.length; i < l; i++) {
-            deleted[i].remove();
-        }
-    });
-}
-
 function big() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -457,7 +446,6 @@ canvas.onmousedown = function(event) {
     track.focalPoint = false;
 
     if (event.button === 2 && track.currentTool !== TOOL.CAMERA) {
-        erase();
         secretlyErasing = true;
         return;
     }
@@ -469,9 +457,6 @@ canvas.onmousedown = function(event) {
         case TOOL.BOOST:
         case TOOL.GRAVITY:
             document.body.style.cursor = 'crosshair';
-            break;
-        case TOOL.ERASER:
-            erase();
             break;
         case TOOL.GOAL:
             track.collectables.push(item = new Target(lastClick.x, lastClick.y, track));
@@ -533,9 +518,8 @@ document.onmousemove = function(event) {
         if (track.currentTool === TOOL.CAMERA) {
             track.camera.selfAdd(lastClick.sub(mousePos));
             mousePos.set(lastClick);
-        } else if (track.currentTool === TOOL.ERASER || event.button === 2) {
-            erase();
-        } else if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
+        }
+        else if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
             var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {
                 line.remove();
@@ -551,8 +535,7 @@ canvas.onmouseup = function() {
         return secretlyErasing = false;
     }
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL.SLINE ||
-            track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
+        if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
             var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.LINE && track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {
                 line.remove();

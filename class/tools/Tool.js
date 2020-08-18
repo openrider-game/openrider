@@ -5,6 +5,11 @@ export class Tool {
     }
     update() {}
     render() {}
-    mouseDown() {}
-    mouseUp() {}
+    mouseDown() {
+        this.isMouseDown = true;
+    }
+    mouseUp() {
+        this.isMouseDown = false;
+    }
+    scroll() {}
 }

@@ -5,10 +5,15 @@ import { mousePos } from '../../bootstrap.js';
 export class LineTool extends Tool {
     constructor(track) {
         super(track);
+        this.type = 'physics';
         this.startPos = new Vector();
         this.endPos = new Vector();
         track.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
         document.addEventListener('mouseup', this.mouseUp.bind(this));
+    }
+
+    toggleType() {
+        this.type = (this.type === 'physics') ? 'scenery' : 'physics';
     }
 
     mouseDown() {
@@ -22,7 +27,7 @@ export class LineTool extends Tool {
     mouseUp() {
         this.isMouseDown = false;
         if (this.checkLineLength()) {
-            const line = this.track.addLine(this.startPos, this.endPos, false);
+            const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
             this.track.pushUndo(function() {
                 line.remove();
             }, function() {

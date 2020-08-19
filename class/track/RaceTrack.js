@@ -1,4 +1,4 @@
-import { drawingSize, eraserSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
+import { canvas, drawingSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
 import { BIKE_BMX, BIKE_HAR, BIKE_MTB } from "../constant/BikeConstants.js";
@@ -17,6 +17,7 @@ import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 import { LineTool } from "../tools/LineTool.js";
 import { Eraser } from "../tools/eraser.js";
+import { ToolHandler } from "../tools/toolHandler.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -30,8 +31,13 @@ export class RaceTrack extends Track {
         this.undoManager = new UndoManager();
         this.lastTool = TOOL.CAMERA;
 
-        this.lineTool = new LineTool(this);
-        this.eraser = new Eraser(this);
+        this.toolHandler = new ToolHandler(this);
+        this.toolHandler.tools = [
+            new LineTool(this, 'physics'),
+            new LineTool(this, 'scenery'),
+            new Eraser(this)
+        ];
+        this.toolHandler.activeTool = this.toolHandler.tools[2];
 
 
         if (!this.id) {
@@ -274,14 +280,7 @@ export class RaceTrack extends Track {
     }
 
     update(progress, delta) {
-        switch(this.currentTool) {
-            case 'line':
-            case 'scenery line':
-                this.lineTool.update(delta);
-                break;
-            case 'eraser':
-                this.eraser.update(delta);
-        }
+        this.toolHandler.update(delta);
         if (!this.paused) {
             this.bike.update(progress, delta);
             for (let i = 0; i < this.ghostInstances.length; i++) {
@@ -310,21 +309,12 @@ export class RaceTrack extends Track {
             return;
         }
 
-        
+        this.toolHandler.render(this.canvas.getContext('2d'));
         // Draw tools (crosshairs, eraser, powerups)
         if (secretlyErasing) {
-            this.eraser(mousePx);
+            //this.eraser(mousePx);
         } else if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
             switch (this.currentTool) {
-                case 'line':
-                case 'scenery line':
-                case 'brush':
-                case 'scenery brush':
-                    this.lineTool.render(this.canvas.getContext('2d'));
-                    break;
-                case 'eraser':
-                    this.eraser.render(this.canvas.getContext('2d'));
-                    break;
                 case 'goal':
                 case 'checkpoint':
                 case 'bomb':
@@ -446,13 +436,7 @@ export class RaceTrack extends Track {
         }
     }
 
-    // eraser(mousePx) {
-    //     let drawer = CanvasHelper.getInstance();
-    //     drawer.setProperty('fillStyle', '#ffb6c1');
-    //     drawer.beginPath().arc(mousePx.x, mousePx.y, (eraserSize - 1) * this.zoomFactor, 0, 2 * Math.PI, true).fill();
-    // }
-
-    checkDelete(eraserPoint) {
+    checkDelete(eraserPoint, radius) {
         let x = Math.floor(eraserPoint.x / this.gridSize - 0.5),
             y = Math.floor(eraserPoint.y / this.gridSize - 0.5),
             Ix = this.grid[x],
@@ -460,7 +444,7 @@ export class RaceTrack extends Track {
             Ixy, Ixy1, Ix1y, Ix1y1, i, l, deleted = [];
 
         function del(obj) {
-            let b = obj.checkDelete(eraserPoint);
+            let b = obj.checkDelete(eraserPoint, radius);
             b && deleted.push(b);
         }
         if (Ix !== undefined) {

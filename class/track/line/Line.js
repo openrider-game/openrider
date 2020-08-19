@@ -1,5 +1,4 @@
 import { Vector } from "../../Vector.js";
-import { eraserSize } from "../../../bootstrap.js";
 
 export class Line {
     constructor(x1, y1, x2, y2, parent) {
@@ -16,7 +15,7 @@ export class Line {
         context.lineTo(this.b.x * this.track.zoomFactor - offsetLeft, this.b.y * this.track.zoomFactor - offsetTop);
     }
 
-    checkDelete(eraserPoint) {
+    checkDelete(eraserPoint, radius) {
         let C4 = eraserPoint.sub(this.a);
         let B8 = C4.dot(this.vector.recipScale(this.len));
         let Bi = new Vector(0, 0);
@@ -28,7 +27,7 @@ export class Line {
             Bi.set(this.a.add(this.vector.recipScale(this.len).scale(B8)));
         }
         let DA = eraserPoint.sub(Bi);
-        if (DA.getLength() <= eraserSize) {
+        if (DA.getLength() <= radius) {
             this.remove();
             return this;
         }

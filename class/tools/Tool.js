@@ -1,10 +1,12 @@
+import {mousePos} from '../../bootstrap.js';
+
 export class Tool {
     constructor(track) {
         this.track = track;
-        this.isMouseDown = false;
+        this.isMouseDown = false;        
     }
     update() {}
-    render() {}
+    render(ctx) {}
     mouseDown() {
         this.isMouseDown = true;
     }

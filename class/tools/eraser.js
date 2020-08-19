@@ -7,9 +7,6 @@ export class Eraser extends Tool {
         this.size = 15;
         this.minSize = 5;
         this.maxSize = 40;
-        this.track.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
-        document.addEventListener('mouseup', this.mouseUp.bind(this));
-        document.addEventListener('wheel', this.scroll.bind(this))
     }
 
     scroll(e) {
@@ -24,7 +21,7 @@ export class Eraser extends Tool {
 
     update() {
         if (this.isMouseDown) {
-            const deleted = this.track.checkDelete(mousePos);
+            const deleted = this.track.checkDelete(mousePos, this.size);
             if (deleted.length > 0) {
                 this.track.pushUndo(
                     () => {
@@ -43,7 +40,7 @@ export class Eraser extends Tool {
     render(ctx) {
         const mousePx = mousePos.toPixel(this.track);
         ctx.beginPath();
-        ctx.arc(mousePx.x, mousePx.y, (this.size - 1) * this.track.zoomFactor, 0, 2 * Math.PI, true);
+        ctx.arc(mousePx.x, mousePx.y, this.size * this.track.zoomFactor, 0, 2 * Math.PI, true);
         ctx.fillStyle = "#ffb6c1";
         ctx.fill();
     }

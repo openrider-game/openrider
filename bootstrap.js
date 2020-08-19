@@ -40,7 +40,6 @@ export var track, game,
     mousePos = new Vector(0, 0),
     // Drawing sizes
     drawingSize = 20,
-    eraserSize = 15,
     // ??
     shift = false,
     // Editor Tooling
@@ -445,6 +444,8 @@ canvas.onmousedown = function(event) {
     snapFromPrevLine = true;
     track.focalPoint = false;
 
+    track.toolHandler.activeTool.mouseDown(event);
+
     if (event.button === 2 && track.currentTool !== TOOL.CAMERA) {
         secretlyErasing = true;
         return;
@@ -529,8 +530,9 @@ document.onmousemove = function(event) {
         }
     }
 };
-canvas.onmouseup = function() {
+canvas.onmouseup = function(event) {
     var x, y, item, direction;
+    track.toolHandler.activeTool.mouseUp(event);
     if (secretlyErasing) {
         return secretlyErasing = false;
     }
@@ -694,14 +696,9 @@ function onScroll(e) {
     let zin = e.detail < 0 || e.wheelDelta > 0;
     let zout = e.detail > 0 || e.wheelDelta < 0;
     e.preventDefault();
+    track.toolHandler.activeTool.scroll(e);
     if (shift) {
-        if (track.currentTool === TOOL.ERASER) {
-            if ((zout) && eraserSize > 5) {
-                eraserSize -= 5;
-            } else if ((zin) && eraserSize < 40) {
-                eraserSize += 5;
-            }
-        } else if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
+        if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
             if ((zout) && drawingSize > 4) {
                 drawingSize -= 8;
             } else if ((zin) && drawingSize < 200) {

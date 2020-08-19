@@ -16,7 +16,7 @@ import { Target } from "../item/Target.js";
 import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 import { LineTool } from "../tools/LineTool.js";
-import { Eraser } from "../tools/eraser.js";
+import { Eraser } from "../tools/EraserTool.js";
 import { ToolHandler } from "../tools/ToolHandler.js";
 
 export class RaceTrack extends Track {

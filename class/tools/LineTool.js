@@ -10,10 +10,6 @@ export class LineTool extends Tool {
         this.endPos = new Vector();
     }
 
-    toggleType() {
-        this.type = (this.type === 'physics') ? 'scenery' : 'physics';
-    }
-
     mouseDown() {
         if (!this.isMouseDown) {
             this.isMouseDown = true;
@@ -76,6 +72,12 @@ export class LineTool extends Tool {
             ctx.strokeStyle = this.checkLineLength() ? "#00f" : "#f00";
             ctx.lineWidth = this.track.zoomFactor * 2;
             ctx.stroke();
+        }
+    }
+
+    deselect() {
+        if (this.isMouseDown) {
+            this.mouseUp();
         }
     }
 

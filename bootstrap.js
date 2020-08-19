@@ -390,16 +390,16 @@ toolbar2.onmousedown = function(event) {
             track.currentTool = TOOL.SBRUSH;
             break;
         case 3:
-            track.currentTool = TOOL.LINE;
+            track.toolHandler.selectTool(TOOL.LINE);
             break;
         case 4:
-            track.currentTool = TOOL.SLINE;
+            track.toolHandler.selectTool(TOOL.SLINE);
             break;
         case 5:
-            track.currentTool = TOOL.ERASER;
+            track.toolHandler.selectTool(TOOL.ERASER);
             break;
         case 6:
-            track.currentTool = TOOL.CAMERA;
+            track.toolHandler.selectTool(TOOL.CAMERA);
             break;
         case 7:
             if (gridDetail === 1) {
@@ -504,9 +504,6 @@ canvas.oncontextmenu = function(event) {
     event.preventDefault();
 };
 document.onmousemove = function(event) {
-    if (track.currentTool !== TOOL.CAMERA) {
-        track.focalPoint = false;
-    }
     mousePos = new Vector(
         event.clientX - canvas.offsetLeft,
         event.clientY - canvas.offsetTop + window.pageYOffset
@@ -515,12 +512,11 @@ document.onmousemove = function(event) {
         mousePos.x = Math.round(mousePos.x / gridDetail) * gridDetail;
         mousePos.y = Math.round(mousePos.y / gridDetail) * gridDetail;
     }
+
+    track.toolHandler.mouseMove(event);
+    
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL.CAMERA) {
-            track.camera.selfAdd(lastClick.sub(mousePos));
-            mousePos.set(lastClick);
-        }
-        else if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
+        if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
             var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
             track.pushUndo(function() {
                 line.remove();

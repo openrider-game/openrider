@@ -18,9 +18,11 @@ export class ToolHandler {
     }
 
     selectTool(name) {
-        if (this.activeTool) this.activeTool.deselect();
-        this.activeTool = this.tools[name] || null;
-        this.activeTool.select();
+        if (this.tools[name] !== this.activeTool) {
+            if (this.activeTool) this.activeTool.deselect();
+            this.activeTool = this.tools[name] || null;
+            if (this.activeTool) this.activeTool.select();
+        }
     }
 
     update(delta) {
@@ -37,6 +39,10 @@ export class ToolHandler {
 
     mouseUp(e) {
         if (this.activeTool) this.activeTool.mouseUp(e);
+    }
+
+    mouseMove(e) {
+        if (this.activeTool) this.activeTool.mouseMove(e);
     }
 
     scroll(e) {

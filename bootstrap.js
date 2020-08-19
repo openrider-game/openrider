@@ -342,11 +342,11 @@ toolbar1.onmousemove = function(event) {
 toolbar2.onmousemove = function(event) {
     var pos = Math.floor((event.clientY - toolbar2.offsetTop + window.pageYOffset) / 25);
     label = [1, pos, hints[1][pos]];
-    if (pos === 14) {
-        if (track.currentTool === TOOL.SLINE || track.currentTool === TOOL.SBRUSH) {
-            label[2] = 'Shorten last set of scenery lines ( Z )';
-        }
-    }
+    // if (pos === 14) {
+    //     if (track.currentTool === TOOL.SLINE || track.currentTool === TOOL.SBRUSH) {
+    //         label[2] = 'Shorten last set of scenery lines ( Z )';
+    //     }
+    // }
 };
 toolbar1.onmousedown = function(event) {
     track.focalPoint = false;
@@ -384,10 +384,10 @@ toolbar2.onmousedown = function(event) {
     track.focalPoint = false;
     switch (Math.floor((event.clientY - toolbar1.offsetTop + window.pageYOffset) / 25) + 1) {
         case 1:
-            track.currentTool = TOOL.BRUSH;
+            track.toolHandler.selectTool(TOOL.BRUSH);
             break;
         case 2:
-            track.currentTool = TOOL.SBRUSH;
+            track.toolHandler.selectTool(TOOL.SBRUSH);
             break;
         case 3:
             track.toolHandler.selectTool(TOOL.LINE);
@@ -514,17 +514,6 @@ document.onmousemove = function(event) {
     }
 
     track.toolHandler.mouseMove(event);
-    
-    if (snapFromPrevLine) {
-        if (!shift && (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) && lastClick.distanceTo(mousePos) >= drawingSize) {
-            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
-            track.pushUndo(function() {
-                line.remove();
-            }, function() {
-                line.reAdd();
-            });
-        }
-    }
 };
 canvas.onmouseup = function(event) {
     var x, y, item, direction;
@@ -693,15 +682,6 @@ function onScroll(e) {
     let zout = e.detail > 0 || e.wheelDelta < 0;
     e.preventDefault();
     track.toolHandler.scroll(e);
-    if (shift) {
-        if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
-            if ((zout) && drawingSize > 4) {
-                drawingSize -= 8;
-            } else if ((zin) && drawingSize < 200) {
-                drawingSize += 8;
-            }
-        }
-    }
 }
 canvas.addEventListener('DOMMouseScroll', onScroll, false);
 canvas.addEventListener('mousewheel', onScroll, false);

@@ -1,5 +1,4 @@
 import { Vector } from "../Vector.js";
-import { eraserSize } from "../../bootstrap.js";
 import { CanvasHelper } from "../helper/CanvasHelper.js";
 
 export class Item {
@@ -25,7 +24,7 @@ export class Item {
     }
 
     checkDelete(eraserPoint) {
-        if (eraserPoint.distanceTo(this.pos) < eraserSize + 7) {
+        if (eraserPoint.distanceTo(this.pos) < radius + 7) {
             this.remove();
             return this;
         }

@@ -3,13 +3,11 @@ import { Tool } from './Tool.js';
 import { mousePos } from '../../bootstrap.js';
 
 export class LineTool extends Tool {
-    constructor(track) {
+    constructor(track, type = 'physics') {
         super(track);
-        this.type = 'physics';
+        this.type = type;
         this.startPos = new Vector();
         this.endPos = new Vector();
-        track.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
-        document.addEventListener('mouseup', this.mouseUp.bind(this));
     }
 
     toggleType() {

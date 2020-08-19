@@ -19,6 +19,7 @@ import { LineTool } from "../tools/LineTool.js";
 import { EraserTool } from "../tools/EraserTool.js";
 import { ToolHandler } from "../tools/ToolHandler.js";
 import { CameraTool } from "../tools/CameraTool.js";
+import { BrushTool } from "../tools/BrushTool.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -37,6 +38,8 @@ export class RaceTrack extends Track {
         this.toolHandler.addTool(new LineTool(this, 'scenery'), TOOL.SLINE);
         this.toolHandler.addTool(new EraserTool(this), TOOL.ERASER);
         this.toolHandler.addTool(new CameraTool(this), TOOL.CAMERA);
+        this.toolHandler.addTool(new BrushTool(this, 'physics'), TOOL.BRUSH);
+        this.toolHandler.addTool(new BrushTool(this, 'scenery'), TOOL.SBRUSH);
         this.toolHandler.selectTool(TOOL.LINE);
 
 

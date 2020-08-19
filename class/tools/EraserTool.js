@@ -1,7 +1,7 @@
 import { Tool } from "./Tool.js";
 import { mousePos } from "../../bootstrap.js";
 
-export class Eraser extends Tool {
+export class EraserTool extends Tool {
     constructor(track) {
         super(track);
         this.size = 15;

@@ -10,13 +10,16 @@ export class Tool {
         this.isMouseDown = false;
     }
     select() {}
-    update() {}
+    update(delta) {}
     render(ctx) {}
     mouseDown() {
         this.isMouseDown = true;
     }
     mouseUp() {
         this.isMouseDown = false;
+    }
+    mouseMove(e) {
+        this.track.focalPoint = false;
     }
     scroll(e) {
         this.track.zoom(mousePos, -Math.sign(e.deltaY));

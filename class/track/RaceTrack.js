@@ -17,7 +17,7 @@ import { GridBox } from "./GridBox.js";
 import { Track } from "./Track.js";
 import { LineTool } from "../tools/LineTool.js";
 import { Eraser } from "../tools/eraser.js";
-import { ToolHandler } from "../tools/toolHandler.js";
+import { ToolHandler } from "../tools/ToolHandler.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -32,12 +32,10 @@ export class RaceTrack extends Track {
         this.lastTool = TOOL.CAMERA;
 
         this.toolHandler = new ToolHandler(this);
-        this.toolHandler.tools = [
-            new LineTool(this, 'physics'),
-            new LineTool(this, 'scenery'),
-            new Eraser(this)
-        ];
-        this.toolHandler.activeTool = this.toolHandler.tools[2];
+        this.toolHandler.addTool(new LineTool(this, 'physics'), TOOL.LINE);
+        this.toolHandler.addTool(new LineTool(this, 'scenery'), TOOL.SLINE);
+        this.toolHandler.addTool(new LineTool(this, 'physics'), TOOL.ERASER);
+        this.toolHandler.selectTool(TOOL.LINE);
 
 
         if (!this.id) {

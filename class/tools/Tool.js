@@ -5,6 +5,11 @@ export class Tool {
         this.track = track;
         this.isMouseDown = false;        
     }
+
+    deselect() {
+        this.isMouseDown = false;
+    }
+    select() {}
     update() {}
     render(ctx) {}
     mouseDown() {

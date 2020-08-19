@@ -444,7 +444,7 @@ canvas.onmousedown = function(event) {
     snapFromPrevLine = true;
     track.focalPoint = false;
 
-    track.toolHandler.activeTool.mouseDown(event);
+    track.toolHandler.mouseDown(event);
 
     if (event.button === 2 && track.currentTool !== TOOL.CAMERA) {
         secretlyErasing = true;
@@ -532,7 +532,7 @@ document.onmousemove = function(event) {
 };
 canvas.onmouseup = function(event) {
     var x, y, item, direction;
-    track.toolHandler.activeTool.mouseUp(event);
+    track.toolHandler.mouseUp(event);
     if (secretlyErasing) {
         return secretlyErasing = false;
     }
@@ -696,7 +696,7 @@ function onScroll(e) {
     let zin = e.detail < 0 || e.wheelDelta > 0;
     let zout = e.detail > 0 || e.wheelDelta < 0;
     e.preventDefault();
-    track.toolHandler.activeTool.scroll(e);
+    track.toolHandler.scroll(e);
     if (shift) {
         if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
             if ((zout) && drawingSize > 4) {

@@ -20,6 +20,7 @@ import { EraserTool } from "../tools/EraserTool.js";
 import { ToolHandler } from "../tools/ToolHandler.js";
 import { CameraTool } from "../tools/CameraTool.js";
 import { BrushTool } from "../tools/BrushTool.js";
+import { PowerupTool } from "../tools/PowerupTool.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -40,7 +41,13 @@ export class RaceTrack extends Track {
         this.toolHandler.addTool(new CameraTool(this, 'r'), TOOL.CAMERA, 'r');
         this.toolHandler.addTool(new BrushTool(this, 'physics', 'a'), TOOL.BRUSH, 'a');
         this.toolHandler.addTool(new BrushTool(this, 'scenery', 's'), TOOL.SBRUSH, 's');
-        this.toolHandler.selectTool(TOOL.LINE);
+
+        this.toolHandler.addTool(new PowerupTool(this, TOOL.GOAL), TOOL.GOAL);
+        this.toolHandler.addTool(new PowerupTool(this, TOOL.CHECKPOINT), TOOL.CHECKPOINT);
+
+        this.toolHandler.addTool(new PowerupTool(this, TOOL.BOMB), TOOL.BOMB);
+        this.toolHandler.addTool(new PowerupTool(this, TOOL.SLOWMO), TOOL.SLOWMO);
+        this.toolHandler.selectTool(TOOL.SLOWMO);
 
 
         if (!this.id) {
@@ -314,18 +321,16 @@ export class RaceTrack extends Track {
 
         this.toolHandler.render(this.canvas.getContext('2d'));
         // Draw tools (crosshairs, eraser, powerups)
-        if (secretlyErasing) {
-            //this.eraser(mousePx);
-        } else if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
+        if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
             switch (this.currentTool) {
-                case 'goal':
-                case 'checkpoint':
-                case 'bomb':
-                case 'slow-mo':
-                    drawer.setProperty('fillStyle', this.currentTool === TOOL.GOAL ? '#ff0' : this.currentTool === TOOL.CHECKPOINT ? '#00f' : this.currentTool === TOOL.BOMB ? '#f00' : '#eee');
-                    drawer.setProperty('strokeStyle', '#000');
-                    drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
-                    break;
+                // case 'goal':
+                // case 'checkpoint':
+                // case 'bomb':
+                // case 'slow-mo':
+                //     drawer.setProperty('fillStyle', this.currentTool === TOOL.GOAL ? '#ff0' : this.currentTool === TOOL.CHECKPOINT ? '#00f' : this.currentTool === TOOL.BOMB ? '#f00' : '#eee');
+                //     drawer.setProperty('strokeStyle', '#000');
+                //     drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
+                //     break;
                 case 'boost':
                 case 'gravity':
                     drawer.setProperty('strokeStyle', '#000');

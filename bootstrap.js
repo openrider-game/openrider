@@ -193,68 +193,6 @@ document.onkeydown = function(event) {
     }
     if (track.id === undefined) {
         switch (event.keyCode) {
-            case 65:
-                // A
-                if (track.currentTool !== 'brush') {
-                    track.currentTool = 'brush';
-                    document.body.style.cursor = 'none';
-                    shift = true;
-                } else if (!snapFromPrevLine) {
-                    snapFromPrevLine = true;
-                    lastClick.set(lastForeground);
-                    shift = true;
-                }
-                break;
-            case 83:
-                // S
-                if (track.currentTool !== 'scenery brush') {
-                    track.currentTool = 'scenery brush';
-                    document.body.style.cursor = 'none';
-                    shift = true;
-                } else if (!snapFromPrevLine) {
-                    snapFromPrevLine = true;
-                    lastClick.set(lastScenery);
-                    shift = true;
-                }
-                break;
-            // case 81:
-            //     // Q
-            //     if (track.currentTool !== 'line') {
-            //         track.currentTool = 'line';
-            //         document.body.style.cursor = 'none';
-            //     } else if (!snapFromPrevLine) {
-            //         snapFromPrevLine = true;
-            //         lastClick.set(lastForeground);
-            //         shift = true;
-            //     }
-            //     break;
-            // case 87:
-            //     // W
-            //     if (track.currentTool !== 'scenery line') {
-            //         track.currentTool = 'scenery line';
-            //         document.body.style.cursor = 'none';
-            //     } else if (!snapFromPrevLine) {
-            //         snapFromPrevLine = true;
-            //         lastClick.set(lastScenery);
-            //         shift = true;
-            //     }
-            //     break;
-            // case 69:
-            //     // E
-            //     track.currentTool = 'eraser';
-            //     document.body.style.cursor = 'none';
-            //     shift = true;
-            //     break;
-            // case 82:
-            //     // R
-            //     if (track.currentTool !== 'camera') {
-            //         track.lastTool = track.currentTool;
-            //         track.currentTool = 'camera';
-            //         document.body.style.cursor = 'move';
-            //     } else {
-            //         backToLastTool = true;
-            //     }
-            //     break;
             case 77: // M
                 track.undo();
                 break;
@@ -461,13 +399,6 @@ canvas.onmousedown = function(event) {
         case TOOL.GRAVITY:
             document.body.style.cursor = 'crosshair';
             break;
-        case TOOL.GOAL:
-            track.collectables.push(item = new Target(lastClick.x, lastClick.y, track));
-            track.numTargets++;
-            break;
-        case TOOL.CHECKPOINT:
-            track.collectables.push(item = new Checkpoint(lastClick.x, lastClick.y, track));
-            break;
         case TOOL.BOMB:
             item = new Bomb(lastClick.x, lastClick.y, track);
             break;
@@ -537,9 +468,6 @@ canvas.onmouseup = function(event) {
 };
 document.onmouseup = function() {
     track.toolHandler.mouseUp(event);
-    if (!shift) {
-        snapFromPrevLine = false;
-    }
 };
 canvas.onmouseout = function() {
     document.body.style.cursor = 'default';

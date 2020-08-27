@@ -38,6 +38,10 @@ export class Item {
         return this;
     }
 
+    addToTrack() {
+        this.track.addObject(this);
+    }
+
     toString() {
         return this.$name + ' ' + this.pos.toString();
     }

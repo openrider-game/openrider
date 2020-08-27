@@ -10,6 +10,11 @@ export class Checkpoint extends ReachableItem {
         this.$name = 'C';
     }
 
+    addToTrack() {
+        this.track.collectables.push(this);
+        super.addToTrack();
+    }
+
     onReach(part) {
         part.bike.doSave |= SAVE_CHECKPOINT;
         DEBUG && console.log('cp', part.bike.time, JSON.stringify(part.bike));

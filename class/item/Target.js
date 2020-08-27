@@ -17,6 +17,12 @@ export class Target extends ReachableItem {
         }
     }
 
+    addToTrack() {
+        this.track.collectables.push(this);
+        this.track.numTargets++;
+        super.addToTrack();
+    }
+
     onReachGhost(part) {
         if (!part.bike.reached[this.$id]) {
             part.bike.reached[this.$id] = ++part.bike.targetsReached;

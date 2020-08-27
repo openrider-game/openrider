@@ -3,25 +3,26 @@ import { Tool } from './Tool.js';
 import { mousePos } from '../../bootstrap.js';
 
 export class LineTool extends Tool {
-    constructor(track, type = 'physics') {
-        super(track);
+    constructor(track, type = 'physics', hotkey) {
+        super(track, hotkey);
         this.type = type;
         this.startPos = new Vector();
         this.endPos = new Vector();
     }
 
     mouseDown() {
-        if (!this.isMouseDown) {
-            this.isMouseDown = true;
+        if (!this.isMouseDown && !this.holding) {
             this.startPos = mousePos.clone();
             this.endPos = mousePos.clone();
         }
+        this.isMouseDown = true;
     }
 
     mouseUp() {
         this.isMouseDown = false;
         if (this.checkLineLength()) {
             const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
+            this.startPos.set(this.endPos);
             this.track.pushUndo(function() {
                 line.remove();
             }, function() {
@@ -31,7 +32,7 @@ export class LineTool extends Tool {
     }
 
     update(delta) {
-        if (this.isMouseDown) {
+        if (this.isMouseDown || this.holding) {
             this.endPos = mousePos.clone();
 
             // Move the screen if the mouse is near the edge
@@ -65,7 +66,7 @@ export class LineTool extends Tool {
         ctx.strokeStyle = '#000';
         ctx.lineCap = 'round';
         ctx.stroke();
-        if (this.isMouseDown) {
+        if (this.isMouseDown || this.holding) {
             ctx.beginPath();
             ctx.moveTo(...this.startPos.toPixel(this.track).toArray());
             ctx.lineTo(...this.endPos.toPixel(this.track).toArray());

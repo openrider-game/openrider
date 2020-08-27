@@ -3,8 +3,8 @@ import { Vector } from "../Vector.js";
 import { mousePos } from "../../bootstrap.js";
 
 export class BrushTool extends Tool {
-    constructor(track, type = 'physics') {
-        super(track);
+    constructor(track, type = 'physics', hotkey) {
+        super(track, hotkey);
         this.type = type;
         this.startPos = new Vector();
         this.endPos = new Vector();
@@ -12,17 +12,18 @@ export class BrushTool extends Tool {
     }
 
     mouseDown() {
-        if (!this.isMouseDown) {
-            this.isMouseDown = true;
+        if (!this.isMouseDown && !this.holding) {
             this.startPos.set(mousePos);
             this.endPos.set(mousePos);
         }
+        this.isMouseDown = true;
     }
 
     mouseUp() {
         this.isMouseDown = false;
         if (this.checkLineLength()) {
             const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
+            this.startPos.set(this.endPos);
             this.track.pushUndo(function() {
                 line.remove();
             }, function() {
@@ -32,7 +33,7 @@ export class BrushTool extends Tool {
     }
 
     scroll(e) {
-        if (e.shiftKey) {
+        if (this.holding) {
             const direction = -Math.sign(e.deltaY);
             this.size = Math.min(200, Math.max(4, this.size + 8 * direction));
         }
@@ -42,10 +43,10 @@ export class BrushTool extends Tool {
     }
 
     update(delta) {
-        if (this.isMouseDown) {
+        if (this.isMouseDown || this.holding) {
             this.endPos.set(mousePos);
 
-            if (this.endPos.sub(this.startPos).lengthSquared() > this.size * this.size) {
+            if (this.isMouseDown && this.endPos.sub(this.startPos).lengthSquared() > this.size * this.size) {
                 const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
                 this.track.pushUndo(function() {
                     line.remove();
@@ -86,7 +87,7 @@ export class BrushTool extends Tool {
         ctx.strokeStyle = '#000';
         ctx.lineCap = 'round';
         ctx.stroke();
-        if (this.isMouseDown) {
+        if (this.isMouseDown || this.holding) {
             ctx.beginPath();
             ctx.moveTo(...this.startPos.toPixel(this.track).toArray());
             ctx.lineTo(...this.endPos.toPixel(this.track).toArray());

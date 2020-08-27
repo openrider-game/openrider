@@ -2,8 +2,8 @@ import { Tool } from "./Tool.js";
 import { mousePos } from "../../bootstrap.js";
 
 export class EraserTool extends Tool {
-    constructor(track) {
-        super(track);
+    constructor(track, hotkey) {
+        super(track, hotkey);
         this.size = 15;
         this.minSize = 5;
         this.maxSize = 40;
@@ -11,7 +11,7 @@ export class EraserTool extends Tool {
 
     scroll(e) {
         const direction = -Math.sign(e.deltaY);
-        if (e.shiftKey) {
+        if (this.holding) {
             this.size = Math.max(this.minSize, Math.min(this.maxSize, this.size + 5 * direction));
         }
         else {

@@ -147,6 +147,7 @@ function toggleFullscreen() {
 }
 
 document.onkeydown = function(event) {
+    track.toolHandler.keyDown(event);
     var ctrl = event.ctrlKey;
     switch (event.keyCode) {
         case 8:
@@ -216,44 +217,44 @@ document.onkeydown = function(event) {
                     shift = true;
                 }
                 break;
-            case 81:
-                // Q
-                if (track.currentTool !== 'line') {
-                    track.currentTool = 'line';
-                    document.body.style.cursor = 'none';
-                } else if (!snapFromPrevLine) {
-                    snapFromPrevLine = true;
-                    lastClick.set(lastForeground);
-                    shift = true;
-                }
-                break;
-            case 87:
-                // W
-                if (track.currentTool !== 'scenery line') {
-                    track.currentTool = 'scenery line';
-                    document.body.style.cursor = 'none';
-                } else if (!snapFromPrevLine) {
-                    snapFromPrevLine = true;
-                    lastClick.set(lastScenery);
-                    shift = true;
-                }
-                break;
-            case 69:
-                // E
-                track.currentTool = 'eraser';
-                document.body.style.cursor = 'none';
-                shift = true;
-                break;
-            case 82:
-                // R
-                if (track.currentTool !== 'camera') {
-                    track.lastTool = track.currentTool;
-                    track.currentTool = 'camera';
-                    document.body.style.cursor = 'move';
-                } else {
-                    backToLastTool = true;
-                }
-                break;
+            // case 81:
+            //     // Q
+            //     if (track.currentTool !== 'line') {
+            //         track.currentTool = 'line';
+            //         document.body.style.cursor = 'none';
+            //     } else if (!snapFromPrevLine) {
+            //         snapFromPrevLine = true;
+            //         lastClick.set(lastForeground);
+            //         shift = true;
+            //     }
+            //     break;
+            // case 87:
+            //     // W
+            //     if (track.currentTool !== 'scenery line') {
+            //         track.currentTool = 'scenery line';
+            //         document.body.style.cursor = 'none';
+            //     } else if (!snapFromPrevLine) {
+            //         snapFromPrevLine = true;
+            //         lastClick.set(lastScenery);
+            //         shift = true;
+            //     }
+            //     break;
+            // case 69:
+            //     // E
+            //     track.currentTool = 'eraser';
+            //     document.body.style.cursor = 'none';
+            //     shift = true;
+            //     break;
+            // case 82:
+            //     // R
+            //     if (track.currentTool !== 'camera') {
+            //         track.lastTool = track.currentTool;
+            //         track.currentTool = 'camera';
+            //         document.body.style.cursor = 'move';
+            //     } else {
+            //         backToLastTool = true;
+            //     }
+            //     break;
             case 77: // M
                 track.undo();
                 break;
@@ -266,6 +267,7 @@ document.onkeydown = function(event) {
     }
 };
 document.onkeyup = function(event) {
+    track.toolHandler.keyUp(event);
     switch (event.keyCode) {
         case 70: // f
         case 27: // esc
@@ -471,16 +473,6 @@ canvas.onmousedown = function(event) {
             break;
         case TOOL.SLOWMO:
             item = new SlowMo(lastClick.x, lastClick.y, track);
-        case TOOL.BRUSH:
-        case TOOL.SBRUSH:
-            if (shift) {
-                track.addLine(lastClick, mousePos, track.currentTool !== TOOL.BRUSH);
-            }
-            shift = false;
-            snapFromPrevLine = true;
-            break;
-        default:
-            ;
     }
     if (item !== undefined) {
         var x = Math.floor(item.pos.x / track.gridSize);
@@ -517,19 +509,11 @@ document.onmousemove = function(event) {
 };
 canvas.onmouseup = function(event) {
     var x, y, item, direction;
-    track.toolHandler.mouseUp(event);
     if (secretlyErasing) {
         return secretlyErasing = false;
     }
     if (snapFromPrevLine) {
-        if (track.currentTool === TOOL.BRUSH || track.currentTool === TOOL.SBRUSH) {
-            var line = track.addLine(lastClick, mousePos, track.currentTool !== TOOL.LINE && track.currentTool !== TOOL.BRUSH);
-            track.pushUndo(function() {
-                line.remove();
-            }, function() {
-                line.reAdd();
-            });
-        } else if (track.currentTool === TOOL.BOOST || track.currentTool === TOOL.GRAVITY) {
+        if (track.currentTool === TOOL.BOOST || track.currentTool === TOOL.GRAVITY) {
             document.body.style.cursor = 'none';
             direction = Math.round(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y) * 180 / Math.PI);
             item = track.currentTool === TOOL.BOOST ? new Boost(lastClick.x, lastClick.y, direction, track) :
@@ -552,6 +536,7 @@ canvas.onmouseup = function(event) {
     }
 };
 document.onmouseup = function() {
+    track.toolHandler.mouseUp(event);
     if (!shift) {
         snapFromPrevLine = false;
     }

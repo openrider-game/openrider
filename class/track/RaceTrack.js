@@ -34,12 +34,12 @@ export class RaceTrack extends Track {
         this.lastTool = TOOL.CAMERA;
 
         this.toolHandler = new ToolHandler(this);
-        this.toolHandler.addTool(new LineTool(this, 'physics'), TOOL.LINE);
-        this.toolHandler.addTool(new LineTool(this, 'scenery'), TOOL.SLINE);
-        this.toolHandler.addTool(new EraserTool(this), TOOL.ERASER);
-        this.toolHandler.addTool(new CameraTool(this), TOOL.CAMERA);
-        this.toolHandler.addTool(new BrushTool(this, 'physics'), TOOL.BRUSH);
-        this.toolHandler.addTool(new BrushTool(this, 'scenery'), TOOL.SBRUSH);
+        this.toolHandler.addTool(new LineTool(this, 'physics', 'q'), TOOL.LINE, 'q');
+        this.toolHandler.addTool(new LineTool(this, 'scenery', 'w'), TOOL.SLINE, 'w');
+        this.toolHandler.addTool(new EraserTool(this, 'e'), TOOL.ERASER, 'e');
+        this.toolHandler.addTool(new CameraTool(this, 'r'), TOOL.CAMERA, 'r');
+        this.toolHandler.addTool(new BrushTool(this, 'physics', 'a'), TOOL.BRUSH, 'a');
+        this.toolHandler.addTool(new BrushTool(this, 'scenery', 's'), TOOL.SBRUSH, 's');
         this.toolHandler.selectTool(TOOL.LINE);
 
 

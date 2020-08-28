@@ -6,6 +6,7 @@ export class ToolHandler {
         this.tools = {};
         this.shortcuts = {};
         this.activeTool = null;
+        this.inFocus = true;
         this.undoManager = new UndoManager();
     }
 
@@ -32,14 +33,15 @@ export class ToolHandler {
     }
 
     update(delta) {
-        if (this.activeTool) this.activeTool.update(delta);
+        if (this.activeTool && this.inFocus) this.activeTool.update(delta);
     }
 
     render(ctx) {
-        if (this.activeTool) this.activeTool.render(ctx);
+        if (this.activeTool && this.inFocus) this.activeTool.render(ctx);
     }
 
     mouseDown(e) {
+        this.inFocus = true;
         if (this.activeTool) this.activeTool.mouseDown(e);
     }
 
@@ -48,15 +50,22 @@ export class ToolHandler {
     }
 
     mouseMove(e) {
+        this.inFocus = true;
         if (this.activeTool) this.activeTool.mouseMove(e);
     }
 
     scroll(e) {
+        this.inFocus = true;
         if (this.activeTool) this.activeTool.scroll(e);
     }
 
     keyDown(e) {
         const key = e.key.toLowerCase();
+        if (['z', 'arrowup', 'arrowleft', 'arrowdown', 'arrowright', 'enter', 'backspace'].includes(key)
+            && !this.activeTool.isMouseDown && !this.activeTool.holding) {
+            this.inFocus = false;
+            return;
+        }
         if (this.shortcuts[key]) this.selectTool(this.shortcuts[key]);
         this.activeTool.keyDown(e);
     }

@@ -49,7 +49,7 @@ export class RaceTrack extends Track {
         this.toolHandler.addTool(new DirectionalTool(this, TOOL.GRAVITY), TOOL.GRAVITY);
         this.toolHandler.addTool(new PowerupTool(this, TOOL.BOMB), TOOL.BOMB);
         this.toolHandler.addTool(new PowerupTool(this, TOOL.SLOWMO), TOOL.SLOWMO);
-        this.toolHandler.selectTool(TOOL.BOOST);
+        this.toolHandler.selectTool(TOOL.LINE);
 
 
         if (!this.id) {

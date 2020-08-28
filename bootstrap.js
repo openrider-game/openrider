@@ -4,14 +4,7 @@ import { GHOST_COLORS, MIN_SIZE, TRACK_DEFAULT } from "./class/constant/TrackCon
 import { Game } from "./class/Game.js";
 import { CanvasHelper } from "./class/helper/CanvasHelper.js";
 import { GhostString } from "./class/helper/GhostString.js";
-import { Bomb } from "./class/item/Bomb.js";
-import { Boost } from "./class/item/Boost.js";
-import { Checkpoint } from "./class/item/Checkpoint.js";
-import { Gravity } from "./class/item/Gravity.js";
-import { SlowMo } from "./class/item/SlowMo.js";
-import { Target } from "./class/item/Target.js";
 import { Vector } from "./class/Vector.js";
-import { GridBox } from "./class/track/GridBox.js";
 
 const COMPILED = false;
 export const DEBUG = !COMPILED;
@@ -199,8 +192,6 @@ document.onkeydown = function(event) {
             case 78: // N
                 track.redo();
                 break;
-            default:
-                ;
         }
     }
 };
@@ -234,13 +225,6 @@ document.onkeyup = function(event) {
             else {
                 gridDetail = 11 - gridDetail;
                 hints[1][6] = (gridDetail === 1 ? 'En' : 'Dis') + "able grid snapping ( G )";
-            }
-            break;
-        case 82: // R (camera toggle)
-            if (backToLastTool) {
-                track.currentTool = track.lastTool;
-                document.body.style.cursor = 'none';
-                backToLastTool = false;
             }
             break;
         case 49: // 1
@@ -385,32 +369,6 @@ canvas.onmousedown = function(event) {
     track.focalPoint = false;
 
     track.toolHandler.mouseDown(event);
-
-    if (event.button === 2 && track.currentTool !== TOOL.CAMERA) {
-        secretlyErasing = true;
-        return;
-    }
-    var item;
-    if (!shift) {
-        lastClick.set(mousePos);
-    }
-    if (item !== undefined) {
-        var x = Math.floor(item.pos.x / track.gridSize);
-        var y = Math.floor(item.pos.y / track.gridSize);
-        if (track.grid[x] === undefined) {
-            track.grid[x] = [];
-        }
-        if (track.grid[x][y] === undefined) {
-            track.grid[x][y] = new GridBox(x, y);
-        }
-        track.grid[x][y].powerups.push(item);
-        track.pushUndo(function() {
-            item.remove();
-        }, function() {
-            item instanceof Target && ++track.numTargets;
-            track.grid[x][y].powerups.push(item);
-        });
-    }
 };
 canvas.oncontextmenu = function(event) {
     event.preventDefault();
@@ -420,10 +378,8 @@ document.onmousemove = function(event) {
         event.clientX - canvas.offsetLeft,
         event.clientY - canvas.offsetTop + window.pageYOffset
     ).normalizeToCanvas(track);
-    if (track.currentTool !== TOOL.ERASER && event.button !== 2) {
-        mousePos.x = Math.round(mousePos.x / gridDetail) * gridDetail;
-        mousePos.y = Math.round(mousePos.y / gridDetail) * gridDetail;
-    }
+    mousePos.x = Math.round(mousePos.x / gridDetail) * gridDetail;
+    mousePos.y = Math.round(mousePos.y / gridDetail) * gridDetail;
 
     track.toolHandler.mouseMove(event);
 };

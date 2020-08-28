@@ -1,4 +1,4 @@
-import { canvas, drawingSize, gridDetail, label, lastClick, lastForeground, lastScenery, mousePos, secretlyErasing, shadeLines, snapFromPrevLine, toolbar2, track, watchGhost } from "../../bootstrap.js";
+import { drawingSize, gridDetail, label, mousePos, toolbar2, watchGhost } from "../../bootstrap.js";
 import { BMXGhost } from "../bike/ghost/BMXGhost.js";
 import { MTBGhost } from "../bike/ghost/MTBGhost.js";
 import { BIKE_BMX, BIKE_HAR, BIKE_MTB } from "../constant/BikeConstants.js";
@@ -488,17 +488,7 @@ export class RaceTrack extends Track {
         return deleted;
     }
 
-    doAfterAddLine() {
-        if (this.currentTool === 'brush' || this.currentTool === 'line' ||
-            this.currentTool === 'scenery brush' || this.currentTool === 'scenery line') {
-            if (this.currentTool === 'brush' || this.currentTool === 'line') {
-                lastForeground.set(mousePos);
-            } else {
-                lastScenery.set(mousePos);
-            }
-            lastClick.set(mousePos);
-        }
-    }
+    doAfterAddLine() {}
 
     selfAdd(arr, known) {
         for (let i = 0, l = arr.length; i < l; i++) {
@@ -543,32 +533,6 @@ export class RaceTrack extends Track {
     redo() {
         this.undoManager.redo();
         return this;
-    }
-
-    shortenLastLineSet() {
-        if (this.currentTool === 'scenery line' || this.currentTool === 'scenery brush') {
-            let x = Math.floor(lastScenery.x / this.gridSize),
-                y = Math.floor(lastScenery.y / this.gridSize),
-                line = this.grid[x][y].scenery[this.grid[x][y].scenery.length - 1];
-            if (line && line.b.x === Math.round(lastScenery.x) && line.b.y === Math.round(lastScenery.y)) {
-                line.doRemove = true;
-                lastScenery.set(line.a);
-                this.remove(line.a, line.b);
-            } else {
-                alert('No more scenery line to erase!');
-            }
-        } else {
-            let x = Math.floor(lastForeground.x / this.gridSize),
-                y = Math.floor(lastForeground.y / this.gridSize),
-                line = this.grid[x][y].lines[this.grid[x][y].lines.length - 1];
-            if (line !== undefined && line.b.x === Math.round(lastForeground.x) && line.b.y === Math.round(lastForeground.y)) {
-                line.doRemove = true;
-                lastForeground.set(line.a);
-                this.remove(line.a, line.b);
-            } else {
-                alert('No more line to erase!');
-            }
-        }
     }
 
     toString() {

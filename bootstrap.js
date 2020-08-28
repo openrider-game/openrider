@@ -26,18 +26,11 @@ drawer.setProperty('font', '8px eiven');
 
 // Lots of init
 export var track, game,
-    // Snapping
-    snapFromPrevLine = false,
-    // Last Clicks
-    lastClick = new Vector(40, 50),
     mousePos = new Vector(0, 0),
     // Drawing sizes
     drawingSize = 20,
-    // ??
-    shift = false,
     // Editor Tooling
     backToLastTool = false,
-    secretlyErasing = false,
     // Selected Tool label
     label = [],
     // Grid Detail
@@ -49,9 +42,6 @@ export var track, game,
         ['', 'Restart ( ENTER )', 'Cancel Checkpoint ( BACKSPACE )', '', 'Switch bike ( B - Arrows to control, Z to turn )', '', 'Enable line shading', 'Enable fullscreen ( F )'],
         ['Brush ( A - Hold to snap, hold & scroll to adjust size )', 'Scenery brush ( S - Hold to snap, hold & scroll to adjust size )', 'Lines ( backWheel - Hold to snap )', 'Scenery lines ( W - Hold to snap )', 'Eraser ( E - Hold & scroll to adjust size )', 'Camera ( R - Release or press again to switch back, scroll to zoom )', 'Enable grid snapping ( G )', '', 'Goal', 'Checkpoint', 'Boost', 'Gravity modifier', 'Bomb', 'Slow-Mo', '', 'Shorten last line ( Z )']
     ],
-    // Last clicks
-    lastForeground = new Vector(40, 50),
-    lastScenery = new Vector(-40, 50),
     // DOM
     trackcode = document.getElementById('trackcode'),
     charcount = document.getElementById('charcount'),
@@ -250,10 +240,6 @@ document.onkeyup = function(event) {
                 return;
             }
         case 65: // A
-            if (shift) {
-                shift =
-                    snapFromPrevLine = false;
-            }
             break;
         default:
             ;
@@ -352,9 +338,6 @@ toolbar2.onmousedown = function(event) {
         case 14:
             track.toolHandler.selectTool(TOOL.SLOWMO);
             break;
-        case 16:
-            track.shortenLastLineSet();
-            break;
         default:
             ;
     }
@@ -365,7 +348,6 @@ canvas.onmouseover = function() {
 };
 canvas.onmousedown = function(event) {
     event.preventDefault();
-    snapFromPrevLine = true;
     track.focalPoint = false;
 
     track.toolHandler.mouseDown(event);

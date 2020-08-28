@@ -23,7 +23,7 @@ export class Item {
         }
     }
 
-    checkDelete(eraserPoint) {
+    checkDelete(eraserPoint, radius) {
         if (eraserPoint.distanceTo(this.pos) < radius + 7) {
             this.remove();
             return this;

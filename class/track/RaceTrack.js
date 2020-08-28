@@ -321,15 +321,12 @@ export class RaceTrack extends Track {
             return;
         }
 
-        this.toolHandler.render(this.canvas.getContext('2d'));
-
-        this.drawText(drawer);
-
+        
         if (this.changingThumb) {
             let x0 = (this.canvas.width - 250) / 2,
-                x1 = x0 + 250,
-                y0 = (this.canvas.height - 150) / 2,
-                y1 = y0 + 150;
+            x1 = x0 + 250,
+            y0 = (this.canvas.height - 150) / 2,
+            y1 = y0 + 150;
             drawer.setProperty('lineWidth', 1);
             drawer.setProperty('strokeStyle', '#fff');
             drawer.setProperty('fillStyle', 'rgba(0, 0, 0, 0.4)');
@@ -337,13 +334,17 @@ export class RaceTrack extends Track {
             //drawer.fillRect(x0, y1, this.canvas.width - x1, this.canvas.height - y1);
             //drawer.fillRect(x1, y0, this.canvas.width - x1, 150);
         }
-
+        
         for (let i = 0; i < this.ghostInstances.length; i++) {
             this.ghostInstances[i].render();
         }
-
+        
         if (this.bike) this.bike.render();
+        
+        this.toolHandler.render(this.canvas.getContext('2d'));
 
+        this.drawText(drawer);
+        
         return this;
     }
 
@@ -374,7 +375,7 @@ export class RaceTrack extends Track {
             if (gridDetail === 10 && (this.currentTool === 'line' || this.currentTool === 'scenery line' || this.currentTool === 'brush' || this.currentTool === 'scenery brush')) {
                 text += ' - Grid ';
             }
-            text += ' - ' + this.currentTool;
+            text += ' - ' + this.toolHandler.activeTool.title;
             if (this.currentTool === 'brush' || this.currentTool === 'scenery brush') {
                 text += ' ( size ' + drawingSize + ' )';
             }

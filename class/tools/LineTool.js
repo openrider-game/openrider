@@ -6,6 +6,7 @@ export class LineTool extends Tool {
     constructor(track, type = 'physics', hotkey) {
         super(track, hotkey);
         this.type = type;
+        this.title = (type === 'physics') ? 'Line' : 'Scenery Line';
         this.startPos = new Vector();
         this.endPos = new Vector();
     }

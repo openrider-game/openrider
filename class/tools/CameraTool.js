@@ -5,6 +5,7 @@ import { Vector } from "../Vector.js";
 export class CameraTool extends Tool {
     constructor(track) {
         super(track);
+        this.title = 'Camera';
         this.cachedCursor = track.canvas.style.cursor;
     }
 

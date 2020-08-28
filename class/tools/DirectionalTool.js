@@ -38,16 +38,18 @@ export class DirectionalTool extends Tool {
     }
 
     mouseUp() {
-        const item = new itemClasses[this.type](this.startPos.x, this.startPos.y, this.angle, this.track);
-        item.addToTrack();
-        const track = this.track;
-        this.isMouseDown = false;
+        if (this.isMouseDown) {
+            const item = new itemClasses[this.type](this.startPos.x, this.startPos.y, this.angle, this.track);
+            item.addToTrack();
+            const track = this.track;
+            this.isMouseDown = false;
 
-        track.pushUndo(function() {
-            item.remove();
-        }, function() {
-            track.grid[Math.floor(item.pos.x / track.gridSize)][Math.floor(item.pos.y / track.gridSize)].powerups.push(item);
-        });
+            track.pushUndo(function() {
+                item.remove();
+            }, function() {
+                track.grid[Math.floor(item.pos.x / track.gridSize)][Math.floor(item.pos.y / track.gridSize)].powerups.push(item);
+            });
+        }
     }
 
     update() {

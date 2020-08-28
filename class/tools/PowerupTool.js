@@ -22,8 +22,8 @@ const itemClasses = {
 }
 
 export class PowerupTool extends Tool {
-    constructor(track, type) {
-        super(track);
+    constructor(track, type, hotkey) {
+        super(track, hotkey);
         this.type = type;
         this.pos = new Vector(0, 0);
     }

@@ -351,22 +351,22 @@ toolbar2.onmousedown = function(event) {
             }
             break;
         case 9:
-            track.currentTool = TOOL.GOAL;
+            track.toolHandler.selectTool(TOOL.GOAL);
             break;
         case 10:
-            track.currentTool = TOOL.CHECKPOINT;
+            track.toolHandler.selectTool(TOOL.CHECKPOINT);
             break;
         case 11:
-            track.currentTool = TOOL.BOOST;
+            track.toolHandler.selectTool(TOOL.BOOST);
             break;
         case 12:
-            track.currentTool = TOOL.GRAVITY;
+            track.toolHandler.selectTool(TOOL.GRAVITY);
             break;
         case 13:
-            track.currentTool = TOOL.BOMB;
+            track.toolHandler.selectTool(TOOL.BOMB);
             break;
         case 14:
-            track.currentTool = TOOL.SLOWMO;
+            track.toolHandler.selectTool(TOOL.SLOWMO);
             break;
         case 16:
             track.shortenLastLineSet();
@@ -393,17 +393,6 @@ canvas.onmousedown = function(event) {
     var item;
     if (!shift) {
         lastClick.set(mousePos);
-    }
-    switch (track.currentTool) {
-        case TOOL.BOOST:
-        case TOOL.GRAVITY:
-            document.body.style.cursor = 'crosshair';
-            break;
-        case TOOL.BOMB:
-            item = new Bomb(lastClick.x, lastClick.y, track);
-            break;
-        case TOOL.SLOWMO:
-            item = new SlowMo(lastClick.x, lastClick.y, track);
     }
     if (item !== undefined) {
         var x = Math.floor(item.pos.x / track.gridSize);
@@ -437,34 +426,6 @@ document.onmousemove = function(event) {
     }
 
     track.toolHandler.mouseMove(event);
-};
-canvas.onmouseup = function(event) {
-    var x, y, item, direction;
-    if (secretlyErasing) {
-        return secretlyErasing = false;
-    }
-    if (snapFromPrevLine) {
-        if (track.currentTool === TOOL.BOOST || track.currentTool === TOOL.GRAVITY) {
-            document.body.style.cursor = 'none';
-            direction = Math.round(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y) * 180 / Math.PI);
-            item = track.currentTool === TOOL.BOOST ? new Boost(lastClick.x, lastClick.y, direction, track) :
-                new Gravity(lastClick.x, lastClick.y, direction, track);
-            x = Math.floor(item.pos.x / track.gridSize);
-            y = Math.floor(item.pos.y / track.gridSize);
-            if (track.grid[x] === undefined) {
-                track.grid[x] = [];
-            }
-            if (track.grid[x][y] === undefined) {
-                track.grid[x][y] = new GridBox(x, y);
-            }
-            track.grid[x][y].powerups.push(item);
-            track.pushUndo(function() {
-                item.remove();
-            }, function() {
-                track.grid[x][y].powerups.push(item);
-            });
-        }
-    }
 };
 document.onmouseup = function() {
     track.toolHandler.mouseUp(event);

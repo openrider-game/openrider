@@ -21,6 +21,7 @@ import { ToolHandler } from "../tools/ToolHandler.js";
 import { CameraTool } from "../tools/CameraTool.js";
 import { BrushTool } from "../tools/BrushTool.js";
 import { PowerupTool } from "../tools/PowerupTool.js";
+import { DirectionalTool } from "../tools/DirectionalTool.js";
 
 export class RaceTrack extends Track {
     constructor(ID, canvas, game) {
@@ -44,10 +45,11 @@ export class RaceTrack extends Track {
 
         this.toolHandler.addTool(new PowerupTool(this, TOOL.GOAL), TOOL.GOAL);
         this.toolHandler.addTool(new PowerupTool(this, TOOL.CHECKPOINT), TOOL.CHECKPOINT);
-
+        this.toolHandler.addTool(new DirectionalTool(this, TOOL.BOOST), TOOL.BOOST);
+        this.toolHandler.addTool(new DirectionalTool(this, TOOL.GRAVITY), TOOL.GRAVITY);
         this.toolHandler.addTool(new PowerupTool(this, TOOL.BOMB), TOOL.BOMB);
         this.toolHandler.addTool(new PowerupTool(this, TOOL.SLOWMO), TOOL.SLOWMO);
-        this.toolHandler.selectTool(TOOL.SLOWMO);
+        this.toolHandler.selectTool(TOOL.BOOST);
 
 
         if (!this.id) {
@@ -320,36 +322,6 @@ export class RaceTrack extends Track {
         }
 
         this.toolHandler.render(this.canvas.getContext('2d'));
-        // Draw tools (crosshairs, eraser, powerups)
-        if (this.currentTool !== TOOL.CAMERA && !this.focalPoint) {
-            switch (this.currentTool) {
-                // case 'goal':
-                // case 'checkpoint':
-                // case 'bomb':
-                // case 'slow-mo':
-                //     drawer.setProperty('fillStyle', this.currentTool === TOOL.GOAL ? '#ff0' : this.currentTool === TOOL.CHECKPOINT ? '#00f' : this.currentTool === TOOL.BOMB ? '#f00' : '#eee');
-                //     drawer.setProperty('strokeStyle', '#000');
-                //     drawer.beginPath().arc(mousePx.x, mousePx.y, 7 * this.zoomFactor, 0, 2 * Math.PI, true).fill().stroke();
-                //     break;
-                case 'boost':
-                case 'gravity':
-                    drawer.setProperty('strokeStyle', '#000');
-                    drawer.beginPath()
-                        .setProperty('fillStyle', this.currentTool === TOOL.BOOST ? '#ff0' : '#0f0');
-                    drawer.ctx.save();
-                    if (!snapFromPrevLine) {
-                        drawer.ctx.translate(mousePx.x, mousePx.y);
-                    } else {
-                        drawer.ctx.translate(lastClick.toPixel(track).x, lastClick.toPixel(track).y);
-                        drawer.ctx.rotate(Math.atan2(-(mousePos.x - lastClick.x), mousePos.y - lastClick.y));
-                    }
-                    drawer.moveTo(-7 * this.zoomFactor, -10 * this.zoomFactor).lineTo(0, 10 * this.zoomFactor).lineTo(7 * this.zoomFactor, -10 * this.zoomFactor).lineTo(-7 * this.zoomFactor, -10 * this.zoomFactor).fill().stroke()
-                    drawer.restore();
-                    break;
-                default:
-                    break;
-            }
-        }
 
         this.drawText(drawer);
 

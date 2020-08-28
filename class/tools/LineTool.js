@@ -20,15 +20,17 @@ export class LineTool extends Tool {
     }
 
     mouseUp() {
-        this.isMouseDown = false;
-        if (this.checkLineLength()) {
-            const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
-            this.startPos.set(this.endPos);
-            this.track.pushUndo(function() {
-                line.remove();
-            }, function() {
-                line.reAdd();
-            });
+        if (this.isMouseDown) {
+            this.isMouseDown = false;
+            if (this.checkLineLength()) {
+                const line = this.track.addLine(this.startPos, this.endPos, this.type === 'scenery');
+                this.startPos.set(this.endPos);
+                this.track.pushUndo(function() {
+                    line.remove();
+                }, function() {
+                    line.reAdd();
+                });
+            }
         }
     }
 

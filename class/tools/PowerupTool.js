@@ -42,17 +42,19 @@ export class PowerupTool extends Tool {
     }
 
     mouseUp() {
-        const item = new itemClasses[this.type](this.pos.x, this.pos.y, this.track);
-        item.addToTrack();
-        const track = this.track;
-        this.isMouseDown = false;
+        if (this.isMouseDown) {
+            const item = new itemClasses[this.type](this.pos.x, this.pos.y, this.track);
+            item.addToTrack();
+            const track = this.track;
+            this.isMouseDown = false;
 
-        track.pushUndo(function() {
-            item.remove();
-        }, function() {
-            if (item instanceof Target) ++track.numTargets;
-            track.grid[Math.floor(item.pos.x / track.gridSize)][Math.floor(item.pos.y / track.gridSize)].powerups.push(item);
-        });
+            track.pushUndo(function() {
+                item.remove();
+            }, function() {
+                if (item instanceof Target) ++track.numTargets;
+                track.grid[Math.floor(item.pos.x / track.gridSize)][Math.floor(item.pos.y / track.gridSize)].powerups.push(item);
+            });
+        }
     }
 
     update() {

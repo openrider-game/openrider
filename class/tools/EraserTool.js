@@ -4,6 +4,7 @@ import { mousePos } from "../../bootstrap.js";
 export class EraserTool extends Tool {
     constructor(track, hotkey) {
         super(track, hotkey);
+        this.title = "Eraser";
         this.size = 15;
         this.minSize = 5;
         this.maxSize = 40;

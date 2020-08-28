@@ -21,9 +21,17 @@ const itemClasses = {
     [TOOL.SLOWMO]: SlowMo,
 }
 
+const titles = {
+    [TOOL.GOAL]: "Goal",
+    [TOOL.CHECKPOINT]: "Checkpoint",
+    [TOOL.BOMB]: "Bomb",
+    [TOOL.SLOWMO]: "Slow Motion",
+}
+
 export class PowerupTool extends Tool {
     constructor(track, type, hotkey) {
         super(track, hotkey);
+        this.title = titles[type];
         this.type = type;
         this.pos = new Vector(0, 0);
     }

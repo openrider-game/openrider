@@ -7,18 +7,24 @@ import { mousePos } from "../../bootstrap.js";
 
 const fillColors = {
     [TOOL.BOOST]: '#ff0',
-    [TOOL.GRAVITY]: '#0f0',
+    [TOOL.GRAVITY]: '#0f0'
 }
 
 const itemClasses = {
     [TOOL.BOOST]: Boost,
-    [TOOL.GRAVITY]: Gravity,
+    [TOOL.GRAVITY]: Gravity
+}
+
+const titles = {
+    [TOOL.BOOST]: "Speed Boost",
+    [TOOL.GRAVITY]: "Gravity Changer"
 }
 
 export class DirectionalTool extends Tool {
     constructor(track, type, hotkey) {
         super(track, hotkey);
         this.type = type;
+        this.title = titles[type];
         this.startPos = new Vector(0, 0);
         this.endPos = new Vector(0, 0);
         this.angle = 0;

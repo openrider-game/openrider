@@ -5,6 +5,7 @@ import { mousePos } from "../../bootstrap.js";
 export class BrushTool extends Tool {
     constructor(track, type = 'physics', hotkey) {
         super(track, hotkey);
+        this.title = (type === 'physics') ? 'Brush' : 'Scenery Brush';
         this.type = type;
         this.startPos = new Vector();
         this.endPos = new Vector();

@@ -1,0 +1,84 @@
+html,
+body,
+#content {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#content #game {
+    background-color: white;
+    z-index: 2;
+    border: 1px solid black;
+}
+
+#game {
+    width: 700px;
+    height: 400px;
+    position: relative;
+}
+
+#options {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    /*TODO: prettier gradient or sth*/
+    background: #eee;
+    flex-direction: column;
+}
+
+.toolbar {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.toolbar.left {
+    left: 0;
+    top: 0;
+}
+
+.toolbar.left .tool {
+    border-width: 0 1px 1px 0;
+}
+
+.toolbar.right {
+    right: 0;
+    top: 0;
+}
+
+.toolbar.right .tool {
+    border-width: 0 0 1px 1px;
+}
+
+.tool {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    height: 24px;
+    background: center center no-repeat;
+    background-color: #fff;
+    border: solid #000;
+    position: relative;
+    transition: all 0.05s linear;
+}
+
+.tool:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.tool.empty {
+    border-width: 0 0 1px 0 !important;
+    background-color: transparent;
+    pointer-events: none
+}

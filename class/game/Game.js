@@ -1,4 +1,4 @@
-import { GAME_UPS, INTERPOLATE } from "../constant/GameConstants.js";
+import { GAME_UPS } from "../constant/GameConstants.js";
 import StateManager from "../state/StateManager.js";
 
 export default class Game {
@@ -18,9 +18,7 @@ export default class Game {
         /** @type {number} */
         this.timer = performance.now();
         /** @type {number} */
-        this.ms = 1000 / GAME_UPS;
-        /** @type {boolean} */
-        this.interpolate = INTERPOLATE;
+        this.frameDuration = 1000 / GAME_UPS;
         /** @type {number} */
         this.progress = 0;
         /** @type {number} */
@@ -35,34 +33,27 @@ export default class Game {
         let now = performance.now();
         let delta = now - this.lastTime;
 
-        this.progress += delta / this.ms;
+        if (delta > 1000) {
+            delta = this.frameDuration;
+        }
+
+        this.progress += delta / this.frameDuration;
         this.lastTime = now;
 
         while (this.progress >= 1) {
             this.stateManager.fixedUpdate();
             this.updates++;
             this.progress--;
-
-            if (!this.interpolate) {
-                this.stateManager.update(0, this.ms);
-
-                if (this.progress < 1) {
-                    this.stateManager.render(this.ctx);
-                    this.frames++;
-                }
-            }
         }
 
-        if (this.interpolate) {
-            this.stateManager.update(this.progress, delta);
-            this.stateManager.render(this.ctx);
-            this.frames++;
-        }
+        this.stateManager.update(this.progress, delta);
+        this.stateManager.render(this.ctx);
+        this.frames++;
 
         if (performance.now() - this.timer > 1000) {
             this.timer += 1000;
 
-            document.title = 'OpenRider - ' + this.updates + " ups, " + this.frames + " fps";
+            document.title = `OpenRider - ${this.updates} ups, ${this.frames} fps`;
 
             this.updates = 0;
             this.frames = 0;

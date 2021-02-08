@@ -17,18 +17,20 @@ export default class TrackEvent {
     }
 
     attach() {
-        this.track.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
-        this.track.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
-        this.track.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
-        this.track.canvas.addEventListener('mousewheel', (e) => this.onScroll(e));
+        this.track.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
+        this.track.canvas.addEventListener('mouseup', e => this.onMouseUp(e));
+        this.track.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
+        this.track.canvas.addEventListener('mousewheel', e => this.onScroll(e));
 
-        this.track.canvas.addEventListener('mouseenter', (e) => this.onMouseEnter(e));
-        this.track.canvas.addEventListener('mouseout', (e) => this.onMouseOut(e));
+        this.track.canvas.addEventListener('mouseenter', e => this.onMouseEnter(e));
+        this.track.canvas.addEventListener('mouseout', e => this.onMouseOut(e));
 
-        this.track.canvas.addEventListener('contextmenu', (e) => this.onContextMenu(e));
+        this.track.canvas.addEventListener('contextmenu', e => this.onContextMenu(e));
 
         document.addEventListener('keydown', e => this.onKeyDown(e));
         document.addEventListener('keyup', e => this.onKeyUp(e));
+
+        document.addEventListener('visibilitychange', () => this.onVisibilityChange());
     }
 
     onMouseDown(e) {
@@ -81,5 +83,12 @@ export default class TrackEvent {
 
     onKeyUp(e) {
         this.keyboard.onKeyUp(e);
+    }
+
+    onVisibilityChange() {
+        if (document.hidden) {
+            this.track.paused = true;
+            this.track.pauseTool.updateDOM();
+        }
     }
 }

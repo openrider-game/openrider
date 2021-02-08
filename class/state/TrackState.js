@@ -68,7 +68,7 @@ export default class TrackState extends GameState {
 
         ctx.lineWidth = 0.5;
         ctx.fillStyle = '#000';
-        ctx.fillText(Time.format(this.track.time * this.manager.game.ms), 30, 15);
+        ctx.fillText(Time.format(this.track.time * this.manager.game.frameDuration), 30, 15);
         ctx.fillText(`${this.track.playerRunner.targetsReached.size}/${this.track.targets.size}`, 30, 30);
     }
 

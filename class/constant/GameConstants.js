@@ -1,3 +1,2 @@
 export const
-    GAME_UPS = 50,
-    INTERPOLATE = true;
+    GAME_UPS = 50;

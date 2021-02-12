@@ -1,5 +1,7 @@
 import { GAME_UPS } from "../constant/GameConstants.js";
+import ParserState from "../state/ParserState.js";
 import StateManager from "../state/StateManager.js";
+import TrackState from "../state/TrackState.js";
 
 export default class Game {
     /**
@@ -10,6 +12,9 @@ export default class Game {
     constructor(canvas, opt) {
         /** @type {StateManager} */
         this.stateManager = new StateManager(this, canvas, opt);
+        this.stateManager.addState(ParserState, 'parser');
+        this.stateManager.addState(TrackState, 'track');
+
         /** @type {CanvasRenderingContext2D} */
         this.ctx = canvas.getContext('2d');
 

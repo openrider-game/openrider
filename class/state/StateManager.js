@@ -4,54 +4,65 @@ import GameState from "./GameState.js";
 
 export default class StateManager extends GameObject {
     constructor(game, canvas, opt) {
-        if (StateManager.instance) {
-            return StateManager.instance;
-        }
-
         super();
 
         this.game = game;
         this.track = new Track(canvas, opt);
-        /** @type {GameState} */
-        this.gameState = null;
-        this.stateMap = new Map();
 
-        StateManager.instance = this;
+        /** @type {Map<String, GameState>} */
+        this.states = new Map();
+        /** @type {Array<GameState>} */
+        this.stateStack = [];
+    }
+
+    push(name) {
+        let state = this.getState(name);
+        state.onEnter();
+        this.stateStack.push(state);
+    }
+
+    pop() {
+        if (this.stateStack.length) {
+            this.getCurrent().onLeave();
+            return this.stateStack.pop();
+        }
+
+        return null;
     }
 
     /**
-     *
-     * @param {GameState} gameState
+     * 
+     * @param {GameState} stateClass 
+     * @param {String} name 
      */
-    setState(gameState) {
-        if (this.gameState) {
-            this.gameState.onLeave();
-        }
+    addState(stateClass, name) {
+        let state = new stateClass(this.track);
+        this.states.set(name, state);
+    }
 
-        if (!this.stateMap.has(gameState)) {
-            this.stateMap.set(gameState, new gameState(this));
-        }
-        this.gameState = this.stateMap.get(gameState);
-        this.gameState.onEnter();
+    getState(name) {
+        return this.states.get(name);
     }
 
     fixedUpdate() {
-        if (this.gameState) {
-            this.gameState.fixedUpdate();
+        if (this.stateStack.length) {
+            this.getCurrent().fixedUpdate();
         }
     }
 
     update(progress, delta) {
-        if (this.gameState) {
-            this.gameState.update(progress, delta);
+        if (this.stateStack.length) {
+            this.getCurrent().update(progress, delta);
         }
     }
 
     render(ctx) {
-        if (this.gameState) {
-            this.gameState.render(ctx);
+        if (this.stateStack.length) {
+            this.getCurrent().render(ctx);
         }
     }
-}
 
-StateManager.instance = null;
+    getCurrent() {
+        return this.stateStack[this.stateStack.length - 1];
+    }
+}

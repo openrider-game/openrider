@@ -3,6 +3,7 @@ import RenderCell from "../grid/cell/RenderCell.js";
 import Vector from "../numeric/Vector.js";
 import Grid from "../grid/Grid.js";
 import Time from "../numeric/Time.js";
+import { getGame } from "../../bootstrap.js";
 
 export default class TrackState extends GameState {
     fixedUpdate() {
@@ -68,7 +69,7 @@ export default class TrackState extends GameState {
 
         ctx.lineWidth = 0.5;
         ctx.fillStyle = '#000';
-        ctx.fillText(Time.format(this.track.time * this.manager.game.frameDuration), 30, 15);
+        ctx.fillText(Time.format(this.track.time * getGame().frameDuration), 30, 15);
         ctx.fillText(`${this.track.playerRunner.targetsReached.size}/${this.track.targets.size}`, 30, 30);
     }
 

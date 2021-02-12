@@ -3,15 +3,13 @@ import SceneryLine from "../item/line/SceneryLine.js";
 import Vector from "../numeric/Vector.js";
 import { ITEM_LIST, LINE, LINE_FOREGROUND } from "../constant/ItemConstants.js";
 import DirectionalItem from "../item/DirectionalItem.js";
-import StateManager from "../state/StateManager.js";
-import TrackState from "../state/TrackState.js";
 import Track from "../track/Track.js";
-import BMX from "../bike/instance/BMX.js";
 import Item from "../item/Item.js";
 import Line from "../item/line/Line.js";
 import Toolbar from "../tool/Toolbar.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
 import GhostRunner from "../bike/GhostRunner.js";
+import { getGame } from "../../bootstrap.js";
 
 export default class TrackParser {
     /**
@@ -166,7 +164,7 @@ export default class TrackParser {
     }
 
     done() {
-        StateManager.instance.setState(TrackState);
+        getGame().stateManager.push('track');
         Toolbar.makeToolbars(this.track);
 
         this.memReset();

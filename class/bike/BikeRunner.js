@@ -14,7 +14,6 @@ export default class BikeRunner extends GameObject {
         this.track = track;
 
         this.done = false;
-        this.currentTime = 0;
         this.snapshots = new Array();
         this.targetsReached = new Map();
         this.checkpointsReached = new Map();
@@ -74,7 +73,7 @@ export default class BikeRunner extends GameObject {
             this.turnPressed = snapshot.turnPressed;
             this.doTurn = snapshot.doTurn;
 
-            this.track.time = snapshot.currentTime;
+            this.track.time = snapshot.time;
         }
 
         this.targetsReached.forEach((target, targetId) => {
@@ -117,7 +116,7 @@ export default class BikeRunner extends GameObject {
 
     explode(pos, vel) {
         this.die();
-        this.deadObject = new Explosion(pos, vel, this.instance.clone(), this.currentTime, this.track);
+        this.deadObject = new Explosion(pos, vel, this.instance.clone(), this.track.time, this.track);
         this.instance = null;
     }
 
@@ -149,10 +148,6 @@ export default class BikeRunner extends GameObject {
     reset() {
         this.snapshots = new Array();
         this.startFrom(null);
-        this.track.ghostRunners.forEach(runner => {
-            runner.snapshots = new Array();
-            runner.startFrom(null);
-        });
     }
 
     restart() {
@@ -161,14 +156,11 @@ export default class BikeRunner extends GameObject {
 
     save() {
         this.snapshots.push(this.snapshot());
-        this.track.ghostRunners.forEach((runner) => {
-            runner.snapshots.push(runner.snapshot());
-        });
     }
 
     snapshot() {
         let snapshot = {
-            currentTime: this.currentTime,
+            time: this.track.time,
             targetsReached: new Map(this.targetsReached),
             checkpointsReached: new Map(this.checkpointsReached),
             upPressed: this.upPressed,
@@ -185,9 +177,6 @@ export default class BikeRunner extends GameObject {
 
     popCheckpoint() {
         this.snapshots.pop();
-        this.track.ghostRunners.forEach(runner => {
-            runner.snapshots.pop();
-        });
     }
 
     processActionQueue() {
@@ -211,8 +200,6 @@ export default class BikeRunner extends GameObject {
     }
 
     fixedUpdate() {
-        this.currentTime = this.track.time;
-
         if (this.instance instanceof Bike) {
             if (this.instance.backWheel.driving && this.instance.frontWheel.driving && !this.dead) {
                 this.instance.setSlow(false);

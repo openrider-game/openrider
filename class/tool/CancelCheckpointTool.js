@@ -10,6 +10,9 @@ export default class CancelCheckpointTool extends Tool {
 
     run() {
         this.track.playerRunner.popCheckpoint();
+        this.track.ghostRunners.forEach(runner => {
+            runner.popCheckpoint();
+        });
         this.track.restart();
     }
 }

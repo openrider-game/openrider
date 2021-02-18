@@ -1,4 +1,3 @@
-import Vector from "../numeric/Vector.js";
 import GhostParser from "../parser/GhostParser.js";
 import BikeRunner from "./BikeRunner.js";
 import BikeRenderer from "./instance/renderer/BikeRenderer.js";
@@ -23,7 +22,7 @@ export default class GhostRunner extends BikeRunner {
 
     updateControls() {
         this.keys.forEach((keyArray, mapKey) => {
-            if (keyArray.includes(this.currentTime.toString())) {
+            if (keyArray.includes(this.track.time.toString())) {
                 // this[mapKey] refers to the this.xxxPressed properties of BikeRunner
                 this[mapKey] = !this[mapKey];
             }
@@ -50,8 +49,8 @@ export default class GhostRunner extends BikeRunner {
         let ghostNameWidth = ghostNameMetrics.width;
         ctx.fillStyle = '#000';
 
-        let nameX = (bikePos.x - ghostNameWidth / 2);
-        let nameY = (bikePos.y - this.instance.hitbox.size * 4 * this.track.zoomFactor);
+        let nameX = bikePos.x - ghostNameWidth / 2;
+        let nameY = bikePos.y - this.instance.hitbox.size * 4 * this.track.zoomFactor;
 
         ctx.fillText(this.ghostName, nameX, nameY);
         ctx.restore();

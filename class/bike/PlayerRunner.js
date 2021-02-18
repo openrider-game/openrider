@@ -29,6 +29,16 @@ export default class PlayerRunner extends BikeRunner {
 
     onHitCheckpoint() {
         this.save();
+        this.track.ghostRunners.forEach((runner) => {
+            runner.save();
+        });
+    }
+
+    reset() {
+        super.reset();
+        this.track.ghostRunners.forEach(runner => {
+            runner.reset();
+        });
     }
 
     updateControls() {
@@ -42,7 +52,7 @@ export default class PlayerRunner extends BikeRunner {
         controls.forEach((pressed, mapKey) => {
             // this[mapKey] refers to the this.xxxPressed properties of BikeRunner
             if (pressed !== this[mapKey]) {
-                this.instance.keyLog.get(mapKey).push(this.currentTime.toString());
+                this.instance.keyLog.get(mapKey).push(this.track.time.toString());
                 this[mapKey] = pressed;
             }
         });

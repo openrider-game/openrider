@@ -9,12 +9,15 @@ export default class TrackState extends GameState {
     fixedUpdate() {
         this.track.toolManager.fixedUpdate();
         if (!this.track.paused) {
+            // Run playerRunner before the ghosts so that when it saves a checkpoint
+            // the physics from the ghosts don't get updated because if they do they run
+            // twice on the same time increment, and they break!
+            this.track.playerRunner.fixedUpdate();
             this.track.ghostRunners.forEach((runner) => {
                 if (!runner.done) {
                     runner.fixedUpdate();
                 }
             });
-            this.track.playerRunner.fixedUpdate();
 
             this.track.time++;
         }

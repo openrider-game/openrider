@@ -41,10 +41,15 @@ export default class Toolbar {
             }, {}));
         }
 
-        let rightToolbar = makeToolbar(track, RIGHT_TOOLBAR);
-        let rightToolbarEl = rightToolbar.getDOM();
-        rightToolbar.registerControls();
-        rightToolbarEl.classList.add('right');
+        let rightToolbarEl = null;
+
+        if (track.id === null) {
+            let rightToolbar = makeToolbar(track, RIGHT_TOOLBAR);
+            rightToolbarEl = rightToolbar.getDOM();
+            rightToolbar.registerControls();
+            rightToolbarEl.classList.add('right');
+            track.canvas.parentNode.insertBefore(rightToolbarEl, track.canvas);
+        }
 
         let leftToolbar = null;
 
@@ -58,10 +63,9 @@ export default class Toolbar {
         leftToolbar.registerControls();
         leftToolbarEl.classList.add('left');
 
-        track.canvas.parentNode.insertBefore(rightToolbarEl, track.canvas);
-        track.canvas.parentNode.insertBefore(leftToolbarEl, rightToolbarEl);
+        track.canvas.parentNode.insertBefore(leftToolbarEl, track.canvas);
 
         track.pauseTool = leftToolbar.instances[PauseTool.toolName];
-        track.toolManager.setTool(rightToolbar.instances[CameraTool.toolName]);
+        track.toolManager.setTool(leftToolbar.instances[CameraTool.toolName]);
     }
 }

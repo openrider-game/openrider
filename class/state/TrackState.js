@@ -76,7 +76,9 @@ export default class TrackState extends GameState {
         ctx.fillText(`${this.track.playerRunner.targetsReached.size}/${this.track.targets.size}`, 30, 30);
 
         this.track.ghostRunners.forEach((runner, index) => {
-            let text = `${runner.ghostName}: ${Time.format(Math.max(0, runner.finalTime - this.track.time) * getGame().frameDuration)}`;
+            let ghostTime = Math.max(0, runner.finalTime - this.track.time);
+            let remainingTimeText = ghostTime > 0 ? Time.format(ghostTime * getGame().frameDuration) : 'finished!';
+            let text = `${runner.ghostName}: ${remainingTimeText} - ${runner.targetsReached.size}/${this.track.targets.size}`;
             let textMetrics = ctx.measureText(text);
 
             ctx.fillStyle = runner.instance.color;

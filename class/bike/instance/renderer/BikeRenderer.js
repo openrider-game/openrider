@@ -1,6 +1,5 @@
+import { RENDERER_MAP } from "../../../constant/BikeConstants.js";
 import Bike from "../Bike.js";
-import BMX from "../BMX.js";
-import BMXRenderer from "./BMXRenderer.js";
 
 export default class BikeRenderer {
     /**
@@ -10,10 +9,10 @@ export default class BikeRenderer {
      * @param {number} opacityFactor
      */
     static render(ctx, bike, opacityFactor) {
-        let renderer = null;
-        if (bike instanceof BMX) {
-            renderer = BMXRenderer;
+        let renderer = RENDERER_MAP[bike.constructor.name];
+
+        if (renderer != null) {
+            renderer.render(ctx, bike, opacityFactor);
         }
-        renderer.render(ctx, bike, opacityFactor);
     }
 }

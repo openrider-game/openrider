@@ -77,7 +77,10 @@ export default class Tool extends GameObject {
         }
     }
 
-    openOptions() {}
+    openOptions() {
+        this.hideOptions();
+    }
+
     closeOptions() {}
 
     activate() {

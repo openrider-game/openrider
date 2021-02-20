@@ -18,8 +18,9 @@ import SceneryLineTool from "../tool/item/line/SceneryLineTool.js";
 import SolidBrushTool from "../tool/item/line/SolidBrushTool.js";
 import SceneryBrushTool from "../tool/item/line/SceneryBrushTool.js";
 import GridSnapTool from "../tool/GridSnapTool.js";
+import SwitchBikeTool from "../tool/SwitchBikeTool.js";
 
 export const
-    LEFT_TOOLBAR_VIEWING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, FullscreenTool],
-    LEFT_TOOLBAR_EDITING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, FullscreenTool, EmptyTool, UndoTool, RedoTool],
+    LEFT_TOOLBAR_VIEWING = [PauseTool, RestartTool, CancelCheckpointTool, SwitchBikeTool, EmptyTool, FullscreenTool],
+    LEFT_TOOLBAR_EDITING = [PauseTool, RestartTool, CancelCheckpointTool, SwitchBikeTool, EmptyTool, FullscreenTool, EmptyTool, UndoTool, RedoTool],
     RIGHT_TOOLBAR = [SolidBrushTool, SceneryBrushTool, SolidLineTool, SceneryLineTool, EraserTool, CameraTool, GridSnapTool, EmptyTool, TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool];

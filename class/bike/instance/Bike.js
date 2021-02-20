@@ -16,7 +16,6 @@ export default class Bike {
         /** @type {Track} */
         this.track = track;
         this.runner = runner;
-        this.type = null; // TODO: check if needed once ghosts are implemented
         this.friction = 0.99;
 
         this.distance = 0;

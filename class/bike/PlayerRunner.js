@@ -22,7 +22,7 @@ export default class PlayerRunner extends BikeRunner {
 
     onHitTarget() {
         if (this.targetsReached.size >= this.track.targets.size) {
-            let ghostString = GhostParser.generate(this.instance.keyLog);
+            let ghostString = GhostParser.generate(this);
             console.log(ghostString);
         }
     }
@@ -31,13 +31,6 @@ export default class PlayerRunner extends BikeRunner {
         this.save();
         this.track.ghostRunners.forEach((runner) => {
             runner.save();
-        });
-    }
-
-    reset() {
-        super.reset();
-        this.track.ghostRunners.forEach(runner => {
-            runner.reset();
         });
     }
 

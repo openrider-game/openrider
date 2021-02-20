@@ -21,24 +21,22 @@ export default class GhostParser {
             keyArray.push(...parts.shift().split(' '));
         });
 
-        ghostMap.set('time', parts[5] || 0);
-        ghostMap.set('bike', BIKE_MAP[parts[6]] || BMX);
-        ghostMap.set('name', parts[7] || 'Ghost');
+        ghostMap.set('time', parts[0] || 0);
+        ghostMap.set('bike', BIKE_MAP[parts[1]] || BMX);
+        ghostMap.set('name', parts[2] || 'Ghost');
 
         return ghostMap;
     }
 
-    /**
-     *
-     * @param {Map<string, Array<number>} ghostKeys
-     */
-    static generate(ghostKeys) {
-        let ghostString = new Array();
+    static generate(bikeRunner) {
+        let ghostKeys = new Array();
 
-        ghostKeys.forEach((keyArray) => {
-            ghostString.push(keyArray.join(' '));
+        bikeRunner.instance.keyLog.forEach((keyArray) => {
+            ghostKeys.push(keyArray.join(' '));
         });
 
-        return ghostString.join(',');
+        ghostKeys.push(bikeRunner.track.time, bikeRunner.bikeClass.name);
+
+        return ghostKeys.join(',');
     }
 }

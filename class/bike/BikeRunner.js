@@ -147,7 +147,6 @@ export default class BikeRunner extends GameObject {
 
     reset() {
         this.snapshots = new Array();
-        this.startFrom(null);
     }
 
     restart() {
@@ -200,6 +199,14 @@ export default class BikeRunner extends GameObject {
     }
 
     fixedUpdate() {
+        // We have to let all the parts process their fixedUpdate before we try to save
+        // Otherwise, we get faulty values in the bike clone, since some of them are 1 cycle behind/ahead
+        // Thus, the Checkpoints and Targets get added in the action queue instead of being processed directly
+        if (this.actionQueue.length) {
+            this.processActionQueue();
+            this.actionQueue = new Array();
+        }
+
         if (this.instance instanceof Bike) {
             if (this.instance.backWheel.driving && this.instance.frontWheel.driving && !this.dead) {
                 this.instance.setSlow(false);
@@ -228,14 +235,6 @@ export default class BikeRunner extends GameObject {
 
         if (this.deadObject instanceof Entity) {
             this.deadObject.fixedUpdate();
-        }
-
-        // We have to let all the parts process their fixedUpdate before we try to save
-        // Otherwise, we get faulty values in the bike clone, since some of them are 1 cycle behind
-        // Thus, the Checkpoints and Targets get added in the action queue instead of being processed directly
-        if (this.actionQueue.length) {
-            this.processActionQueue();
-            this.actionQueue = new Array();
         }
     }
 

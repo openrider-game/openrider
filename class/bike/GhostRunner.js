@@ -1,3 +1,4 @@
+import Color from "../numeric/Color.js";
 import GhostParser from "../parser/GhostParser.js";
 import BikeRunner from "./BikeRunner.js";
 import BikeRenderer from "./instance/renderer/BikeRenderer.js";
@@ -12,6 +13,10 @@ export default class GhostRunner extends BikeRunner {
         this.keys = ghostMap.get('keys');
         this.finalTime = ghostMap.get('time');
         this.ghostName = ghostMap.get('name');
+    }
+
+    assignColor() {
+        this.instance.color = Color.generateRandomDark();
     }
 
     onHitTarget() {
@@ -47,7 +52,7 @@ export default class GhostRunner extends BikeRunner {
 
         let ghostNameMetrics = ctx.measureText(this.ghostName);
         let ghostNameWidth = ghostNameMetrics.width;
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = this.instance.color;
 
         let nameX = bikePos.x - ghostNameWidth / 2;
         let nameY = bikePos.y - this.instance.hitbox.size * 4 * this.track.zoomFactor;

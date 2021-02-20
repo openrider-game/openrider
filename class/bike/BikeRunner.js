@@ -40,8 +40,11 @@ export default class BikeRunner extends GameObject {
     createBike() {
         let bikeClass = this.bikeClass;
         this.instance = new bikeClass(this.track, this);
+        this.assignColor();
         this.initialBike = this.instance.clone();
     }
+
+    assignColor() {}
 
     startFrom(snapshot) {
         this.done = false;

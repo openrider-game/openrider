@@ -3,16 +3,18 @@ import TrackParser from "../parser/TrackParser.js";
 
 export default class ParserState extends GameState {
     onEnter() {
-        this.start();
+        this.getTrackParser();
     }
 
-    async start() {
+    async getTrackParser() {
         let rawTrack = await this.track.fetchRawTrack();
         this.parser = new TrackParser(rawTrack, this.track);
-        this.parser.parse();
+        this.parser.currentStep();
     }
 
-    fixedUpdate() {}
+    fixedUpdate() {
+        this.parser.currentStep();
+    }
 
     update(progress, delta) {
         this.parser.progress =

@@ -21,7 +21,7 @@ export default class TrackParser {
         /** @type {Track} */
         this.track = track;
 
-        this.stepSize = 1000;
+        this.stepSize = 100;
 
         this.memReset();
 
@@ -36,6 +36,7 @@ export default class TrackParser {
     }
 
     memReset() {
+        this.currentStep = this.parseSolidLines;
         this.progress = 0;
         this.progressLabel = null;
         this.solidLineData = this.emptyData();
@@ -47,17 +48,12 @@ export default class TrackParser {
         this.codeOrigin = '';
     }
 
-    parse() {
-        this.parseSolidLines();
-    }
-
     parseSolidLines() {
         this.progressLabel = 'Solid lines';
         this.parseLines(
             this.solidLineData,
             SolidLine,
             LINE,
-            this.parseSolidLines,
             this.parseSceneryLines
         );
     }
@@ -68,7 +64,6 @@ export default class TrackParser {
             this.sceneryLineData,
             SceneryLine,
             LINE,
-            this.parseSceneryLines,
             this.parseItems
         );
     }
@@ -109,10 +104,8 @@ export default class TrackParser {
             }
         }
 
-        if (this.itemData.index < this.itemData.code.length) {
-            requestAnimationFrame(() => this.loopItems(itemMap));
-        } else {
-            this.parseForegroundSolidLines();
+        if (this.itemData.index >= this.itemData.code.length) {
+            this.currentStep = this.parseForegroundSolidLines;
         }
     }
 
@@ -122,7 +115,6 @@ export default class TrackParser {
             this.foregroundSolidLineData,
             SolidLine,
             LINE_FOREGROUND,
-            this.parseForegroundSolidLines,
             this.parseForegroundSceneryLines
         );
     }
@@ -133,7 +125,6 @@ export default class TrackParser {
             this.foregroundSceneryLineData,
             SceneryLine,
             LINE_FOREGROUND,
-            this.parseForegroundSceneryLines,
             this.parseOrigin
         );
     }
@@ -144,7 +135,8 @@ export default class TrackParser {
         let originVector = new Vector(parseInt(origin[0], 32), parseInt(origin[1], 32));
         this.track.origin.set(originVector);
         this.track.camera.set(originVector);
-        this.parseBike();
+
+        this.currentStep = this.parseBike;
     }
 
     parseBike() {
@@ -166,7 +158,7 @@ export default class TrackParser {
 
         this.track.focalPoint = this.track.ghostRunners[0].instance.hitbox;
 
-        this.done();
+        this.currentStep = this.done;
     }
 
     done() {
@@ -176,7 +168,7 @@ export default class TrackParser {
         this.memReset();
     }
 
-    parseLines(lineData, type, event, current, next) {
+    parseLines(lineData, type, event, next) {
         let toGo = this.stepSize;
         let l = Math.min(lineData.index + toGo, lineData.code.length);
         for (; lineData.index < l; lineData.index++) {
@@ -205,10 +197,8 @@ export default class TrackParser {
             }
         }
 
-        if (lineData.index < lineData.code.length) {
-            requestAnimationFrame(() => (current.bind(this))());
-        } else {
-            (next.bind(this))();
+        if (lineData.index >= lineData.code.length) {
+            this.currentStep = next;
         }
     }
 

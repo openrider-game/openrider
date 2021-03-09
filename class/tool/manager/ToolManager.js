@@ -38,7 +38,7 @@ export default class ToolManager extends GameObject {
     }
 
     render(ctx) {
-        if (this.track.event.mouseIn && this.tool && this.active) {
+        if ((this.track.event.mouseIn && this.tool && this.active) || (this.tool && this.tool.alwaysRender)) {
             this.tool.render(ctx);
         }
     }

@@ -15,6 +15,7 @@ export default class Tool extends GameObject {
         super();
         this.track = track;
         this.mouseDown = false;
+        this.alwaysRender = false;
     }
 
     registerControls() {
@@ -62,7 +63,7 @@ export default class Tool extends GameObject {
 
     showOptions(e) {
         e.preventDefault();
-        if (!this.track.toolManager.optionsOpened) {
+        if (!this.track.toolManager.optionsOpened && this.track.toolManager.tool === this) {
             this.track.toolManager.optionsOpened = true;
             this.openOptions();
         }
@@ -88,6 +89,7 @@ export default class Tool extends GameObject {
     }
 
     deactivate() {
+        this.hideOptions();
         this.mouseDown = false;
     }
 

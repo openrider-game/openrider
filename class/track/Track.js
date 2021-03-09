@@ -14,6 +14,7 @@ import ReachableItem from "../item/ReachableItem.js";
 import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
 import PauseTool from "../tool/PauseTool.js";
+import StartPositionTool from "../tool/StartPositionTool.js";
 import TrackEvent from "./TrackEvent.js";
 
 export default class Track {
@@ -56,6 +57,9 @@ export default class Track {
         // special edge case because we need to be updating the DOM from outside the tool
         /** @type {PauseTool} */
         this.pauseTool = null;
+        // special edge case because we need to be updating the tool from another tool
+        /** @type {StartPositionTool} */
+        this.startPositionTool = null;
         this.paused = false;
         this.time = 0;
 

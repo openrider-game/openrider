@@ -19,5 +19,7 @@ export default class SwitchBikeTool extends Tool {
         })
 
         this.track.restart();
+
+        this.track.startPositionTool.createDummyRunner();
     }
 }

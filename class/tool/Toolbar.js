@@ -1,6 +1,7 @@
 import { LEFT_TOOLBAR_EDITING, LEFT_TOOLBAR_VIEWING, RIGHT_TOOLBAR } from "../constant/ToolbarConstants.js";
 import CameraTool from "./CameraTool.js";
 import PauseTool from "./PauseTool.js";
+import StartPositionTool from "./StartPositionTool.js";
 import Tool from "./Tool.js";
 
 export default class Toolbar {
@@ -49,6 +50,8 @@ export default class Toolbar {
             rightToolbar.registerControls();
             rightToolbarEl.classList.add('right');
             track.canvas.parentNode.insertBefore(rightToolbarEl, track.canvas);
+
+            track.startPositionTool = rightToolbar.instances[StartPositionTool.toolName];
         }
 
         let leftToolbar = null;

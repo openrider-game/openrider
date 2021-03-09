@@ -12,7 +12,9 @@ export default class Checkpoint extends ReachableItem {
      * @param {BikePart} part
      */
     onReach(part) {
-        part.bike.runner.actionQueue.push(this);
+        if (!part.bike.runner.checkpointsReached.has(this.id)) {
+            part.bike.runner.actionQueue.push(this);
+        }
     }
 
     onAdd() {

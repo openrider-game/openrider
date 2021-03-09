@@ -20,10 +20,7 @@ export default class StartPositionTool extends Tool {
     activate() {
         this.track.canvas.style.cursor = 'pointer';
 
-        this.dummyRunner = new GhostRunner(this.track, '0,0,0,0,0,,,Start Position');
-        this.dummyRunner.assignColor = () => {};
-
-        this.dummyRunner.createBike();
+        this.createDummyRunner();
     }
 
     onMouseUp(e) {
@@ -40,6 +37,13 @@ export default class StartPositionTool extends Tool {
         let oldInstance = this.track.playerRunner.instance;
         this.track.playerRunner.createBike();
         this.track.playerRunner.instance = oldInstance;
+
+        this.createDummyRunner();
+    }
+
+    createDummyRunner() {
+        this.dummyRunner = new GhostRunner(this.track, `,,,,,,${this.track.playerRunner.bikeClass.name},Start Position`);
+        this.dummyRunner.assignColor = () => {};
 
         this.dummyRunner.createBike();
     }

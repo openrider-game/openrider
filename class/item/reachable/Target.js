@@ -1,3 +1,4 @@
+import BikePart from "../../entity/BikePart.js";
 import ReachableItem from "../ReachableItem.js";
 
 export default class Target extends ReachableItem {
@@ -6,8 +7,14 @@ export default class Target extends ReachableItem {
     static get reachedColor() { return '#ffa'; }
     static get code() { return 'T'; }
 
+    /**
+     *
+     * @param {BikePart} part
+     */
     onReach(part) {
-        part.bike.runner.actionQueue.push(this);
+        if (!part.bike.runner.targetsReached.has(this.id)) {
+            part.bike.runner.actionQueue.push(this);
+        }
     }
 
     onAdd() {

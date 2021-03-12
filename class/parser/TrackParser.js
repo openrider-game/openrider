@@ -20,7 +20,7 @@ export default class TrackParser {
         /** @type {Track} */
         this.track = track;
 
-        this.stepSize = 100;
+        this.stepSize = 1000;
 
         this.memReset();
 

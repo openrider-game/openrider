@@ -12,7 +12,9 @@ export default class ParserState extends GameState {
         this.parser.currentStep();
     }
 
-    fixedUpdate() {
+    fixedUpdate() {}
+
+    update(progress, delta) {
         this.parser.currentStep();
 
         this.parser.progress =
@@ -21,9 +23,6 @@ export default class ParserState extends GameState {
             this.parser.itemData.index +
             this.parser.foregroundSolidLineData.index +
             this.parser.foregroundSceneryLineData.index;
-    }
-
-    update(progress, delta) {
         if (this.parser.done) {
             this.manager.push('track');
         }

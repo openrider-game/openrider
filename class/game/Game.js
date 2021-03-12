@@ -56,7 +56,7 @@ export default class Game {
         this.frames++;
 
         if (performance.now() - this.timer > 1000) {
-            this.timer += 1000;
+            this.timer = performance.now();
 
             document.title = `OpenRider - ${this.updates} ups, ${this.frames} fps`;
 

@@ -9,7 +9,6 @@ import Line from "../item/line/Line.js";
 import Toolbar from "../tool/Toolbar.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
 import GhostRunner from "../bike/GhostRunner.js";
-import { getGame } from "../../bootstrap.js";
 
 export default class TrackParser {
     /**
@@ -36,6 +35,7 @@ export default class TrackParser {
     }
 
     memReset() {
+        this.done = false;
         this.currentStep = this.parseSolidLines;
         this.progress = 0;
         this.progressLabel = null;
@@ -158,14 +158,14 @@ export default class TrackParser {
 
         this.track.focalPoint = this.track.ghostRunners[0].instance.hitbox;
 
-        this.currentStep = this.done;
+        this.currentStep = this.finish;
     }
 
-    done() {
-        getGame().stateManager.push('track');
+    finish() {
         Toolbar.makeToolbars(this.track);
 
         this.memReset();
+        this.done = true;
     }
 
     parseLines(lineData, type, event, next) {

@@ -6,8 +6,6 @@ if (!document.createElement('canvas').getContext) {
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.querySelector('[data-play=openrider]');
-/** @type {Game} */
-let game = null;
 
 window.addEventListener('resize', (e) => setCanvasSize());
 setCanvasSize();
@@ -37,13 +35,9 @@ function setContextProperties(ctx) {
  * @param {{}} opt
  */
 function newGame(opt) {
-    game = new Game(canvas, opt);
+    let game = new Game(canvas, opt);
     game.run();
     game.stateManager.push('parser');
-}
-
-export function getGame() {
-    return game;
 }
 
 export default {

@@ -14,15 +14,19 @@ export default class ParserState extends GameState {
 
     fixedUpdate() {
         this.parser.currentStep();
-    }
 
-    update(progress, delta) {
         this.parser.progress =
             this.parser.solidLineData.index +
             this.parser.sceneryLineData.index +
             this.parser.itemData.index +
             this.parser.foregroundSolidLineData.index +
             this.parser.foregroundSceneryLineData.index;
+    }
+
+    update(progress, delta) {
+        if (this.parser.done) {
+            this.manager.push('track');
+        }
     }
 
     render(ctx) {

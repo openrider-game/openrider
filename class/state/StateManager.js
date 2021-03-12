@@ -36,7 +36,7 @@ export default class StateManager extends GameObject {
      * @param {String} name 
      */
     addState(stateClass, name) {
-        let state = new stateClass(this.track);
+        let state = new stateClass(this);
         this.states.set(name, state);
     }
 

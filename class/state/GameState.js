@@ -1,11 +1,15 @@
 import GameObject from "../game/GameObject.js";
 import Track from "../track/Track.js";
+import StateManager from "./StateManager.js";
 
 export default class GameState extends GameObject {
-    constructor(track) {
+    constructor(manager) {
         super();
+
+        /** @type {StateManager} */
+        this.manager = manager;
         /** @type {Track} */
-        this.track = track;
+        this.track = manager.track;
     }
 
     onEnter() {}

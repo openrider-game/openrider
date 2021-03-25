@@ -23,10 +23,16 @@ export default class StartPositionTool extends Tool {
         this.createDummyRunner();
     }
 
-    onMouseUp(e) {
-        if (!this.mouseDown) return;
+    onMouseMove(e) {
+        super.onMouseMove(e);
 
-        this.mouseDown = false;
+        if (this.mouseDown) {
+            this.dummyRunner.instance.setBikeInitialState(this.track.mousePos);
+        }
+    }
+
+    onMouseUp(e) {
+        super.onMouseUp(e);
 
         this.setStartPosition(this.track.mousePos);
     }
@@ -34,11 +40,10 @@ export default class StartPositionTool extends Tool {
     setStartPosition(pos) {
         this.track.origin.set(pos);
 
-        let oldInstance = this.track.playerRunner.instance;
-        this.track.playerRunner.createBike();
-        this.track.playerRunner.instance = oldInstance;
+        let bikeClass = this.track.playerRunner.bikeClass;
+        this.track.playerRunner.initialBike = new bikeClass(this.track, this.track.playerRunner);
 
-        this.createDummyRunner();
+        this.dummyRunner.instance.setBikeInitialState(pos);
     }
 
     createDummyRunner() {

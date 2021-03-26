@@ -1,6 +1,7 @@
 import Track from "./Track.js";
 import Vector from "../numeric/Vector.js";
 import Keyboard from "../keyboard/Keyboard.js";
+import PauseTool from "../tool/PauseTool.js";
 
 export default class TrackEvent {
     /**
@@ -88,7 +89,7 @@ export default class TrackEvent {
     onVisibilityChange() {
         if (document.hidden) {
             this.track.paused = true;
-            this.track.pauseTool.updateDOM();
+            this.track.tools.get(PauseTool.toolName).updateDOM();
         }
     }
 }

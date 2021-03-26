@@ -14,7 +14,7 @@ import ReachableItem from "../item/ReachableItem.js";
 import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
 import PauseTool from "../tool/PauseTool.js";
-import StartPositionTool from "../tool/StartPositionTool.js";
+import Tool from "../tool/Tool.js";
 import TrackEvent from "./TrackEvent.js";
 
 export default class Track {
@@ -54,12 +54,8 @@ export default class Track {
         this.checkpoints = new Map();
         this.targets = new Map();
 
-        // special edge case because we need to be updating the DOM from outside the tool
-        /** @type {PauseTool} */
-        this.pauseTool = null;
-        // special edge case because we need to be updating the tool from another tool
-        /** @type {StartPositionTool} */
-        this.startPositionTool = null;
+        /** @type {Map<String, Tool>} */
+        this.tools = new Map();
         this.paused = false;
         this.time = 0;
 
@@ -184,7 +180,7 @@ export default class Track {
         this.unreachEverything();
 
         this.paused = false;
-        this.pauseTool.updateDOM();
+        this.tools.get(PauseTool.toolName).updateDOM();
 
         this.playerRunner.restart();
         this.ghostRunners.forEach(runner => {

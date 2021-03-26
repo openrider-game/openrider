@@ -1,4 +1,5 @@
 import { LEFT_TOOLBAR_EDITING, LEFT_TOOLBAR_VIEWING, RIGHT_TOOLBAR } from "../constant/ToolbarConstants.js";
+import Track from "../track/Track.js";
 import CameraTool from "./CameraTool.js";
 import PauseTool from "./PauseTool.js";
 import StartPositionTool from "./StartPositionTool.js";
@@ -7,8 +8,8 @@ import Tool from "./Tool.js";
 export default class Toolbar {
     /**
      *
-     * @param {Tool} tools
-     * @param {Tool} instances
+     * @param {Tool[]} tools
+     * @param {Tool[]} instances
      */
     constructor(tools, instances) {
         this.tools = tools;
@@ -18,6 +19,13 @@ export default class Toolbar {
     registerControls() {
         for (let tool in this.instances) {
             this.instances[tool].registerControls();
+        }
+    }
+
+    /** @param {Track} track */
+    attachToTrack(track) {
+        for (let tool in this.instances) {
+            track.tools.set(tool, this.instances[tool]);
         }
     }
 
@@ -35,6 +43,7 @@ export default class Toolbar {
         return el;
     }
 
+    /** @param {Track} track */
     static makeToolbars(track) {
         const makeToolbar = (track, tools) => {
             return new Toolbar(tools, tools.reduce((toolMap, toolClass) => {
@@ -51,7 +60,7 @@ export default class Toolbar {
             rightToolbarEl.classList.add('right');
             track.canvas.parentNode.insertBefore(rightToolbarEl, track.canvas);
 
-            track.startPositionTool = rightToolbar.instances[StartPositionTool.toolName];
+            rightToolbar.attachToTrack(track);
         }
 
         let leftToolbar = null;
@@ -65,10 +74,10 @@ export default class Toolbar {
         let leftToolbarEl = leftToolbar.getDOM();
         leftToolbar.registerControls();
         leftToolbarEl.classList.add('left');
-
         track.canvas.parentNode.insertBefore(leftToolbarEl, track.canvas);
 
-        track.pauseTool = leftToolbar.instances[PauseTool.toolName];
+        leftToolbar.attachToTrack(track);
+
         track.toolManager.setTool(leftToolbar.instances[CameraTool.toolName]);
     }
 }

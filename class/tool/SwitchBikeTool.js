@@ -3,6 +3,7 @@ import * as KeyCode from "../keyboard/KeyCode.js";
 import Control from "../keyboard/Control.js";
 import Keyboard from "../keyboard/Keyboard.js";
 import { SWITCH_MAP } from "../constant/BikeConstants.js";
+import StartPositionTool from "./StartPositionTool.js";
 
 export default class SwitchBikeTool extends Tool {
     static get toolName() { return 'Switch Bike'; }
@@ -20,6 +21,6 @@ export default class SwitchBikeTool extends Tool {
 
         this.track.restart();
 
-        this.track.startPositionTool.createDummyRunner();
+        this.track.tools.get(StartPositionTool.toolName).createDummyRunner();
     }
 }

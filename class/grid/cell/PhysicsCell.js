@@ -10,12 +10,12 @@ export default class PhysicsCell extends Cell {
      * @param {Entity} part
      */
     touch(part) {
-        for (let line of this.lines) {
-            line.touch(part);
+        for (let i = this.lines.length - 1; i >= 0; i--) {
+            this.lines[i].touch(part);
         }
         if (!part.bike.runner.dead) {
-            for (let object of this.objects) {
-                object.touch(part);
+            for (let i = this.objects.length - 1; i >= 0; i--) {
+                this.objects[i].touch(part);
             }
         }
     }

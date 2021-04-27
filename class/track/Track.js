@@ -130,9 +130,9 @@ export default class Track {
         this.grid.cell(x + 1, y + 1).untouch();
 
         this.grid.cell(x, y).touch(part);
-        this.grid.cell(x, y + 1).touch(part);
         this.grid.cell(x + 1, y).touch(part);
         this.grid.cell(x + 1, y + 1).touch(part);
+        this.grid.cell(x, y + 1).touch(part);
     }
 
     checkDelete(eraserPoint, radius, restrict) {

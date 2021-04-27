@@ -226,12 +226,12 @@ export default class BikeRunner extends GameObject {
             }
 
             if (!this.instance.slow || this.instance.slowParity === 0) {
-                for (let joint of this.instance.joints) {
-                    joint.fixedUpdate();
+                for (let i = this.instance.joints.length - 1; i >= 0; i--) {
+                    this.instance.joints[i].fixedUpdate();
                 }
 
-                for (let point of this.instance.points) {
-                    point.fixedUpdate();
+                for (let i = this.instance.points.length - 1; i >= 0; i--) {
+                    this.instance.points[i].fixedUpdate();
                 }
             }
         }

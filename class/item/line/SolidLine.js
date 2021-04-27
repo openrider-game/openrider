@@ -15,7 +15,7 @@ export default class SolidLine extends Line {
             let distanceToPart = 0;
             let posDistance = part.pos.sub(this.pos);
             let diffVel = posDistance.sub(part.velocity);
-            let relativePosOnLine = posDistance.dot(this.vector) / this.len ** 2;
+            let relativePosOnLine = posDistance.dot(this.vector) / this.len / this.len;
 
             // Is our part directly above or below the line
             if (relativePosOnLine >= 0 && relativePosOnLine <= 1) {

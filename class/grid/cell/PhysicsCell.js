@@ -36,7 +36,7 @@ export default class PhysicsCell extends Cell {
         }
 
         for (let line of lines) {
-            if (line && line.pos.x === point.x && line.pos.y === point.y && !line.stringGot) {
+            if (line && line.pos.x === point.x && line.pos.y === point.y && !line.hasString) {
                 return line;
             }
         }

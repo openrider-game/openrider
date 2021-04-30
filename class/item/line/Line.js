@@ -21,7 +21,7 @@ export default class Line extends Item {
         /** @type {boolean} */
         this.touched = false;
         /** @type {boolean} */
-        this.stringGot = false;
+        this.hasString = false;
     }
 
     /**
@@ -63,6 +63,7 @@ export default class Line extends Item {
      * @return {string}
      */
     getEnd() {
+        this.hasString = true;
         let end = ' ' + this.b.toString();
         let gridCoords = Grid.gridCoords(this.endPos, this.grid.cellSize);
         /** @type {PhysicsCell} */

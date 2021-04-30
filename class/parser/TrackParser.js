@@ -8,7 +8,6 @@ import Item from "../item/Item.js";
 import Line from "../item/line/Line.js";
 import Toolbar from "../tool/Toolbar.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
-import GhostRunner from "../bike/GhostRunner.js";
 
 export default class TrackParser {
     /**

@@ -6,24 +6,24 @@ export default class GeneratorState extends GameState {
         this.generator = new TrackGenerator(this.track);
     }
 
+    onLeave() {
+        this.generator.memReset();
+    }
+
     fixedUpdate() {}
 
     update(progress, delta) {
-        let canProgress = this.generator.progress <= this.generator.cellCount;
-        let canProgressForeground = this.generator.foregroundProgress <= this.generator.foregroundCellCount;
-        
-        if (canProgress) {
-            this.generator.generateNextCell();
-        }
+        this.generator.currentStep();
 
-        if(canProgressForeground) {
-            this.generator.generateNextForegroundCell();
-        }
+        this.generator.progress =
+            this.generator.cellData.index +
+            this.generator.foregroundCellData.index;
 
-        if(!canProgress && !canProgressForeground) {
-            this.generator.cleanup();
+        if(this.generator.done) {
             // use getCode to put it in the text box
+            console.log(this.generator.getCode());
             // change state
+            this.manager.pop();
         }
     }
 
@@ -31,19 +31,16 @@ export default class GeneratorState extends GameState {
         let barY = this.track.canvas.height / 2 - 15;
         let barW = this.track.canvas.width - 200;
 
-        let progress = this.generator.progress + this.generator.foregroundProgress;
-        let total = this.generator.cellCount + this.generator.foregroundCellCount;
-
         ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
 
         ctx.fillStyle = '#ccc';
         ctx.fillRect(100, barY, barW, 30);
 
         ctx.fillStyle = '#aaa';
-        ctx.fillRect(100, barY, progress / total * barW, 30);
+        ctx.fillRect(100, barY, this.generator.progress / this.generator.length * barW, 30);
         ctx.strokeRect(99, barY - 1, barW - 1, 32);
 
-        let progressText = `Generating track code: ${Math.round(progress / total * 100)} %`;
+        let progressText = `Generating track code: ${Math.round(this.generator.progress / this.generator.length * 100)} %`;
         let progressTextMetrics = ctx.measureText(progressText);
         let progressTextWidth = progressTextMetrics.width;
         let progressTextHeight = progressTextMetrics.actualBoundingBoxAscent + progressTextMetrics.actualBoundingBoxDescent;

@@ -49,6 +49,6 @@ export default class DirectionalItem extends Item {
     }
 
     toString() {
-        return this.name + " " + this.pos.toString() + ' ' + (this.rotation - 180).toString(32);
+        return this.constructor.code + " " + this.pos.toString() + ' ' + (this.rotation - 180).toString(32);
     }
 }

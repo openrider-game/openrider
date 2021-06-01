@@ -83,7 +83,7 @@ export default class Item extends GameObject {
     }
 
     toString() {
-        return this.constructor.name + ' ' + this.pos.toString();
+        return this.constructor.code + ' ' + this.pos.toString();
     }
 
     /**

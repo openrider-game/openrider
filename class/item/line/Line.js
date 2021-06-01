@@ -64,7 +64,7 @@ export default class Line extends Item {
      */
     getEnd() {
         this.hasString = true;
-        let end = ' ' + this.b.toString();
+        let end = ' ' + this.endPos.toString();
         let gridCoords = Grid.gridCoords(this.endPos, this.grid.cellSize);
         /** @type {PhysicsCell} */
         let nextGrid = this.grid.cell(gridCoords.x, gridCoords.y);

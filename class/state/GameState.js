@@ -1,5 +1,4 @@
-import GameObject from "../game/GameObject.js";
-import Track from "../track/Track.js";
+import GameObject from "../game/GameObject.js";;
 import StateManager from "./StateManager.js";
 
 export default class GameState extends GameObject {
@@ -8,9 +7,10 @@ export default class GameState extends GameObject {
 
         /** @type {StateManager} */
         this.manager = manager;
-        /** @type {Track} */
-        this.track = manager.track;
     }
+
+    get track() { return this.manager.track; }
+    set track(track) { this.manager.track = track; }
 
     onEnter() {}
     onLeave() {}

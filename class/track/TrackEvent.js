@@ -12,26 +12,33 @@ export default class TrackEvent {
         this.track = track;
         this.keyboard = new Keyboard();
 
+        this.controller = new AbortController();
+
         this.mouseIn = false;
 
         this.attach();
     }
 
     attach() {
-        this.track.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
-        this.track.canvas.addEventListener('mouseup', e => this.onMouseUp(e));
-        this.track.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
-        this.track.canvas.addEventListener('mousewheel', e => this.onScroll(e));
+        this.track.canvas.addEventListener('mousedown', e => this.onMouseDown(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mouseup', e => this.onMouseUp(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mousemove', e => this.onMouseMove(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mousewheel', e => this.onScroll(e), {signal: this.controller.signal});
 
-        this.track.canvas.addEventListener('mouseenter', e => this.onMouseEnter(e));
-        this.track.canvas.addEventListener('mouseout', e => this.onMouseOut(e));
+        this.track.canvas.addEventListener('mouseenter', e => this.onMouseEnter(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mouseout', e => this.onMouseOut(e), {signal: this.controller.signal});
 
-        this.track.canvas.addEventListener('contextmenu', e => this.onContextMenu(e));
+        this.track.canvas.addEventListener('contextmenu', e => this.onContextMenu(e), {signal: this.controller.signal});
 
-        document.addEventListener('keydown', e => this.onKeyDown(e));
-        document.addEventListener('keyup', e => this.onKeyUp(e));
+        document.addEventListener('keydown', e => this.onKeyDown(e), {signal: this.controller.signal});
+        document.addEventListener('keyup', e => this.onKeyUp(e), {signal: this.controller.signal});
 
-        document.addEventListener('visibilitychange', () => this.onVisibilityChange());
+        document.addEventListener('visibilitychange', () => this.onVisibilityChange(), {signal: this.controller.signal});
+    }
+
+    detach() {
+        this.controller.abort();
+        this.controller = new AbortController();
     }
 
     onMouseDown(e) {

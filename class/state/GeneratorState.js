@@ -19,10 +19,12 @@ export default class GeneratorState extends GameState {
             this.generator.cellData.index +
             this.generator.foregroundCellData.index;
 
-        if(this.generator.done) {
-            // use getCode to put it in the text box
-            console.log(this.generator.getCode());
-            // change state
+        if (this.generator.done) {
+            let downloadLink = document.createElement("a");
+            downloadLink.download = "track.txt";
+            let data = new Blob([this.generator.getCode()], { type: "text/plain" });
+            downloadLink.href = window.URL.createObjectURL(data);
+            downloadLink.click();
             this.manager.pop();
         }
     }

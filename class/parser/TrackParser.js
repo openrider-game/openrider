@@ -14,16 +14,17 @@ export default class TrackParser {
      *
      * @param {string} rawTrack
      */
-    constructor(rawTrack, track) {
-        this.rawTrack = rawTrack;
+    constructor(track) {
         /** @type {Track} */
         this.track = track;
 
         this.stepSize = 1000;
+    }
 
+    init(rawTrack) {
         this.memReset();
 
-        this.split();
+        this.split(rawTrack);
 
         this.length =
             this.solidLineData.code.length +
@@ -188,8 +189,8 @@ export default class TrackParser {
         }
     }
 
-    split() {
-        let split = this.rawTrack.split('#');
+    split(rawTrack) {
+        let split = rawTrack.split('#');
         let i = 0;
         try {
             this.solidLineData.code = split[i++].split(',');

@@ -74,7 +74,6 @@ export default class ToolManager extends GameObject {
     onContextMenu(e) {
         if (this.tool) {
             this.active = true;
-            // if shift + right click switch to eraser somehow
         }
     }
 }

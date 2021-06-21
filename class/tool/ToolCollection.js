@@ -6,10 +6,10 @@ export default class ToolCollection {
         this.toolsByKeyLabel = new Map();
     }
 
-    setTools(tools) {
-        for (let tool of tools) {
-            this.toolsByToolName.set(tool.constructor.toolName, tool);
-            this.toolsByKeyLabel.set(tool.constructor.keyLabel, tool);
+    setTools(instances) {
+        for (let tool in instances) {
+            this.toolsByToolName.set(instances[tool].constructor.toolName, instances[tool]);
+            this.toolsByKeyLabel.set(instances[tool].constructor.keyLabel, instances[tool]);
         }
     }
 

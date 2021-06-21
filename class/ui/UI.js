@@ -19,7 +19,6 @@ export default class UI {
             if (file) {
                 let reader = new FileReader();
                 reader.onload = () => {
-                    Tool.detachAllTools();
                     state.track.event.detach();
                     state.track = new Track(state.track.canvas, { trackCode: reader.result });
                     state.getTrackParser();

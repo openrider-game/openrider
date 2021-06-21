@@ -14,7 +14,6 @@ import ReachableItem from "../item/ReachableItem.js";
 import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
 import PauseTool from "../tool/PauseTool.js";
-import Tool from "../tool/Tool.js";
 import ToolCollection from "../tool/ToolCollection.js";
 import TrackEvent from "./TrackEvent.js";
 
@@ -55,8 +54,6 @@ export default class Track {
         this.checkpoints = new Map();
         this.targets = new Map();
 
-        /** @type {Map<String, Tool>} */
-        this.tools = new Map();
         this.toolCollection = new ToolCollection();
         this.paused = false;
         this.time = 0;
@@ -180,7 +177,7 @@ export default class Track {
 
     pause(paused) {
         this.paused = paused;
-        this.tools.get(PauseTool.toolName).updateDOM();
+        this.toolCollection.getByToolName(PauseTool.toolName).updateDOM();
     }
 
     restart() {

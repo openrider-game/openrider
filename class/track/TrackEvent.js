@@ -33,6 +33,8 @@ export default class TrackEvent {
         document.addEventListener('keydown', e => this.onKeyDown(e), { signal: this.controller.signal });
         document.addEventListener('keyup', e => this.onKeyUp(e), { signal: this.controller.signal });
 
+        document.addEventListener('keyboarddown', e => this.onKeyboardDown(e), { signal: this.controller.signal });
+
         document.addEventListener('visibilitychange', () => this.onVisibilityChange(), { signal: this.controller.signal });
     }
 
@@ -91,6 +93,13 @@ export default class TrackEvent {
 
     onKeyUp(e) {
         this.keyboard.onKeyUp(e);
+    }
+
+    onKeyboardDown(e) {
+        let tool = this.track.toolCollection.getByKeyLabel(e.detail);
+        if(tool) {
+            tool.run();
+        }
     }
 
     onVisibilityChange() {

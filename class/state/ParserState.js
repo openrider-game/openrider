@@ -18,9 +18,9 @@ export default class ParserState extends GameState {
 
     initUI() {
         if (!this.track.id) {
-            UI.createEditorUI(this.track, this.manager);
+            UI.createEditorUI(this);
         } else {
-            UI.createRaceUI(this.track, this.manager);
+            UI.createRaceUI(this);
         }
     }
 

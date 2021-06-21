@@ -20,20 +20,20 @@ export default class TrackEvent {
     }
 
     attach() {
-        this.track.canvas.addEventListener('mousedown', e => this.onMouseDown(e), {signal: this.controller.signal});
-        this.track.canvas.addEventListener('mouseup', e => this.onMouseUp(e), {signal: this.controller.signal});
-        this.track.canvas.addEventListener('mousemove', e => this.onMouseMove(e), {signal: this.controller.signal});
-        this.track.canvas.addEventListener('mousewheel', e => this.onScroll(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mousedown', e => this.onMouseDown(e), { signal: this.controller.signal });
+        this.track.canvas.addEventListener('mouseup', e => this.onMouseUp(e), { signal: this.controller.signal });
+        this.track.canvas.addEventListener('mousemove', e => this.onMouseMove(e), { signal: this.controller.signal });
+        this.track.canvas.addEventListener('mousewheel', e => this.onScroll(e), { signal: this.controller.signal });
 
-        this.track.canvas.addEventListener('mouseenter', e => this.onMouseEnter(e), {signal: this.controller.signal});
-        this.track.canvas.addEventListener('mouseout', e => this.onMouseOut(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('mouseenter', e => this.onMouseEnter(e), { signal: this.controller.signal });
+        this.track.canvas.addEventListener('mouseout', e => this.onMouseOut(e), { signal: this.controller.signal });
 
-        this.track.canvas.addEventListener('contextmenu', e => this.onContextMenu(e), {signal: this.controller.signal});
+        this.track.canvas.addEventListener('contextmenu', e => this.onContextMenu(e), { signal: this.controller.signal });
 
-        document.addEventListener('keydown', e => this.onKeyDown(e), {signal: this.controller.signal});
-        document.addEventListener('keyup', e => this.onKeyUp(e), {signal: this.controller.signal});
+        document.addEventListener('keydown', e => this.onKeyDown(e), { signal: this.controller.signal });
+        document.addEventListener('keyup', e => this.onKeyUp(e), { signal: this.controller.signal });
 
-        document.addEventListener('visibilitychange', () => this.onVisibilityChange(), {signal: this.controller.signal});
+        document.addEventListener('visibilitychange', () => this.onVisibilityChange(), { signal: this.controller.signal });
     }
 
     detach() {
@@ -95,8 +95,7 @@ export default class TrackEvent {
 
     onVisibilityChange() {
         if (document.hidden) {
-            this.track.paused = true;
-            this.track.tools.get(PauseTool.toolName).updateDOM();
+            this.track.pause(true);
         }
     }
 }

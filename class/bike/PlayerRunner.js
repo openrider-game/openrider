@@ -12,12 +12,7 @@ export default class PlayerRunner extends BikeRunner {
         this.track.event.keyboard.registerControl('Down', new Control(KeyCode.DOM_VK_DOWN));
         this.track.event.keyboard.registerControl('Left', new Control(KeyCode.DOM_VK_LEFT));
         this.track.event.keyboard.registerControl('Right', new Control(KeyCode.DOM_VK_RIGHT));
-        this.track.event.keyboard.registerControl('Z', new Control(KeyCode.DOM_VK_Z));
-        document.addEventListener('keyboarddown', (e) => {
-            if (e.detail === 'Z' && !this.dead) {
-                this.doTurn = true;
-            }
-        });
+        this.track.event.keyboard.registerControl('Z', new Control(KeyCode.DOM_VK_Z, Keyboard.NONE, true));
     }
 
     onHitTarget() {
@@ -40,7 +35,7 @@ export default class PlayerRunner extends BikeRunner {
         controls.set('downPressed', this.track.event.keyboard.isDown('Down'));
         controls.set('leftPressed', this.track.event.keyboard.isDown('Left'));
         controls.set('rightPressed', this.track.event.keyboard.isDown('Right'));
-        controls.set('turnPressed', this.doTurn);
+        controls.set('turnPressed', this.track.event.keyboard.isDown('Z'));
 
         controls.forEach((pressed, mapKey) => {
             // this[mapKey] refers to the this.xxxPressed properties of BikeRunner

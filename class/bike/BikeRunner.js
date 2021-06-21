@@ -29,7 +29,6 @@ export default class BikeRunner extends GameObject {
         this.leftPressed = false;
         this.rightPressed = false;
         this.turnPressed = false;
-        this.doTurn = false;
 
         this.actionQueue = new Array();
 
@@ -60,7 +59,6 @@ export default class BikeRunner extends GameObject {
         this.leftPressed = false;
         this.rightPressed = false;
         this.turnPressed = false;
-        this.doTurn = false;
 
         this.track.time = 0;
 
@@ -74,7 +72,6 @@ export default class BikeRunner extends GameObject {
             this.leftPressed = snapshot.leftPressed;
             this.rightPressed = snapshot.rightPressed;
             this.turnPressed = snapshot.turnPressed;
-            this.doTurn = snapshot.doTurn;
 
             this.track.time = snapshot.time;
         }
@@ -104,7 +101,6 @@ export default class BikeRunner extends GameObject {
         this.leftPressed = false;
         this.rightPressed = false;
         this.turnPressed = false;
-        this.doTurn = false;
 
         this.instance.hitbox.touch = false;
         this.instance.hitbox.drive = () => {};
@@ -170,7 +166,6 @@ export default class BikeRunner extends GameObject {
             leftPressed: this.leftPressed,
             rightPressed: this.rightPressed,
             turnPressed: this.turnPressed,
-            doTurn: this.doTurn,
             bike: this.instance.clone()
         };
 

@@ -79,7 +79,6 @@ export default class Bike {
     }
 
     turn() {
-        this.runner.doTurn = false;
         this.direction = -this.direction;
         this.frontToBack.turn();
         let headToBack = this.headToBack.len;

@@ -1,12 +1,13 @@
 import Keyboard from "./Keyboard.js";
 
 export default class Control {
-    constructor(keyCodes, modifiers = Keyboard.NONE) {
+    constructor(keyCodes, modifiers = Keyboard.NONE, fireOnce = false) {
         if (!Array.isArray(keyCodes)) {
             keyCodes = [keyCodes];
         }
 
-        this.modifiers = modifiers;
         this.codes = keyCodes;
+        this.modifiers = modifiers;
+        this.fireOnce = fireOnce;
     }
 }

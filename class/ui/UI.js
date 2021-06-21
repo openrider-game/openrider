@@ -1,5 +1,8 @@
+import Tool from "../tool/Tool.js";
+import Track from "../track/Track.js";
+
 export default class UI {
-    static createEditorUI(track, manager) {
+    static createEditorUI(state) {
         let importButton = document.createElement('button');
         let importLabel = document.createElement('label');
         importLabel.setAttribute('for', 'import');
@@ -16,10 +19,11 @@ export default class UI {
             if (file) {
                 let reader = new FileReader();
                 reader.onload = () => {
-                    track.event.detach();
-                    track = new Track(track.canvas, { trackCode: reader.result });
-                    this.getTrackParser();
-                    manager.pop();
+                    Tool.detachAllTools();
+                    state.track.event.detach();
+                    state.track = new Track(state.track.canvas, { trackCode: reader.result });
+                    state.getTrackParser();
+                    state.manager.pop();
                 };
 
                 reader.readAsText(file);
@@ -28,7 +32,7 @@ export default class UI {
 
         let exportButton = document.createElement('button');
         exportButton.innerHTML = 'Export';
-        exportButton.addEventListener('click', () => manager.push('generator'));
+        exportButton.addEventListener('click', () => state.manager.push('generator'));
 
         let uploadButton = document.createElement('button');
         uploadButton.innerHTML = 'Upload';
@@ -39,7 +43,7 @@ export default class UI {
         ui.appendChild(uploadButton);
     }
 
-    static createRaceUI(track, manager) {
+    static createRaceUI(state) {
 
     }
 }

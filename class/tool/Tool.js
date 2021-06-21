@@ -18,19 +18,9 @@ export default class Tool extends GameObject {
         this.alwaysRender = false;
     }
 
-    static detachAllTools() {
-        Tool.controller.abort();
-        Tool.controller = new AbortController();
-    }
-
     registerControls() {
         if (this.constructor.keyLabel != null && this.constructor.key != null) {
             this.track.event.keyboard.registerControl(this.constructor.keyLabel, this.constructor.key);
-            document.addEventListener('keyboarddown', (e) => {
-                if (e.detail === this.constructor.keyLabel) {
-                    this.run();
-                }
-            }, { signal: Tool.controller.signal });
         }
     }
 
@@ -124,5 +114,3 @@ export default class Tool extends GameObject {
     update(progress, delta) {}
     render(ctx) {}
 }
-
-Tool.controller = new AbortController();

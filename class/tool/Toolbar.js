@@ -24,9 +24,7 @@ export default class Toolbar {
 
     /** @param {Track} track */
     attachToTrack(track) {
-        for (let tool in this.instances) {
-            track.tools.set(tool, this.instances[tool]);
-        }
+        track.toolCollection.setTools(this.instances);
     }
 
     /**

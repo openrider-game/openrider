@@ -15,6 +15,7 @@ import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
 import PauseTool from "../tool/PauseTool.js";
 import Tool from "../tool/Tool.js";
+import ToolCollection from "../tool/ToolCollection.js";
 import TrackEvent from "./TrackEvent.js";
 
 export default class Track {
@@ -56,6 +57,7 @@ export default class Track {
 
         /** @type {Map<String, Tool>} */
         this.tools = new Map();
+        this.toolCollection = new ToolCollection();
         this.paused = false;
         this.time = 0;
 
@@ -176,11 +178,14 @@ export default class Track {
         });
     }
 
+    pause(paused) {
+        this.paused = paused;
+        this.tools.get(PauseTool.toolName).updateDOM();
+    }
+
     restart() {
         this.unreachEverything();
-
-        this.paused = false;
-        this.tools.get(PauseTool.toolName).updateDOM();
+        this.pause(false);
 
         this.playerRunner.restart();
         this.ghostRunners.forEach(runner => {

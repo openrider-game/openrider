@@ -1,6 +1,4 @@
 import Cell from "./Cell.js";
-import SceneryLine from "../../item/line/SceneryLine.js";
-import SolidLine from "../../item/line/SolidLine.js";
 import Entity from "../../entity/Entity.js";
 import Vector from "../../numeric/Vector.js";
 
@@ -27,13 +25,7 @@ export default class PhysicsCell extends Cell {
     }
 
     search(point, type) {
-        let lines;
-        switch (type) {
-            case SceneryLine:
-                lines = this.scenery;
-            case SolidLine:
-                lines = this.lines;
-        }
+        let lines = this.linesByType.get(type);
 
         for (let line of lines) {
             if (line && line.pos.x === point.x && line.pos.y === point.y && !line.hasString) {

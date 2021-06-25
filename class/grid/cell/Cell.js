@@ -11,6 +11,10 @@ export default class Cell {
         this.scenery = new Array();
         this.lines = new Array();
         this.objects = new Array();
+
+        this.linesByType = new Map();
+        this.linesByType.set(SolidLine, this.lines);
+        this.linesByType.set(SceneryLine, this.scenery);
     }
 
     push(item) {

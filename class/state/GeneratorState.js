@@ -15,16 +15,21 @@ export default class GeneratorState extends GameState {
     update(progress, delta) {
         this.generator.currentStep();
 
-        this.generator.progress =
-            this.generator.cellData.index +
-            this.generator.foregroundCellData.index;
+        this.generator.progress = 
+            this.generator.lineData.index +
+            this.generator.foregroundLineData.index +
+            this.generator.sceneryData.index +
+            this.generator.foregroundSceneryData.index +
+            this.generator.objectData.index;
 
         if (this.generator.done) {
             let downloadLink = document.createElement("a");
             downloadLink.download = "track.txt";
             let data = new Blob([this.generator.getCode()], { type: "text/plain" });
-            downloadLink.href = window.URL.createObjectURL(data);
+            let url = URL.createObjectURL(data);
+            downloadLink.href = url;
             downloadLink.click();
+            URL.revokeObjectURL(url);
             this.manager.pop();
         }
     }

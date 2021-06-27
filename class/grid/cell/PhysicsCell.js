@@ -28,7 +28,7 @@ export default class PhysicsCell extends Cell {
         let lines = this.linesByType.get(type);
 
         for (let line of lines) {
-            if (line && line.pos.x === point.x && line.pos.y === point.y && !line.hasString) {
+            if (line && line.pos.x === point.x && line.pos.y === point.y && !line.recorded) {
                 return line;
             }
         }

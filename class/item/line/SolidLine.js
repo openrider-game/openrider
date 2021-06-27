@@ -3,6 +3,14 @@ import Vector from "../../numeric/Vector.js";
 import Line from "./Line.js";
 
 export default class SolidLine extends Line {
+    onDelete() {
+        this.grid.totalSolidLines.filter(obj => obj !== this);
+    }
+
+    onAdd() {
+        this.grid.totalSolidLines.push(this);
+    }
+    
     /**
      *
      * @param {BikePart} part

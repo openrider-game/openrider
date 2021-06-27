@@ -18,10 +18,12 @@ export default class Target extends ReachableItem {
     }
 
     onAdd() {
+        super.onAdd();
         this.track.targets.set(this.id, this);
     }
 
     onDelete() {
+        super.onDelete();
         this.track.targets.delete(this.id);
     }
 }

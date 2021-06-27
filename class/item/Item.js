@@ -91,8 +91,14 @@ export default class Item extends GameObject {
      * @param {Entity} part
      */
     onTouch(part) {}
-    onDelete() {}
-    onAdd() {}
+
+    onDelete() {
+        this.grid.totalObjects.filter(obj => obj !== this);
+    }
+
+    onAdd() {
+        this.grid.totalObjects.push(this);
+    }
 }
 
 Item.id = 0;

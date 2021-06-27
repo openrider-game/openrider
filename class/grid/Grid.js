@@ -7,6 +7,10 @@ export default class Grid {
 
         this.cellSize = cellSize;
         this.cellClass = cellClass;
+
+        this.totalSolidLines = new Array();
+        this.totalSceneryLines = new Array();
+        this.totalObjects = new Array();
     }
 
     getKey(x, y) {

@@ -18,10 +18,12 @@ export default class Checkpoint extends ReachableItem {
     }
 
     onAdd() {
+        super.onAdd();
         this.track.checkpoints.set(this.id, this);
     }
 
     onDelete() {
+        super.onDelete();
         this.track.checkpoints.delete(this.id);
     }
 }

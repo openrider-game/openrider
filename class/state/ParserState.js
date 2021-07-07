@@ -24,7 +24,7 @@ export default class ParserState extends GameState {
         }
     }
 
-    fixedUpdate() {}
+    fixedUpdate() { }
 
     update(progress, delta) {
         this.parser.currentStep();

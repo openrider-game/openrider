@@ -45,7 +45,7 @@ export default class Toolbar {
     static makeToolbars(track) {
         const makeToolbar = (track, tools) => {
             return new Toolbar(tools, tools.reduce((toolMap, toolClass) => {
-                return {...toolMap, [toolClass.toolName]: new toolClass(track) };
+                return { ...toolMap, [toolClass.toolName]: new toolClass(track) };
             }, {}));
         }
 

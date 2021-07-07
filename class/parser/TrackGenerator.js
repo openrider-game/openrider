@@ -11,7 +11,7 @@ export default class TrackGenerator {
 
         let grid = this.track.grid;
         let foregroundGrid = this.track.foregroundGrid;
-        this.length = 
+        this.length =
             grid.totalSolidLines.length +
             grid.totalSceneryLines.length +
             grid.totalObjects.length +
@@ -87,9 +87,9 @@ export default class TrackGenerator {
     }
 
     getCode() {
-        return  `${this.lineData.code}#${this.sceneryData.code}#${this.objectData.code}#` +
-                `${this.foregroundLineData.code}#${this.foregroundSceneryData.code}#` +
-                `${this.track.playerRunner.bikeClass.name}#${this.track.origin.toString()}`;
+        return `${this.lineData.code}#${this.sceneryData.code}#${this.objectData.code}#` +
+            `${this.foregroundLineData.code}#${this.foregroundSceneryData.code}#` +
+            `${this.track.playerRunner.bikeClass.name}#${this.track.origin.toString()}`;
     }
 
     emptyData() {

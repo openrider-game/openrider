@@ -8,5 +8,5 @@ export default class EmptyTool extends Tool {
         return el;
     }
 
-    run() {}
+    run() { }
 }

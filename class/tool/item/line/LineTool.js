@@ -137,7 +137,7 @@ export default class LineTool extends Tool {
         this.renderLineSize(ctx, mousePx);
     }
 
-    renderLineSize(ctx, mousePx) {}
+    renderLineSize(ctx, mousePx) { }
 
     renderLineInfo(ctx, mousePx) {
         ctx.strokeStyle = this.checkLineLength() ? "#00f" : "#f00";

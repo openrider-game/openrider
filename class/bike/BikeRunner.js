@@ -43,7 +43,7 @@ export default class BikeRunner extends GameObject {
         this.initialBike = this.instance.clone();
     }
 
-    assignColor() {}
+    assignColor() { }
 
     startFrom(snapshot) {
         this.done = false;
@@ -103,7 +103,7 @@ export default class BikeRunner extends GameObject {
         this.turnPressed = false;
 
         this.instance.hitbox.touch = false;
-        this.instance.hitbox.drive = () => {};
+        this.instance.hitbox.drive = () => { };
         this.instance.backWheel.speedValue = 0;
     }
 
@@ -141,8 +141,8 @@ export default class BikeRunner extends GameObject {
         }
     }
 
-    onHitTarget() {}
-    onHitCheckpoint() {}
+    onHitTarget() { }
+    onHitCheckpoint() { }
 
     reset() {
         this.snapshots = new Array();

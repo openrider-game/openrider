@@ -41,5 +41,5 @@ export default class Cell {
         this.clear();
     }
 
-    clear() {}
+    clear() { }
 }

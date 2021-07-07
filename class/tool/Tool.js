@@ -77,7 +77,7 @@ export default class Tool extends GameObject {
         this.hideOptions();
     }
 
-    closeOptions() {}
+    closeOptions() { }
 
     activate() {
         this.track.canvas.style.cursor = 'none';
@@ -110,7 +110,7 @@ export default class Tool extends GameObject {
         this.track.zoom(pos, -Math.sign(e.deltaY));
     }
 
-    fixedUpdate() {}
-    update(progress, delta) {}
-    render(ctx) {}
+    fixedUpdate() { }
+    update(progress, delta) { }
+    render(ctx) { }
 }

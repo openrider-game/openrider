@@ -73,6 +73,6 @@ export default class Spring extends GameObject {
         return this;
     }
 
-    update(progress, delta) {}
-    render(ctx) {}
+    update(progress, delta) { }
+    render(ctx) { }
 }

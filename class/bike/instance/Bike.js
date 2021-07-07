@@ -53,7 +53,7 @@ export default class Bike {
         this.setBikeInitialState(track.origin);
     }
 
-    setBikeInitialState(startPos) {}
+    setBikeInitialState(startPos) { }
 
     updatePhysics() {
         if (this.runner.turnPressed) {

@@ -28,7 +28,7 @@ export default class Line extends Item {
      *
      * @param {Entity} part
      */
-    touch(part) {}
+    touch(part) { }
 
     /**
      *
@@ -93,5 +93,5 @@ export default class Line extends Item {
         ctx.stroke();
     }
 
-    render(ctx) {}
+    render(ctx) { }
 }

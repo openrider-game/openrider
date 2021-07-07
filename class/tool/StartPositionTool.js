@@ -48,7 +48,7 @@ export default class StartPositionTool extends Tool {
 
     createDummyRunner() {
         this.dummyRunner = new GhostRunner(this.track, `,,,,,,${this.track.playerRunner.bikeClass.name},Start Position`);
-        this.dummyRunner.assignColor = () => {};
+        this.dummyRunner.assignColor = () => { };
 
         this.dummyRunner.createBike();
     }

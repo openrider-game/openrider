@@ -47,5 +47,5 @@ export default class ReachableItem extends Item {
      *
      * @param {BikePart} part
      */
-    onReach(part) {}
+    onReach(part) { }
 }

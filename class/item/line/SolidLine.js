@@ -10,7 +10,7 @@ export default class SolidLine extends Line {
     onAdd() {
         this.grid.totalSolidLines.push(this);
     }
-    
+
     /**
      *
      * @param {BikePart} part

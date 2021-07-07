@@ -30,5 +30,5 @@ export default class Entity extends GameObject {
         this.displayPos = this.pos.add(this.velocity.scale(progress));
     }
 
-    render(ctx) {}
+    render(ctx) { }
 }

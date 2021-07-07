@@ -83,6 +83,22 @@ export default class TrackState extends GameState {
             ctx.fillStyle = runner.instance.color;
             ctx.fillText(text, this.track.canvas.width - 30 - textMetrics.width, 15 * (1 + index));
         });
+
+        if (this.isTrackUpload) {
+            let x0 = (this.track.canvas.width - 250) / 2;
+            let x1 = x0 + 250;
+            let y0 = (this.track.canvas.height - 150) / 2;
+            let y1 = y0 + 150;
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = '#fff';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.fillRect(0, 0, this.track.canvas.width, y0);
+            ctx.fillRect(0, y1, this.track.canvas.width, y0);
+            ctx.fillRect(0, y0, x0, 150);
+            ctx.fillRect(x1, y0, x0, 150);
+            ctx.strokeRect(x0, y0, 250, 150);
+        }
     }
 
     /**

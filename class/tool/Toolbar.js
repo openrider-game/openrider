@@ -1,8 +1,6 @@
 import { LEFT_TOOLBAR_EDITING, LEFT_TOOLBAR_VIEWING, RIGHT_TOOLBAR } from "../constant/ToolbarConstants.js";
 import Track from "../track/Track.js";
 import CameraTool from "./CameraTool.js";
-import PauseTool from "./PauseTool.js";
-import StartPositionTool from "./StartPositionTool.js";
 import Tool from "./Tool.js";
 
 export default class Toolbar {

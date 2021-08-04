@@ -6,6 +6,7 @@ import UI from "../ui/UI.js";
 export default class GeneratorState extends GameState {
     onEnter() {
         UI.hideToolbars();
+        UI.clearUI();
         this.track.canvas.style.cursor = 'none';
         this.track.event.detachAllEvt();
         this.generator = new TrackGenerator(this.track);
@@ -48,6 +49,7 @@ export default class GeneratorState extends GameState {
                 URL.revokeObjectURL(url);
 
                 UI.showToolbars();
+                UI.swapUI('editor');
                 this.track.event.attachAllEvt();
             }
 

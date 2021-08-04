@@ -1,6 +1,5 @@
 import GameState from "./GameState.js";
 import TrackParser from "../parser/TrackParser.js";
-import Track from "../track/Track.js";
 import UI from "../ui/UI.js";
 
 export default class ParserState extends GameState {
@@ -17,11 +16,10 @@ export default class ParserState extends GameState {
     }
 
     initUI() {
-        if (!this.track.id) {
-            UI.createEditorUI(this);
-        } else {
-            UI.createRaceUI(this);
-        }
+        UI.createUI(this);
+
+        let UIkey = !this.track.id ? 'editor' : 'race';
+        UI.swapUI(UIkey);
     }
 
     fixedUpdate() { }

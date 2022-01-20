@@ -1,4 +1,5 @@
 import Control from "../keyboard/Control.js";
+import Keyboard from "../keyboard/Keyboard.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
 import GhostParser from "../parser/GhostParser.js";
 import BikeRunner from "./BikeRunner.js";

@@ -1,5 +1,7 @@
+import EventManager from "../event/EventManager.js";
 import GameObject from "../game/GameObject.js";
 import Track from "../track/Track.js";
+import UIManager from "../ui/manager/UIManager.js";
 import GameState from "./GameState.js";
 
 export default class StateManager extends GameObject {
@@ -7,7 +9,10 @@ export default class StateManager extends GameObject {
         super();
 
         this.game = game;
-        this.track = new Track(canvas, opt);
+        this.event = new EventManager(this);
+        this.track = new Track(canvas, opt, this.event);
+
+        this.event.attachAllEvt();
 
         /** @type {Map<String, GameState>} */
         this.states = new Map();
@@ -23,6 +28,7 @@ export default class StateManager extends GameObject {
 
     pop() {
         if (this.stateStack.length) {
+            this.getCurrent().ui.uiElements = [];
             this.getCurrent().onLeave();
             return this.stateStack.pop();
         }
@@ -47,18 +53,21 @@ export default class StateManager extends GameObject {
     fixedUpdate() {
         if (this.stateStack.length) {
             this.getCurrent().fixedUpdate();
+            this.getCurrent().ui.fixedUpdate();
         }
     }
 
     update(progress, delta) {
         if (this.stateStack.length) {
             this.getCurrent().update(progress, delta);
+            this.getCurrent().ui.update(progress, delta);
         }
     }
 
     render(ctx) {
         if (this.stateStack.length) {
             this.getCurrent().render(ctx);
+            this.getCurrent().ui.render(ctx);
         }
     }
 

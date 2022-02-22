@@ -21,6 +21,9 @@ export default class SwitchBikeTool extends Tool {
 
         this.track.restart();
 
-        this.track.toolCollection.getByToolName(StartPositionTool.toolName).createDummyRunner();
+        let startPositionTool = this.track.toolCollection.getByToolName(StartPositionTool.toolName);
+        if (startPositionTool != null) {
+            startPositionTool.createDummyRunner();
+        }
     }
 }

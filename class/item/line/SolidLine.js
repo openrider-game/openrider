@@ -4,11 +4,11 @@ import Line from "./Line.js";
 
 export default class SolidLine extends Line {
     onDelete() {
-        this.grid.totalSolidLines.filter(obj => obj !== this);
+        this.grid.totalSolidLines.delete(this.id);
     }
 
     onAdd() {
-        this.grid.totalSolidLines.push(this);
+        this.grid.totalSolidLines.set(this.id, this);
     }
 
     /**

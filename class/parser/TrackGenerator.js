@@ -12,11 +12,11 @@ export default class TrackGenerator {
         let grid = this.track.grid;
         let foregroundGrid = this.track.foregroundGrid;
         this.length =
-            grid.totalSolidLines.length +
-            grid.totalSceneryLines.length +
-            grid.totalObjects.length +
-            foregroundGrid.totalSolidLines.length +
-            foregroundGrid.totalSceneryLines.length;
+            grid.totalSolidLines.size +
+            grid.totalSceneryLines.size +
+            grid.totalObjects.size +
+            foregroundGrid.totalSolidLines.size +
+            foregroundGrid.totalSceneryLines.size;
     }
 
     memReset() {
@@ -30,17 +30,24 @@ export default class TrackGenerator {
         this.objectData = this.emptyData();
     }
 
+    /**
+     * 
+     * @param {{}} lineData 
+     * @param {Map} gridTarget 
+     * @param {Function} nextStep 
+     */
     generate(lineData, gridTarget, nextStep) {
         let toGo = this.stepSize;
-        let l = Math.min(lineData.index + toGo, gridTarget.length);
+        let l = Math.min(lineData.index + toGo, gridTarget.size);
+        let gridElements = Array.from(gridTarget.values());
         for (; lineData.index < l; lineData.index++) {
-            let line = gridTarget[lineData.index];
+            let line = gridElements[lineData.index];
             if (!line.recorded) {
                 lineData.code += `${line.toString()},`;
             }
         }
 
-        if (lineData.index >= gridTarget.length) {
+        if (lineData.index >= gridTarget.size) {
             this.currentStep = nextStep;
         }
     }
@@ -55,13 +62,14 @@ export default class TrackGenerator {
 
     generateObjects() {
         let toGo = this.stepSize;
-        let l = Math.min(this.objectData.index + toGo, this.track.grid.totalObjects.length);
+        let l = Math.min(this.objectData.index + toGo, this.track.grid.totalObjects.size);
+        let gridObjects = Array.from(this.track.grid.totalObjects.values());
         for (; this.objectData.index < l; this.objectData.index++) {
-            let object = this.track.grid.totalObjects[this.objectData.index];
+            let object = gridObjects[this.objectData.index];
             this.objectData.code += `${object.toString()},`;
         }
 
-        if (this.objectData.index >= this.track.grid.totalObjects.length) {
+        if (this.objectData.index >= this.track.grid.totalObjects.size) {
             this.currentStep = this.generateForegroundLines;
         }
     }

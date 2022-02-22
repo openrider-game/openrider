@@ -1,8 +1,8 @@
 import GhostRunner from "../bike/GhostRunner.js";
-import BikeRenderer from "../bike/instance/renderer/BikeRenderer.js";
 import Control from "../keyboard/Control.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
 import Vector from "../numeric/Vector.js";
+import UIButton from "../ui/UIButton.js";
 import Tool from "./Tool.js";
 
 export default class StartPositionTool extends Tool {
@@ -18,7 +18,8 @@ export default class StartPositionTool extends Tool {
     }
 
     activate() {
-        this.track.canvas.style.cursor = 'pointer';
+        super.activate();
+        // this.track.canvas.style.cursor = 'pointer';
 
         this.createDummyRunner();
     }
@@ -32,7 +33,9 @@ export default class StartPositionTool extends Tool {
     }
 
     onMouseUp(e) {
-        super.onMouseUp(e);
+        if (!this.mouseDown) return;
+
+        this.mouseDown = false;
 
         this.setStartPosition(this.track.mousePos);
     }
@@ -48,29 +51,21 @@ export default class StartPositionTool extends Tool {
 
     createDummyRunner() {
         this.dummyRunner = new GhostRunner(this.track, `,,,,,,${this.track.playerRunner.bikeClass.name},Start Position`);
-        this.dummyRunner.assignColor = () => { };
+        this.dummyRunner.assignColor = () => {};
 
         this.dummyRunner.createBike();
     }
 
-    openOptions() {
-        let buttonReset = document.createElement('button');
-        buttonReset.textContent = 'Reset start position (0,0)';
-        buttonReset.addEventListener('click', () => this.setStartPosition(new Vector()));
-
-        let buttonOk = document.createElement('button');
-        buttonOk.textContent = 'OK';
-        buttonOk.addEventListener('click', () => this.hideOptions());
-
-        let buttonDiv = document.createElement('div');
-
-        buttonDiv.appendChild(buttonReset);
-        buttonDiv.appendChild(buttonOk);
-
-        options.appendChild(buttonDiv);
-    }
-
     render(ctx) {
         this.dummyRunner.renderInstance(ctx);
+    }
+
+    createOptionsUI() {
+        let x = (this.track.canvas.width - 300) / 2;
+        let resetPos = new UIButton(this.ui, this.track, x, 5, 300, 30, 'Reset start position (0,0)', () => this.setStartPosition(new Vector()));
+        resetPos.color = '#fff';
+        resetPos.hoveredColor = '#eee';
+        resetPos.focusedColor = '#ddd';
+        this.ui.optionsUI.items.push(resetPos);
     }
 }

@@ -1,12 +1,9 @@
 import GameState from "./GameState.js";
 import TrackParser from "../parser/TrackParser.js";
-import UI from "../ui/UI.js";
 
 export default class ParserState extends GameState {
     onEnter() {
         this.getTrackParser();
-
-        this.initUI();
     }
 
     async getTrackParser() {
@@ -15,14 +12,7 @@ export default class ParserState extends GameState {
         this.parser.init(rawTrack);
     }
 
-    initUI() {
-        UI.createUI(this);
-
-        let UIkey = !this.track.id ? 'editor' : 'race';
-        UI.swapUI(UIkey);
-    }
-
-    fixedUpdate() { }
+    fixedUpdate() {}
 
     update(progress, delta) {
         this.parser.currentStep();

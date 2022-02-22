@@ -9,7 +9,7 @@ export default class CameraTool extends Tool {
     static get icon() { return 'arrows'; }
 
     activate() {
-        this.track.canvas.style.cursor = 'move';
+        // this.track.canvas.style.cursor = 'move';
     }
 
     onMouseMove(e) {

@@ -3,8 +3,62 @@ import RenderCell from "../grid/cell/RenderCell.js";
 import Vector from "../numeric/Vector.js";
 import Grid from "../grid/Grid.js";
 import Time from "../numeric/Time.js";
+import UIToolbar from "../ui/UIToolbar.js";
+import { LEFT_TOOLBAR_VIEWING, LEFT_TOOLBAR_EDITING, RIGHT_TOOLBAR } from "../constant/ToolbarConstants.js";
+import CameraTool from "../tool/CameraTool.js";
+import UIButton from "../ui/UIButton.js";
+import UIElement from "../ui/base/UIElement.js";
+import Track from "../track/Track.js";
 
 export default class TrackState extends GameState {
+    onEnter() {
+        let isRace = this.track.id !== null;
+        let leftToolbar = new UIToolbar(this.ui, this.track, isRace ? LEFT_TOOLBAR_VIEWING : LEFT_TOOLBAR_EDITING);
+        let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
+        this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
+        this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
+        this.ui.uiElements.push(leftToolbar, rightToolbar);
+
+        if (!isRace) {
+            let importButton = new UIButton(this.ui, this.track, 0, 0, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
+            let exportButton = new UIButton(this.ui, this.track, 110, 0, 100, 26, 'Export track', () => this.handleExport(), UIElement.ALIGN_BOTTOM);
+            let uploadButton = new UIButton(this.ui, this.track, 220, 0, 100, 26, 'Upload track', () => this.handleUpload(), UIElement.ALIGN_BOTTOM);
+
+            this.ui.uiElements.push(importButton, exportButton, uploadButton);
+        }
+    }
+
+    handleImport() {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.addEventListener('change', () => {
+            let file = input.files[0];
+
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = () => {
+                    // this.track.canvas.style.cursor = 'none';
+                    this.track = new Track(this.track.canvas, { trackCode: reader.result }, this.manager.event);
+                    this.manager.getState('parser').getTrackParser();
+                    this.manager.pop();
+                };
+
+                reader.readAsText(file);
+            }
+        });
+
+        input.click();
+    }
+
+    handleExport() {
+        this.manager.push('generator');
+    }
+
+    handleUpload() {
+        this.manager.getState('generator').isTrackUpload = true;
+        this.manager.push('generator');
+    }
+
     fixedUpdate() {
         this.track.toolManager.fixedUpdate();
         if (!this.track.paused) {
@@ -125,6 +179,39 @@ export default class TrackState extends GameState {
             for (let object of cell.objects) {
                 object.render(ctx);
             }
+        }
+    }
+
+    onMouseDown(e) {
+        this.track.toolManager.onMouseDown(e);
+    }
+
+    onMouseUp(e) {
+        this.track.toolManager.onMouseUp(e);
+    }
+
+    onMouseMove(e) {
+        this.track.toolManager.onMouseMove(e);
+    }
+
+    onScroll(e) {
+        this.track.toolManager.onScroll(e);
+    }
+
+    onContextMenu(e) {
+        this.track.toolManager.onContextMenu(e);
+    }
+
+    onKeyboardDown(e) {
+        let tool = this.track.toolCollection.getByKeyLabel(e.detail);
+        if (tool) {
+            tool.run();
+        }
+    }
+
+    onVisibilityChange() {
+        if (document.hidden) {
+            this.track.pause(true);
         }
     }
 }

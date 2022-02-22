@@ -9,7 +9,7 @@ export default class ToolManager extends GameObject {
         this.track = track;
         this.tool = null;
         this.active = false;
-        this.optionsOpened = false;
+        this.cameraTool = null;
     }
 
     /**
@@ -17,13 +17,27 @@ export default class ToolManager extends GameObject {
      * @param {Tool} tool
      */
     setTool(tool) {
-        if (this.tool) {
-            this.tool.deactivate();
-        }
+        if (tool !== this.tool) {
+            if (this.tool) {
+                this.tool.ui.toggleActive();
+                this.tool.deactivate();
+            }
 
-        this.tool = tool;
-        this.tool.activate();
+            this.tool = tool;
+            this.tool.activate();
+            this.tool.ui.toggleActive();
+        } else {
+            if (this.tool.optionsOpen) {
+                this.tool.closeOptions();
+            } else {
+                this.tool.openOptions();
+            }
+        }
     };
+
+    setCamera(cameraTool) {
+        this.cameraTool = cameraTool;
+    }
 
     fixedUpdate() {
         if (this.tool && this.active) {
@@ -38,15 +52,19 @@ export default class ToolManager extends GameObject {
     }
 
     render(ctx) {
-        if ((this.track.event.mouseIn && this.tool && this.active) || (this.tool && this.tool.alwaysRender)) {
+        if (this.tool && (this.allowRender() || this.tool.alwaysRender)) {
             this.tool.render(ctx);
         }
     }
 
     onMouseDown(e) {
-        if (this.tool) {
+        if (this.tool && e.button != 2) {
             this.active = true;
             this.tool.onMouseDown(e);
+        }
+
+        if (this.tool !== this.cameraTool && this.cameraTool && e.button == 2) {
+            this.cameraTool.onMouseDown(e);
         }
     }
 
@@ -55,12 +73,20 @@ export default class ToolManager extends GameObject {
             this.active = true;
             this.tool.onMouseUp(e);
         }
+
+        if (this.tool !== this.cameraTool && this.cameraTool) {
+            this.cameraTool.onMouseUp(e);
+        }
     }
 
     onMouseMove(e) {
         if (this.tool) {
             this.active = true;
             this.tool.onMouseMove(e);
+        }
+
+        if (this.tool !== this.cameraTool && this.cameraTool) {
+            this.cameraTool.onMouseMove(e);
         }
     }
 
@@ -75,5 +101,9 @@ export default class ToolManager extends GameObject {
         if (this.tool) {
             this.active = true;
         }
+    }
+
+    allowRender() {
+        return this.track.event.mouseIn && this.track.event.allowStateEvent() && this.active;
     }
 }

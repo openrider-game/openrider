@@ -5,9 +5,7 @@ export default class DirectionalItemTool extends ItemTool {
     static get itemClass() { return DirectionalItem; }
 
     onMouseDown(e) {
-        if (e.button !== 2) {
-            this.mouseDown = true;
-        }
+        this.mouseDown = true;
     }
 
     onMouseUp(e) {

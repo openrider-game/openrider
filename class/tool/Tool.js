@@ -1,5 +1,6 @@
 import Track from "../track/Track.js";
 import GameObject from "../game/GameObject.js";
+import UITool from "../ui/UITool.js";
 
 export default class Tool extends GameObject {
     static get toolName() { return 'Tool'; }
@@ -16,6 +17,8 @@ export default class Tool extends GameObject {
         this.track = track;
         this.mouseDown = false;
         this.alwaysRender = false;
+        this.ui = null;
+        this.optionsOpen = false;
     }
 
     registerControls() {
@@ -24,28 +27,12 @@ export default class Tool extends GameObject {
         }
     }
 
-    getDOM() {
-        let el = document.createElement('div');
-        el.classList.add('tool');
-        el.title = `${this.constructor.toolName} (${this.constructor.keyLabel})`;
-
-        if (this.constructor.icon) {
-            this.domIcon = document.createElement('img');
-
-            if (this.constructor.icon.type === 'b64') {
-                this.domIcon.setAttribute('src', this.constructor.icon.data);
-            } else {
-                this.domIcon.setAttribute('src', `./media/icon/${this.constructor.icon}.svg`);
-            }
-
-            el.appendChild(this.domIcon);
+    getUI(uiManager, pos, align) {
+        if (this.ui == null) {
+            this.ui = new UITool(uiManager, this.track, pos * 26, this.constructor, () => this.run(), align);
         }
 
-        el.addEventListener('click', () => this.run());
-        el.addEventListener('contextmenu', (e) => this.showOptions(e));
-
-        this.dom = el;
-        return el;
+        return this.ui;
     }
 
     isHolding() {
@@ -56,42 +43,33 @@ export default class Tool extends GameObject {
         this.track.toolManager.setTool(this);
     }
 
-    showOptions(e) {
-        e.preventDefault();
-        if (!this.track.toolManager.optionsOpened && this.track.toolManager.tool === this) {
-            this.track.toolManager.optionsOpened = true;
-            this.openOptions();
-        }
-    }
-
-    hideOptions() {
-        if (this.track.toolManager.optionsOpened) {
-            this.track.toolManager.optionsOpened = false;
-            this.closeOptions();
-            options.innerHTML = null;
-            this.run();
-        }
-    }
+    createOptionsUI() {}
 
     openOptions() {
-        this.hideOptions();
+        if (this.ui.optionsUI.items.length == 0) {
+            this.createOptionsUI();
+        }
+        this.ui.uiManager.uiElements.push(this.ui.optionsUI);
+        this.optionsOpen = true;
     }
 
-    closeOptions() { }
+    closeOptions() {
+        this.ui.uiManager.uiElements = this.ui.uiManager.uiElements.filter(obj => obj !== this.ui.optionsUI);
+        this.optionsOpen = false;
+    }
 
     activate() {
-        this.track.canvas.style.cursor = 'none';
+        // this.track.canvas.style.cursor = 'none';
+        this.openOptions();
     }
 
     deactivate() {
-        this.hideOptions();
+        this.closeOptions();
         this.mouseDown = false;
     }
 
     onMouseDown(e) {
-        if (e.button !== 2) {
-            this.mouseDown = true;
-        }
+        this.mouseDown = true;
     }
 
     onMouseUp(e) {
@@ -110,7 +88,7 @@ export default class Tool extends GameObject {
         this.track.zoom(pos, -Math.sign(e.deltaY));
     }
 
-    fixedUpdate() { }
-    update(progress, delta) { }
-    render(ctx) { }
+    fixedUpdate() {}
+    update(progress, delta) {}
+    render(ctx) {}
 }

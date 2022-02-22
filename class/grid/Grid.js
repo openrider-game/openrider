@@ -8,9 +8,9 @@ export default class Grid {
         this.cellSize = cellSize;
         this.cellClass = cellClass;
 
-        this.totalSolidLines = new Array();
-        this.totalSceneryLines = new Array();
-        this.totalObjects = new Array();
+        this.totalSolidLines = new Map();
+        this.totalSceneryLines = new Map();
+        this.totalObjects = new Map();
     }
 
     getKey(x, y) {

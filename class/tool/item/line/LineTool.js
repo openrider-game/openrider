@@ -2,6 +2,8 @@ import { MAX_LINE_LENGTH, MIN_LINE_LENGTH } from "../../../constant/TrackConstan
 import Line from "../../../item/line/Line.js";
 import LinePath from "../../../numeric/LinePath.js";
 import Vector from "../../../numeric/Vector.js";
+import UIElement from "../../../ui/base/UIElement.js";
+import UIToggleableButton from "../../../ui/UIToggleableButton.js";
 import Tool from "../../Tool.js";
 
 export default class LineTool extends Tool {
@@ -16,7 +18,7 @@ export default class LineTool extends Tool {
     onMouseDown(e) {
         if (this.isHolding()) {
             this.addLine(this.lastLine);
-        } else if (e.button !== 2) {
+        } else {
             this.mouseDown = true;
         }
     }
@@ -64,33 +66,13 @@ export default class LineTool extends Tool {
         return (measure >= MIN_LINE_LENGTH && measure < MAX_LINE_LENGTH);
     }
 
-    openOptions() {
-        let foregroundLabel = document.createElement('label');
-        foregroundLabel.setAttribute('for', 'foregroundCheckbox');
-        foregroundLabel.textContent = 'Foreground:';
-
-        let foregroundCheckbox = document.createElement('input');
-        foregroundCheckbox.id = 'foregroundCheckbox';
-        foregroundCheckbox.type = 'checkbox';
-        foregroundCheckbox.checked = this.foreground;
-
-        let buttonOk = document.createElement('button');
-        buttonOk.textContent = 'OK';
-        buttonOk.addEventListener('click', () => this.hideOptions());
-
-        let foregroundDiv = document.createElement('div');
-        let buttonDiv = document.createElement('div');
-
-        foregroundDiv.appendChild(foregroundLabel);
-        foregroundDiv.appendChild(foregroundCheckbox);
-        buttonDiv.appendChild(buttonOk);
-
-        options.appendChild(foregroundDiv);
-        options.appendChild(buttonDiv);
-    }
-
-    closeOptions() {
-        this.foreground = foregroundCheckbox.checked;
+    createOptionsUI() {
+        let x = (this.track.canvas.width - 300) / 2;
+        let foregroundToggle = new UIToggleableButton(this.ui, this.track, x, 5, 300, 30, 'Layer: Main', 'Layer: Foreground', () => this.foreground = !this.foreground, UIElement.ALIGN_HORIZONTAL_CENTER);
+        foregroundToggle.color = '#fff';
+        foregroundToggle.hoveredColor = '#eee';
+        foregroundToggle.focusedColor = '#ddd';
+        this.ui.optionsUI.items.push(foregroundToggle);
     }
 
     update(progress, delta) {
@@ -137,9 +119,10 @@ export default class LineTool extends Tool {
         this.renderLineSize(ctx, mousePx);
     }
 
-    renderLineSize(ctx, mousePx) { }
+    renderLineSize(ctx, mousePx) {}
 
     renderLineInfo(ctx, mousePx) {
+        ctx.save();
         ctx.strokeStyle = this.checkLineLength() ? "#00f" : "#f00";
         ctx.lineWidth = this.track.zoomFactor * 2;
 
@@ -160,5 +143,6 @@ export default class LineTool extends Tool {
         ctx.textAlign = 'right';
         ctx.fillText(Math.round(angle) + '°', mousePx.x - 3, mousePx.y - 3);
         ctx.textAlign = 'left';
+        ctx.restore();
     }
 }

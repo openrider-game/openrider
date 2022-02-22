@@ -27,8 +27,8 @@ export default class Item extends GameObject {
     static get color() { return '#fff'; }
     static get code() { return null; }
 
-    fixedUpdate() { }
-    update(progress, delta) { }
+    fixedUpdate() {}
+    update(progress, delta) {}
 
     /**
      * @param {CanvasRenderingContext2D} ctx
@@ -90,14 +90,14 @@ export default class Item extends GameObject {
      *
      * @param {Entity} part
      */
-    onTouch(part) { }
+    onTouch(part) {}
 
     onDelete() {
-        this.grid.totalObjects.filter(obj => obj !== this);
+        this.grid.totalObjects.delete(this.id);
     }
 
     onAdd() {
-        this.grid.totalObjects.push(this);
+        this.grid.totalObjects.set(this.id, this);
     }
 }
 

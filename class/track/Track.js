@@ -13,16 +13,18 @@ import Line from "../item/line/Line.js";
 import ReachableItem from "../item/ReachableItem.js";
 import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
-import PauseTool from "../tool/PauseTool.js";
 import ToolCollection from "../tool/ToolCollection.js";
-import TrackEvent from "./TrackEvent.js";
+import PauseTool from "../tool/PauseTool.js";
+import EventManager from "../event/EventManager.js";
 
 export default class Track {
     /**
      *
+     * @param {HTMLCanvasElement} canvas
      * @param {{}} opt
+     * @param {EventManager} event
      */
-    constructor(canvas, opt = {}) {
+    constructor(canvas, opt = {}, event) {
         /** @type {HTMLCanvasElement} */
         this.canvas = canvas;
         /** @type {number} */
@@ -30,8 +32,7 @@ export default class Track {
         /** @type {string} */
         this.trackCode = opt.trackCode;
 
-        this.event = new TrackEvent(this);
-
+        this.event = event;
         this.toolManager = new ToolManager(this);
 
         /** @type {number} */
@@ -177,7 +178,7 @@ export default class Track {
 
     pause(paused) {
         this.paused = paused;
-        this.toolCollection.getByToolName(PauseTool.toolName).updateDOM();
+        this.toolCollection.getByToolName(PauseTool.toolName).updateUI();
     }
 
     restart() {

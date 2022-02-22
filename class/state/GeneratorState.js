@@ -1,14 +1,10 @@
 import TrackGenerator from "../parser/TrackGenerator.js";
 import GameState from "./GameState.js";
 import CameraTool from "../tool/CameraTool.js";
-import UI from "../ui/UI.js";
 
 export default class GeneratorState extends GameState {
     onEnter() {
-        UI.hideToolbars();
-        UI.clearUI();
-        this.track.canvas.style.cursor = 'none';
-        this.track.event.detachAllEvt();
+        // this.track.canvas.style.cursor = 'none';
         this.generator = new TrackGenerator(this.track);
     }
 
@@ -16,7 +12,7 @@ export default class GeneratorState extends GameState {
         this.generator.memReset();
     }
 
-    fixedUpdate() { }
+    fixedUpdate() {}
 
     update(progress, delta) {
         this.generator.currentStep();
@@ -37,8 +33,6 @@ export default class GeneratorState extends GameState {
                 this.track.pause(true);
                 this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
                 this.manager.getState('track').isTrackUpload = true;
-                // Here we purposefully keep the toolbars hidden and keyboard events off to force the camera to be the only option
-                this.track.event.attachMiscEvt();
             } else {
                 let downloadLink = document.createElement("a");
                 downloadLink.download = "track.txt";
@@ -47,10 +41,6 @@ export default class GeneratorState extends GameState {
                 downloadLink.href = url;
                 downloadLink.click();
                 URL.revokeObjectURL(url);
-
-                UI.showToolbars();
-                UI.swapUI('editor');
-                this.track.event.attachAllEvt();
             }
 
             this.manager.pop();

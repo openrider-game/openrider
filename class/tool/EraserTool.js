@@ -1,5 +1,7 @@
 import Control from "../keyboard/Control.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
+import UIElement from "../ui/base/UIElement.js";
+import UIToggleableButton from "../ui/UIToggleableButton.js";
 import Tool from "./Tool.js";
 
 export default class EraserTool extends Tool {
@@ -52,90 +54,45 @@ export default class EraserTool extends Tool {
         }
     }
 
-    openOptions() {
-        let foregroundLineLabel = document.createElement('label');
-        foregroundLineLabel.setAttribute('for', 'foregroundLineCheckbox');
-        foregroundLineLabel.textContent = 'Foreground Line:';
+    createOptionsUI() {
+        let x = (this.track.canvas.width - 300) / 2;
 
-        let foregroundLineCheckbox = document.createElement('input');
-        foregroundLineCheckbox.id = 'foregroundLineCheckbox';
-        foregroundLineCheckbox.type = 'checkbox';
-        foregroundLineCheckbox.checked = this.restrict.get('foregroundLayer').get('line');
+        let foregroundLineToggle = new UIToggleableButton(this.ui, this.track, x, 5, 300, 30, 'Foreground Line: inactive', 'Foreground Line: active', () => this.restrict.get('foregroundLayer').set('line', !this.restrict.get('foregroundLayer').get('line')), UIElement.ALIGN_HORIZONTAL_CENTER);
+        foregroundLineToggle.active = true;
+        foregroundLineToggle.label = foregroundLineToggle.activeLabel;
+        foregroundLineToggle.color = '#fff';
+        foregroundLineToggle.hoveredColor = '#eee';
+        foregroundLineToggle.focusedColor = '#ddd';
 
-        let foregroundSceneryLabel = document.createElement('label');
-        foregroundSceneryLabel.setAttribute('for', 'foregroundSceneryCheckbox');
-        foregroundSceneryLabel.textContent = 'Foreground Scenery:';
+        let foregroundSceneryToggle = new UIToggleableButton(this.ui, this.track, x, 40, 300, 30, 'Foreground Scenery: inactive', 'Foreground Scenery: active', () => this.restrict.get('foregroundLayer').set('scenery', !this.restrict.get('foregroundLayer').get('scenery')), UIElement.ALIGN_HORIZONTAL_CENTER);
+        foregroundSceneryToggle.active = true;
+        foregroundSceneryToggle.label = foregroundSceneryToggle.activeLabel;
+        foregroundSceneryToggle.color = '#fff';
+        foregroundSceneryToggle.hoveredColor = '#eee';
+        foregroundSceneryToggle.focusedColor = '#ddd';
 
-        let foregroundSceneryCheckbox = document.createElement('input');
-        foregroundSceneryCheckbox.id = 'foregroundSceneryCheckbox';
-        foregroundSceneryCheckbox.type = 'checkbox';
-        foregroundSceneryCheckbox.checked = this.restrict.get('foregroundLayer').get('scenery');
+        let mainLineToggle = new UIToggleableButton(this.ui, this.track, x, 75, 300, 30, 'Main Line: inactive', 'Main Line: active', () => this.restrict.get('mainLayer').set('line', !this.restrict.get('mainLayer').get('line')), UIElement.ALIGN_HORIZONTAL_CENTER);
+        mainLineToggle.active = true;
+        mainLineToggle.label = mainLineToggle.activeLabel;
+        mainLineToggle.color = '#fff';
+        mainLineToggle.hoveredColor = '#eee';
+        mainLineToggle.focusedColor = '#ddd';
 
-        let lineLabel = document.createElement('label');
-        lineLabel.setAttribute('for', 'lineCheckbox');
-        lineLabel.textContent = 'Line:';
+        let mainSceneryToggle = new UIToggleableButton(this.ui, this.track, x, 110, 300, 30, 'Main Scenery: inactive', 'Main Scenery: active', () => this.restrict.get('mainLayer').set('scenery', !this.restrict.get('mainLayer').get('scenery')), UIElement.ALIGN_HORIZONTAL_CENTER);
+        mainSceneryToggle.active = true;
+        mainSceneryToggle.label = mainSceneryToggle.activeLabel;
+        mainSceneryToggle.color = '#fff';
+        mainSceneryToggle.hoveredColor = '#eee';
+        mainSceneryToggle.focusedColor = '#ddd';
 
-        let lineCheckbox = document.createElement('input');
-        lineCheckbox.id = 'lineCheckbox';
-        lineCheckbox.type = 'checkbox';
-        lineCheckbox.checked = this.restrict.get('mainLayer').get('line');
+        let mainObjectToggle = new UIToggleableButton(this.ui, this.track, x, 145, 300, 30, 'Main Object: inactive', 'Main Object: active', () => this.restrict.get('mainLayer').set('object', !this.restrict.get('mainLayer').get('object')), UIElement.ALIGN_HORIZONTAL_CENTER);
+        mainObjectToggle.active = true;
+        mainObjectToggle.label = mainObjectToggle.activeLabel;
+        mainObjectToggle.color = '#fff';
+        mainObjectToggle.hoveredColor = '#eee';
+        mainObjectToggle.focusedColor = '#ddd';
 
-        let sceneryLabel = document.createElement('label');
-        sceneryLabel.setAttribute('for', 'sceneryCheckbox');
-        sceneryLabel.textContent = 'Scenery:';
-
-        let sceneryCheckbox = document.createElement('input');
-        sceneryCheckbox.id = 'sceneryCheckbox';
-        sceneryCheckbox.type = 'checkbox';
-        sceneryCheckbox.checked = this.restrict.get('mainLayer').get('scenery');
-
-        let objectLabel = document.createElement('label');
-        objectLabel.setAttribute('for', 'objectCheckbox');
-        objectLabel.textContent = 'Object:';
-
-        let objectCheckbox = document.createElement('input');
-        objectCheckbox.id = 'objectCheckbox';
-        objectCheckbox.type = 'checkbox';
-        objectCheckbox.checked = this.restrict.get('mainLayer').get('object');
-
-        let buttonOk = document.createElement('button');
-        buttonOk.textContent = 'OK';
-        buttonOk.addEventListener('click', () => this.hideOptions());
-
-        let foregroundLineDiv = document.createElement('div');
-        let foregroundSceneryDiv = document.createElement('div');
-        let lineDiv = document.createElement('div');
-        let sceneryDiv = document.createElement('div');
-        let objectDiv = document.createElement('div');
-        let buttonDiv = document.createElement('div');
-
-        foregroundLineDiv.appendChild(foregroundLineLabel);
-        foregroundLineDiv.appendChild(foregroundLineCheckbox);
-        foregroundSceneryDiv.appendChild(foregroundSceneryLabel);
-        foregroundSceneryDiv.appendChild(foregroundSceneryCheckbox);
-        lineDiv.appendChild(lineLabel);
-        lineDiv.appendChild(lineCheckbox);
-        sceneryDiv.appendChild(sceneryLabel);
-        sceneryDiv.appendChild(sceneryCheckbox);
-        objectDiv.appendChild(objectLabel);
-        objectDiv.appendChild(objectCheckbox);
-
-        buttonDiv.appendChild(buttonOk);
-
-        options.appendChild(foregroundLineDiv);
-        options.appendChild(foregroundSceneryDiv);
-        options.appendChild(lineDiv);
-        options.appendChild(sceneryDiv);
-        options.appendChild(objectDiv);
-        options.appendChild(buttonDiv);
-    }
-
-    closeOptions() {
-        this.restrict.get('foregroundLayer').set('line', foregroundLineCheckbox.checked);
-        this.restrict.get('foregroundLayer').set('scenery', foregroundSceneryCheckbox.checked);
-        this.restrict.get('mainLayer').set('line', lineCheckbox.checked);
-        this.restrict.get('mainLayer').set('scenery', sceneryCheckbox.checked);
-        this.restrict.get('mainLayer').set('object', objectCheckbox.checked);
+        this.ui.optionsUI.items.push(foregroundLineToggle, foregroundSceneryToggle, mainLineToggle, mainSceneryToggle, mainObjectToggle);
     }
 
     render(ctx) {

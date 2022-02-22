@@ -5,20 +5,18 @@ export default class ItemTool extends Tool {
     static get itemClass() { return Item; }
 
     onMouseDown(e) {
-        if (e.button !== 2) {
-            let itemClass = this.constructor.itemClass;
-            /** @type {Item} */
-            let item = new itemClass(this.track.mousePos.clone(), this.track);
+        let itemClass = this.constructor.itemClass;
+        /** @type {Item} */
+        let item = new itemClass(this.track.mousePos.clone(), this.track);
 
-            item.grid = this.track.grid;
-            item.cache = this.track.cache;
+        item.grid = this.track.grid;
+        item.cache = this.track.cache;
 
-            item.addToTrack();
-            this.track.undoManager.push({
-                undo: () => item.removeFromTrack(),
-                redo: () => item.addToTrack()
-            });
-        }
+        item.addToTrack();
+        this.track.undoManager.push({
+            undo: () => item.removeFromTrack(),
+            redo: () => item.addToTrack()
+        });
     }
 
     render(ctx) {

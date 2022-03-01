@@ -7,9 +7,8 @@ export default class UITool extends UIButton {
 
         this.toolClass = toolClass;
 
-        this.color = '#fff';
-        this.hoveredColor = '#ddd';
-        this.focusedColor = '#ccc';
+        this.toolLabel = toolClass.toolName;
+
         this.activeColor = '#456';
 
         this.icon = this.createIcon(this.toolClass.icon);
@@ -54,7 +53,7 @@ export default class UITool extends UIButton {
         ctx.strokeRect(this.x, this.y, this.width, this.height);
 
         if (this.hovered) {
-            let label = `${this.toolClass.toolName} (${this.toolClass.keyLabel})`;
+            let label = `${this.toolLabel} (${this.toolClass.keyLabel})`;
             let labelMetrics = ctx.measureText(label);
             let labelWidth = labelMetrics.width;
             let labelHeight = labelMetrics.actualBoundingBoxAscent + labelMetrics.actualBoundingBoxDescent;

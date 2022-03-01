@@ -123,7 +123,7 @@ export default class LineTool extends Tool {
 
     renderLineInfo(ctx, mousePx) {
         ctx.save();
-        ctx.strokeStyle = this.checkLineLength() ? "#00f" : "#f00";
+        ctx.strokeStyle = this.checkLineLength() ? '#00f' : '#f00';
         ctx.lineWidth = this.track.zoomFactor * 2;
 
         let startPos = this.isHolding() ? this.lastLine : this.track.lastClick;

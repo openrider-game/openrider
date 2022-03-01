@@ -5,9 +5,9 @@ export default class UIButton extends UIElement {
         super(uiManager, track, x, y, width, height, align);
         this.label = label;
         this.onClick = callback;
-        this.color = '#999';
-        this.hoveredColor = '#888';
-        this.focusedColor = '#777';
+        this.color = '#fff';
+        this.hoveredColor = '#ddd';
+        this.focusedColor = '#ccc';
     }
 
     /**

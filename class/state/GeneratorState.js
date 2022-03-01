@@ -25,25 +25,24 @@ export default class GeneratorState extends GameState {
             this.generator.objectData.index;
 
         if (this.generator.done) {
+            this.manager.pop();
+
             let trackCode = this.generator.getCode();
 
             if (this.isTrackUpload) {
                 this.isTrackUpload = false;
                 this.track.trackCode = trackCode;
                 this.track.pause(true);
-                this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
-                this.manager.getState('track').isTrackUpload = true;
+                this.manager.push('trackUpload');
             } else {
-                let downloadLink = document.createElement("a");
-                downloadLink.download = "track.txt";
-                let data = new Blob([trackCode], { type: "text/plain" });
+                let downloadLink = document.createElement('a');
+                downloadLink.download = 'track.txt';
+                let data = new Blob([trackCode], { type: 'text/plain' });
                 let url = URL.createObjectURL(data);
                 downloadLink.href = url;
                 downloadLink.click();
                 URL.revokeObjectURL(url);
             }
-
-            this.manager.pop();
         }
     }
 

@@ -14,6 +14,9 @@ export default class PauseTool extends Tool {
         this.pauseIcon = this.ui.icon;
         this.unpauseIcon = this.ui.createIcon('play');
 
+        this.pauseLabel = this.ui.toolLabel;
+        this.unpauseLabel = 'Unpause';
+
         return this.ui;
     }
 
@@ -23,7 +26,7 @@ export default class PauseTool extends Tool {
     }
 
     updateUI() {
-        let icon = this.track.paused ? this.unpauseIcon : this.pauseIcon;
-        this.ui.icon = icon;
+        this.ui.icon = this.track.paused ? this.unpauseIcon : this.pauseIcon;
+        this.ui.toolLabel = this.track.paused ? this.unpauseLabel : this.pauseLabel;
     }
 }

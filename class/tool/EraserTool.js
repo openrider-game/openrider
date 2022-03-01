@@ -99,7 +99,7 @@ export default class EraserTool extends Tool {
         let pos = this.track.mousePos.toPixel(this.track);
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, this.size * this.track.zoomFactor, 0, 2 * Math.PI, true);
-        ctx.fillStyle = "#ffb6c1";
+        ctx.fillStyle = '#ffb6c1';
         ctx.fill();
     }
 }

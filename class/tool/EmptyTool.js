@@ -1,5 +1,5 @@
-import UIElement from '../ui/base/UIElement.js';
-import Tool from './Tool.js';
+import UIElement from "../ui/base/UIElement.js";
+import Tool from "./Tool.js";
 
 export default class EmptyTool extends Tool {
     getUI(pos) {

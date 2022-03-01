@@ -3,6 +3,7 @@ import GeneratorState from "../state/GeneratorState.js";
 import ParserState from "../state/ParserState.js";
 import StateManager from "../state/StateManager.js";
 import TrackState from "../state/TrackState.js";
+import TrackUploadState from "../state/TrackUploadState.js";
 
 export default class Game {
     /**
@@ -16,6 +17,7 @@ export default class Game {
         this.stateManager.addState(ParserState, 'parser');
         this.stateManager.addState(TrackState, 'track');
         this.stateManager.addState(GeneratorState, 'generator');
+        this.stateManager.addState(TrackUploadState, 'trackUpload');
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = canvas.getContext('2d');

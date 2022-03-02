@@ -6,10 +6,11 @@ import UIToolbar from "../ui/UIToolbar.js";
 import CameraTool from "../tool/CameraTool.js";
 import UIButton from "../ui/UIButton.js";
 import UIElement from "../ui/base/UIElement.js";
+import FullscreenTool from "../tool/FullscreenTool.js";
 
 export default class TrackUploadState extends GameState {
     onEnter() {
-        let toolbar = new UIToolbar(this.ui, this.track, [CameraTool]);
+        let toolbar = new UIToolbar(this.ui, this.track, [CameraTool, FullscreenTool]);
         this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.ui.uiElements.push(toolbar);
@@ -66,11 +67,11 @@ export default class TrackUploadState extends GameState {
         let topLeft = new Vector(0, 0).normalizeToCanvas(this.track);
         let bottomRight = new Vector(this.track.canvas.width, this.track.canvas.height).normalizeToCanvas(this.track);
 
-        let gridTopLeft = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
-        let gridBottomRight = Grid.gridCoords(topLeft, this.track.cache.cellSize);
+        let gridTopLeft = Grid.gridCoords(topLeft, this.track.cache.cellSize);
+        let gridBottomRight = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
 
-        for (let x = gridBottomRight.x; x <= gridTopLeft.x; x++) {
-            for (let y = gridBottomRight.y; y <= gridTopLeft.y; y++) {
+        for (let x = gridTopLeft.x; x <= gridBottomRight.x; x++) {
+            for (let y = gridTopLeft.y; y <= gridBottomRight.y; y++) {
                 this.renderCache(ctx, this.track.cache, x, y, 1);
             }
         }
@@ -80,8 +81,8 @@ export default class TrackUploadState extends GameState {
         });
         this.track.playerRunner.render(ctx);
 
-        for (let x = gridBottomRight.x; x <= gridTopLeft.x; x++) {
-            for (let y = gridBottomRight.y; y <= gridTopLeft.y; y++) {
+        for (let x = gridTopLeft.x; x <= gridBottomRight.x; x++) {
+            for (let y = gridTopLeft.y; y <= gridBottomRight.y; y++) {
                 this.renderCache(ctx, this.track.foregroundCache, x, y, 0.5);
             }
         }
@@ -155,6 +156,13 @@ export default class TrackUploadState extends GameState {
 
     onContextMenu(e) {
         this.track.toolManager.onContextMenu(e);
+    }
+
+    onKeyboardDown(e) {
+        let tool = this.track.toolCollection.getByKeyLabel(e.detail);
+        if (tool instanceof CameraTool || tool instanceof FullscreenTool) {
+            tool.run();
+        }
     }
 
     onVisibilityChange() {

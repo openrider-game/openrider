@@ -101,11 +101,11 @@ export default class TrackState extends GameState {
         let topLeft = new Vector(0, 0).normalizeToCanvas(this.track);
         let bottomRight = new Vector(this.track.canvas.width, this.track.canvas.height).normalizeToCanvas(this.track);
 
-        let gridTopLeft = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
-        let gridBottomRight = Grid.gridCoords(topLeft, this.track.cache.cellSize);
+        let gridTopLeft = Grid.gridCoords(topLeft, this.track.cache.cellSize);
+        let gridBottomRight = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
 
-        for (let x = gridBottomRight.x; x <= gridTopLeft.x; x++) {
-            for (let y = gridBottomRight.y; y <= gridTopLeft.y; y++) {
+        for (let x = gridTopLeft.x; x <= gridBottomRight.x; x++) {
+            for (let y = gridTopLeft.y; y <= gridBottomRight.y; y++) {
                 this.renderCache(ctx, this.track.cache, x, y, 1);
             }
         }
@@ -115,8 +115,8 @@ export default class TrackState extends GameState {
         });
         this.track.playerRunner.render(ctx);
 
-        for (let x = gridBottomRight.x; x <= gridTopLeft.x; x++) {
-            for (let y = gridBottomRight.y; y <= gridTopLeft.y; y++) {
+        for (let x = gridTopLeft.x; x <= gridBottomRight.x; x++) {
+            for (let y = gridTopLeft.y; y <= gridBottomRight.y; y++) {
                 this.renderCache(ctx, this.track.foregroundCache, x, y, 0.5);
             }
         }

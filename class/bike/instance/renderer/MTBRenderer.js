@@ -161,12 +161,6 @@ export default class MTBRenderer {
         ctx.arc(headCenter.x, headCenter.y, headRadius, 0, 2 * Math.PI, true);
         ctx.stroke();
         // head gear
-        ctx.lineWidth = 2 * bike.track.zoomFactor;
-        ctx.beginPath();
-        ctx.moveTo(headCenter.x + headRadius, headCenter.y)
-        ctx.arc(headCenter.x, headCenter.y, headRadius, 0, 2 * Math.PI, true);
-        ctx.stroke();
-        // head gear
         let hatFrontBottom = playerTransform.scale(0.37, 1.19);
         let hatBackBottom = playerTransform.scale(0.02, 1.14);
         let hatFront = playerTransform.scale(0.28, 1.17);

@@ -17,12 +17,16 @@ export default class ParserState extends GameState {
     update(progress, delta) {
         this.parser.currentStep();
 
-        this.parser.progress =
-            this.parser.solidLineData.index +
-            this.parser.sceneryLineData.index +
-            this.parser.itemData.index +
-            this.parser.foregroundSolidLineData.index +
-            this.parser.foregroundSceneryLineData.index;
+        if (this.parser.caching) {
+            this.parser.progress = this.parser.cacheIndex;
+        } else {
+            this.parser.progress =
+                this.parser.solidLineData.index +
+                this.parser.sceneryLineData.index +
+                this.parser.itemData.index +
+                this.parser.foregroundSolidLineData.index +
+                this.parser.foregroundSceneryLineData.index;
+        }
         if (this.parser.done) {
             this.manager.push('track');
         }
@@ -37,11 +41,17 @@ export default class ParserState extends GameState {
         ctx.fillStyle = '#ccc';
         ctx.fillRect(100, barY, barW, 30);
 
+        let progressText = 'Parsing...';
+        if (this.parser.caching) {
+            progressText = `Caching: ${this.parser.progressLabel} - ${Math.round(this.parser.progress / this.parser.length * 100)} %`;
+        } else {
+            progressText = `Parsing ${this.parser.progressLabel}: ${Math.round(this.parser.progress / this.parser.length * 100)} %`;
+        }
+
         ctx.fillStyle = '#aaa';
         ctx.fillRect(100, barY, this.parser.progress / this.parser.length * barW, 30);
         ctx.strokeRect(99, barY - 1, barW - 1, 32);
 
-        let progressText = `Parsing ${this.parser.progressLabel}: ${Math.round(this.parser.progress / this.parser.length * 100)} %`;
         let progressTextMetrics = ctx.measureText(progressText);
         let progressTextWidth = progressTextMetrics.width;
         let progressTextHeight = progressTextMetrics.actualBoundingBoxAscent + progressTextMetrics.actualBoundingBoxDescent;

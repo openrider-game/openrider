@@ -87,7 +87,7 @@ export default class Track {
      */
     zoom(point, direction) {
         let px = point.toPixel(this);
-        this.zoomFactor = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, this.zoomFactor + 0.2 * direction));
+        this.zoomFactor = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round((this.zoomFactor + 0.2 * direction) * 100) / 100));
         this.camera.x = point.x - (px.x - this.canvas.width / 2) / this.zoomFactor;
         this.camera.y = point.y - (px.y - this.canvas.height / 2) / this.zoomFactor;
     }

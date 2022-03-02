@@ -12,7 +12,7 @@ export default class StateManager extends GameObject {
         this.event = new EventManager(this);
         this.track = new Track(canvas, opt, this.event);
 
-        this.event.attachAllEvt();
+        this.event.attach();
 
         /** @type {Map<String, GameState>} */
         this.states = new Map();

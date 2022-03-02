@@ -11,12 +11,6 @@ export default class EventManager {
         this.stateManager = stateManager;
         this.keyboard = new Keyboard();
 
-        this.evtController = new AbortController();
-        this.keyboardEvtController = new AbortController();
-
-        this.evtAttached = false;
-        this.keyboardEvtAttached = false;
-
         this.mouseIn = false;
     }
 
@@ -28,57 +22,23 @@ export default class EventManager {
         return this.stateManager.getCurrent().ui;
     }
 
-    attachAllEvt() {
-        this.attachMiscEvt();
-        this.attachKeyboardEvt();
-    }
+    attach() {
+        this.getTrack().canvas.addEventListener('mousedown', e => this.onMouseDown(e));
+        this.getTrack().canvas.addEventListener('mouseup', e => this.onMouseUp(e));
+        this.getTrack().canvas.addEventListener('mousemove', e => this.onMouseMove(e));
+        this.getTrack().canvas.addEventListener('mousewheel', e => this.onScroll(e));
 
-    detachAllEvt() {
-        this.detachEvt();
-        this.detachKeyboardEvt();
-    }
+        this.getTrack().canvas.addEventListener('mouseenter', e => this.onMouseEnter(e));
+        this.getTrack().canvas.addEventListener('mouseout', e => this.onMouseOut(e));
 
-    attachMiscEvt() {
-        if (!this.evtAttached) {
-            this.evtAttached = true;
-            this.getTrack().canvas.addEventListener('mousedown', e => this.onMouseDown(e), { signal: this.evtController.signal });
-            this.getTrack().canvas.addEventListener('mouseup', e => this.onMouseUp(e), { signal: this.evtController.signal });
-            this.getTrack().canvas.addEventListener('mousemove', e => this.onMouseMove(e), { signal: this.evtController.signal });
-            this.getTrack().canvas.addEventListener('mousewheel', e => this.onScroll(e), { signal: this.evtController.signal });
+        this.getTrack().canvas.addEventListener('contextmenu', e => this.onContextMenu(e));
 
-            this.getTrack().canvas.addEventListener('mouseenter', e => this.onMouseEnter(e), { signal: this.evtController.signal });
-            this.getTrack().canvas.addEventListener('mouseout', e => this.onMouseOut(e), { signal: this.evtController.signal });
+        document.addEventListener('visibilitychange', () => this.onVisibilityChange());
+    
+        document.addEventListener('keydown', e => this.onKeyDown(e));
+        document.addEventListener('keyup', e => this.onKeyUp(e));
 
-            this.getTrack().canvas.addEventListener('contextmenu', e => this.onContextMenu(e), { signal: this.evtController.signal });
-
-            document.addEventListener('visibilitychange', () => this.onVisibilityChange(), { signal: this.evtController.signal });
-        }
-    }
-
-    attachKeyboardEvt() {
-        if (!this.keyboardEvtAttached) {
-            this.keyboardEvtAttached = true;
-            document.addEventListener('keydown', e => this.onKeyDown(e), { signal: this.keyboardEvtController.signal });
-            document.addEventListener('keyup', e => this.onKeyUp(e), { signal: this.keyboardEvtController.signal });
-
-            document.addEventListener('keyboarddown', e => this.onKeyboardDown(e), { signal: this.keyboardEvtController.signal });
-        }
-    }
-
-    detachEvt() {
-        if (this.evtAttached) {
-            this.evtAttached = false;
-            this.evtController.abort();
-            this.evtController = new AbortController();
-        }
-    }
-
-    detachKeyboardEvt() {
-        if (this.keyboardEvtAttached) {
-            this.keyboardEvtAttached = false;
-            this.keyboardEvtController.abort();
-            this.keyboardEvtController = new AbortController();
-        }
+        document.addEventListener('keyboarddown', e => this.onKeyboardDown(e));
     }
 
     onMouseDown(e) {

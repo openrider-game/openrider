@@ -7,6 +7,7 @@ import Track from "../track/Track.js";
 import Item from "../item/Item.js";
 import Line from "../item/line/Line.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
+import { MIN_ZOOM } from "../constant/TrackConstants.js";
 
 export default class TrackParser {
     /**
@@ -45,6 +46,9 @@ export default class TrackParser {
         this.foregroundSceneryLineData = this.emptyData();
         this.codeBike = '';
         this.codeOrigin = '';
+
+        this.caching = false;
+        this.cacheIndex = 0;
     }
 
     parseSolidLines() {
@@ -144,7 +148,20 @@ export default class TrackParser {
         this.track.playerRunner.createBike();
         this.track.focalPoint = this.track.playerRunner.instance.hitbox;
 
-        this.currentStep = this.finish;
+        this.currentStep = this.processMainCache;
+        this.caching = true;
+    }
+
+    processMainCache() {
+        this.progressLabel = 'Main cache';
+        this.length = this.track.cache.cells.size;
+        this.processCache(this.track.cache, this.processForegroundCache);
+    }
+
+    processForegroundCache() {
+        this.progressLabel = 'Foreground cache';
+        this.length = this.track.foregroundCache.cells.size;
+        this.processCache(this.track.foregroundCache, this.finish);
     }
 
     finish() {
@@ -182,6 +199,26 @@ export default class TrackParser {
         }
 
         if (lineData.index >= lineData.code.length) {
+            this.currentStep = next;
+        }
+    }
+
+    processCache(cache, next) {
+        let toGo = 1;
+        let l = Math.min(this.cacheIndex + toGo, cache.cells.size);
+        let cacheCells = Array.from(cache.cells.values());
+
+        for (; this.cacheIndex < l; this.cacheIndex++) {
+            let cell = cacheCells[this.cacheIndex];
+            if (cell.lines.length + cell.scenery.length > 500) {
+                for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
+                    cell.getCanvas(zoom, 1);
+                }
+            }
+        }
+
+        if (this.cacheIndex >= cache.cells.size) {
+            this.cacheIndex = 0;
             this.currentStep = next;
         }
     }

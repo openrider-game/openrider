@@ -1,15 +1,10 @@
 import TrackGenerator from "../parser/TrackGenerator.js";
 import GameState from "./GameState.js";
-import CameraTool from "../tool/CameraTool.js";
 
 export default class GeneratorState extends GameState {
     onEnter() {
         // this.track.canvas.style.cursor = 'none';
         this.generator = new TrackGenerator(this.track);
-    }
-
-    onLeave() {
-        this.generator.memReset();
     }
 
     fixedUpdate() {}
@@ -28,6 +23,7 @@ export default class GeneratorState extends GameState {
             this.manager.pop();
 
             let trackCode = this.generator.getCode();
+            this.generator.memReset();
 
             if (this.isTrackUpload) {
                 this.isTrackUpload = false;

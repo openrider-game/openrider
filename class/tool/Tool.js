@@ -39,8 +39,8 @@ export default class Tool extends GameObject {
         return this.track.event.keyboard.isDown(this.constructor.keyLabel);
     }
 
-    run() {
-        this.track.toolManager.setTool(this);
+    run(noOptions = false) {
+        this.track.toolManager.setTool(this, noOptions);
     }
 
     createOptionsUI() {}

@@ -16,7 +16,7 @@ export default class ToolManager extends GameObject {
      *
      * @param {Tool} tool
      */
-    setTool(tool) {
+    setTool(tool, noOptions = false) {
         if (tool !== this.tool) {
             if (this.tool) {
                 this.tool.ui.toggleActive();
@@ -26,7 +26,7 @@ export default class ToolManager extends GameObject {
             this.tool = tool;
             this.tool.activate();
             this.tool.ui.toggleActive();
-        } else {
+        } else if (!noOptions) {
             if (this.tool.optionsOpen) {
                 this.tool.closeOptions();
             } else {

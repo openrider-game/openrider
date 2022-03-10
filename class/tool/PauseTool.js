@@ -1,7 +1,6 @@
 import Tool from "./Tool.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
 import Control from "../keyboard/Control.js";
-import UITool from "../ui/UITool.js";
 
 export default class PauseTool extends Tool {
     static get toolName() { return 'Pause'; }

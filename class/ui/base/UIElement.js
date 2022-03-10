@@ -9,6 +9,8 @@ export default class UIElement extends GameObject {
          * @type {Track}
          */
         this.track = track;
+        this.originalX = x;
+        this.originalY = y;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -43,10 +45,10 @@ export default class UIElement extends GameObject {
 
     render(ctx) {
         if (this.align & UIElement.ALIGN_BOTTOM) {
-            this.y = this.track.canvas.height - this.height;
+            this.y = this.track.canvas.height - this.height - this.originalY;
         }
         if (this.align & UIElement.ALIGN_RIGHT) {
-            this.x = this.track.canvas.width - this.width;
+            this.x = this.track.canvas.width - this.width - this.originalX;
         }
         if (this.align & UIElement.ALIGN_HORIZONTAL_CENTER) {
             this.x = (this.track.canvas.width - this.width) / 2;

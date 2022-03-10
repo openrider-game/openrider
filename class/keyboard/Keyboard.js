@@ -24,6 +24,9 @@ export default class Keyboard {
 
     test(control, e) {
         let matches = control.codes.includes(e.which) || control.codes.includes(e.code);
+        if (matches && control.modifiers === Keyboard.NONE) {
+            matches = !e.ctrlKey && !e.altKey && !e.shiftKey;
+        }
         if (matches && (control.modifiers & Keyboard.CTRL)) {
             matches = e.ctrlKey;
         }

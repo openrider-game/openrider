@@ -13,7 +13,7 @@ import Line from "../item/line/Line.js";
 import ReachableItem from "../item/ReachableItem.js";
 import Vector from "../numeric/Vector.js";
 import ToolManager from "../tool/manager/ToolManager.js";
-import ToolCollection from "../tool/ToolCollection.js";
+import ToolCollection from "../tool/collection/ToolCollection.js";
 import PauseTool from "../tool/PauseTool.js";
 import EventManager from "../event/EventManager.js";
 
@@ -64,6 +64,8 @@ export default class Track {
         this.ghostRunners = new Array();
 
         this.undoManager = new UndoManager();
+
+        this.debug = false;
     }
 
     async fetchRawTrack() {

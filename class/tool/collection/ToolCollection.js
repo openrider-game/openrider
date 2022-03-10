@@ -1,5 +1,3 @@
-import Tool from "./Tool.js";
-
 export default class ToolCollection {
     constructor() {
         this.toolsByToolName = new Map();

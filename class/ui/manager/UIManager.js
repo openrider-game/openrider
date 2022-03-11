@@ -13,7 +13,7 @@ export default class UIManager extends GameObject {
          * @type {Array<UIElement>}
          */
         this.uiElements = [];
-        // this.cursor = null;
+        this.cursor = 'none';
     }
 
     fixedUpdate() {
@@ -33,16 +33,8 @@ export default class UIManager extends GameObject {
             uiElement.render(ctx);
         }
 
-        // let anyHovered = this.uiElements.some(uiElement => uiElement.hovered);
-        // if (anyHovered && this.cursor == null) {
-        //     this.cursor = this.track.canvas.style.cursor;
-        //     this.track.canvas.style.cursor = 'default';
-        // } else if (!anyHovered && this.cursor != null) {
-        //     if (this.track.canvas.style.cursor == 'default') {
-        //         this.track.canvas.style.cursor = this.cursor;
-        //     }
-        //     this.cursor = null;
-        // }
+        let anyHovered = this.uiElements.some(uiElement => uiElement.hovered);
+        this.track.canvas.style.cursor = anyHovered ? 'pointer' : this.cursor;
     }
 
     onMouseMove(e) {

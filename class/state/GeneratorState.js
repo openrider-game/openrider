@@ -3,7 +3,6 @@ import GameState from "./GameState.js";
 
 export default class GeneratorState extends GameState {
     onEnter() {
-        // this.track.canvas.style.cursor = 'none';
         this.generator = new TrackGenerator(this.track);
     }
 

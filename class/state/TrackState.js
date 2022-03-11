@@ -37,7 +37,6 @@ export default class TrackState extends GameState {
             if (file) {
                 let reader = new FileReader();
                 reader.onload = () => {
-                    // this.track.canvas.style.cursor = 'none';
                     this.track = new Track(this.track.canvas, { trackCode: reader.result }, this.manager.event);
                     this.manager.getState('parser').getTrackParser();
                     this.manager.pop();

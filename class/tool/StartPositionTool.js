@@ -19,7 +19,7 @@ export default class StartPositionTool extends Tool {
 
     activate() {
         super.activate();
-        // this.track.canvas.style.cursor = 'pointer';
+        this.ui.uiManager.cursor = 'pointer';
 
         this.createDummyRunner();
     }

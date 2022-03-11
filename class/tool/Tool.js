@@ -59,7 +59,7 @@ export default class Tool extends GameObject {
     }
 
     activate() {
-        // this.track.canvas.style.cursor = 'none';
+        this.ui.uiManager.cursor = 'none';
         this.openOptions();
     }
 

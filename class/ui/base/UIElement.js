@@ -61,7 +61,7 @@ export default class UIElement extends GameObject {
     onClick() {}
 
     onMouseMove(e) {
-        let intersects = this.intersects(this.track.mousePos);
+        let intersects = this.intersects(this.track.realMousePos);
         this.hovered = intersects;
 
         if (!intersects && this.focused) {
@@ -70,11 +70,11 @@ export default class UIElement extends GameObject {
     }
 
     onMouseDown(e) {
-        this.focused = this.intersects(this.track.mousePos);
+        this.focused = this.intersects(this.track.realMousePos);
     }
 
     onMouseUp(e) {
-        let intersects = this.intersects(this.track.mousePos);
+        let intersects = this.intersects(this.track.realMousePos);
 
         if (intersects && this.focused) {
             this.focused = false;

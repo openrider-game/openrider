@@ -34,7 +34,7 @@ export default class EventManager {
         this.getTrack().canvas.addEventListener('contextmenu', e => this.onContextMenu(e));
 
         document.addEventListener('visibilitychange', () => this.onVisibilityChange());
-    
+
         document.addEventListener('keydown', e => this.onKeyDown(e));
         document.addEventListener('keyup', e => this.onKeyUp(e));
 
@@ -62,9 +62,6 @@ export default class EventManager {
 
     onMouseMove(e) {
         this.setMousePos(e);
-
-        this.getTrack().mousePos.x = Math.round(this.getTrack().mousePos.x / this.getTrack().gridDetail) * this.getTrack().gridDetail;
-        this.getTrack().mousePos.y = Math.round(this.getTrack().mousePos.y / this.getTrack().gridDetail) * this.getTrack().gridDetail;
 
         this.getUI().onMouseMove(e);
 
@@ -96,7 +93,9 @@ export default class EventManager {
     }
 
     onKeyDown(e) {
-        this.keyboard.onKeyDown(e);
+        if (document.activeElement === document.body) {
+            this.keyboard.onKeyDown(e);
+        }
     }
 
     onKeyUp(e) {
@@ -117,10 +116,13 @@ export default class EventManager {
 
     setMousePos(e) {
         let canvasRect = this.getTrack().canvas.getBoundingClientRect();
-        this.getTrack().mousePos.set(new Vector(
+        this.getTrack().realMousePos.set(new Vector(
             e.clientX - canvasRect.left + window.pageXOffset,
             e.clientY - canvasRect.top + window.pageYOffset
         ).normalizeToCanvas(this.getTrack()));
+
+        this.getTrack().mousePos.x = Math.round(this.getTrack().realMousePos.x / this.getTrack().gridDetail) * this.getTrack().gridDetail;
+        this.getTrack().mousePos.y = Math.round(this.getTrack().realMousePos.y / this.getTrack().gridDetail) * this.getTrack().gridDetail;
     }
 
     allowStateEvent() {

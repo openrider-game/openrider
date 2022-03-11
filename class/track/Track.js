@@ -42,6 +42,7 @@ export default class Track {
 
         this.focalPoint = new Entity(new Vector(), new Vector());
 
+        this.realMousePos = new Vector();
         this.mousePos = new Vector();
         this.lastClick = new Vector();
         this.gridDetail = 1;

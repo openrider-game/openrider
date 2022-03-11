@@ -1,6 +1,6 @@
 ## Missing features for CR/BHR parity
 
-- Track upload ❌
+- Track upload ✅
 - Load track by id ❌
 - Save and upload ghosts ❌
 - Ghost leaderboard ❌

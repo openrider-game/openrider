@@ -51,4 +51,9 @@ export default class DirectionalItem extends Item {
     toString() {
         return this.constructor.code + ' ' + this.pos.toString() + ' ' + (this.rotation - 180).toString(32);
     }
+
+    static createInstance(itemCode, track) {
+        let pos = new Vector(parseInt(itemCode[1], 32), parseInt(itemCode[2], 32));
+        return new this(pos, parseInt(itemCode[3], 32) + 180, track);
+    }
 }

@@ -47,5 +47,19 @@ export default class ReachableItem extends Item {
      *
      * @param {BikePart} part
      */
-    onReach(part) { }
+    onReach(part) {
+        if (!part.bike.runner.reachablesReached.has(this.id)) {
+            part.bike.runner.actionQueue.push(this);
+        }
+    }
+
+    onAdd() {
+        super.onAdd();
+        this.track.reachables.set(this.id, this);
+    }
+
+    onDelete() {
+        super.onDelete();
+        this.track.reachables.delete(this.id);
+    }
 }

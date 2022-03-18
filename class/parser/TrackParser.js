@@ -2,9 +2,7 @@ import SolidLine from "../item/line/SolidLine.js";
 import SceneryLine from "../item/line/SceneryLine.js";
 import Vector from "../numeric/Vector.js";
 import { ITEM_LIST, LINE, LINE_FOREGROUND } from "../constant/ItemConstants.js";
-import DirectionalItem from "../item/DirectionalItem.js";
 import Track from "../track/Track.js";
-import Item from "../item/Item.js";
 import Line from "../item/line/Line.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
 import { MIN_ZOOM } from "../constant/TrackConstants.js";
@@ -87,17 +85,10 @@ export default class TrackParser {
         for (; this.itemData.index < l; this.itemData.index++) {
             let itemCode = this.itemData.code[this.itemData.index].split(' ');
             if (itemCode.length > 2) {
-                /** @type {Item} */
-                let item = null;
-                let pos = new Vector(parseInt(itemCode[1], 32), parseInt(itemCode[2], 32));
                 let itemClass = itemMap.get(itemCode[0]);
 
                 if (itemClass) {
-                    if (itemClass.prototype instanceof DirectionalItem) {
-                        item = new itemClass(pos, parseInt(itemCode[3], 32) + 180, this.track);
-                    } else {
-                        item = new itemClass(pos, this.track);
-                    }
+                    let item = itemClass.createInstance(itemCode, this.track);
 
                     item.grid = this.track.grid;
                     item.cache = this.track.cache;

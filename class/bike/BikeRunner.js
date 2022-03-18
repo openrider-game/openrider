@@ -6,6 +6,7 @@ import Target from "../item/reachable/Target.js";
 import Track from "../track/Track.js";
 import Bike from "./instance/Bike.js";
 import Ragdoll from "../entity/Ragdoll.js";
+import ReachableItem from "../item/ReachableItem.js";
 
 export default class BikeRunner extends GameObject {
     constructor(track, bikeClass) {
@@ -16,7 +17,7 @@ export default class BikeRunner extends GameObject {
         this.done = false;
         this.snapshots = new Array();
         this.targetsReached = new Map();
-        this.checkpointsReached = new Map();
+        this.reachablesReached = new Map();
 
         /** @type {Bike} */
         this.instance = null;
@@ -43,7 +44,7 @@ export default class BikeRunner extends GameObject {
         this.initialBike = this.instance.clone();
     }
 
-    assignColor() { }
+    assignColor() {}
 
     startFrom(snapshot) {
         this.done = false;
@@ -52,7 +53,7 @@ export default class BikeRunner extends GameObject {
 
         let bike = this.initialBike;
         this.targetsReached = new Map();
-        this.checkpointsReached = new Map();
+        this.reachablesReached = new Map();
 
         this.upPressed = false;
         this.downPressed = false;
@@ -65,7 +66,7 @@ export default class BikeRunner extends GameObject {
         if (snapshot) {
             bike = snapshot.bike;
             this.targetsReached = new Map(snapshot.targetsReached);
-            this.checkpointsReached = new Map(snapshot.checkpointsReached);
+            this.reachablesReached = new Map(snapshot.reachablesReached);
 
             this.upPressed = snapshot.upPressed;
             this.downPressed = snapshot.downPressed;
@@ -82,9 +83,9 @@ export default class BikeRunner extends GameObject {
             }
         });
 
-        this.checkpointsReached.forEach((checkpoint, checkpointId) => {
-            if (this.track.checkpoints.has(checkpointId)) {
-                this.track.checkpoints.get(checkpointId).reached = true;
+        this.reachablesReached.forEach((reachable, reachableId) => {
+            if (this.track.reachables.has(reachableId)) {
+                this.track.reachables.get(reachableId).reached = true;
             }
         });
 
@@ -103,7 +104,7 @@ export default class BikeRunner extends GameObject {
         this.turnPressed = false;
 
         this.instance.hitbox.touch = false;
-        this.instance.hitbox.drive = () => { };
+        this.instance.hitbox.drive = () => {};
         this.instance.backWheel.speedValue = 0;
     }
 
@@ -117,6 +118,16 @@ export default class BikeRunner extends GameObject {
         this.die();
         this.deadObject = new Explosion(pos, vel, this.instance.clone(), this.track.time, this.track);
         this.instance = null;
+    }
+
+    /**
+     * 
+     * @param {ReachableItem} reachable 
+     */
+    hitReachable(reachable) {
+        if (!this.reachablesReached.has(reachable.id)) {
+            this.reachablesReached.set(reachable.id, true);
+        }
     }
 
     /**
@@ -135,14 +146,14 @@ export default class BikeRunner extends GameObject {
      * @param {Checkpoint} checkpoint
      */
     hitCheckpoint(checkpoint) {
-        if (!this.checkpointsReached.has(checkpoint.id)) {
-            this.checkpointsReached.set(checkpoint.id, true);
+        if (!this.reachablesReached.has(checkpoint.id)) {
+            this.reachablesReached.set(checkpoint.id, true);
             this.onHitCheckpoint();
         }
     }
 
-    onHitTarget() { }
-    onHitCheckpoint() { }
+    onHitTarget() {}
+    onHitCheckpoint() {}
 
     reset() {
         this.snapshots = new Array();
@@ -160,7 +171,7 @@ export default class BikeRunner extends GameObject {
         let snapshot = {
             time: this.track.time,
             targetsReached: new Map(this.targetsReached),
-            checkpointsReached: new Map(this.checkpointsReached),
+            reachablesReached: new Map(this.reachablesReached),
             upPressed: this.upPressed,
             downPressed: this.downPressed,
             leftPressed: this.leftPressed,
@@ -180,10 +191,10 @@ export default class BikeRunner extends GameObject {
         for (let action of this.actionQueue) {
             if (action instanceof Checkpoint) {
                 this.hitCheckpoint(action);
-            }
-
-            if (action instanceof Target) {
+            } else if (action instanceof Target) {
                 this.hitTarget(action);
+            } else if (action instanceof ReachableItem) {
+                this.hitReachable(action);
             }
         }
     }

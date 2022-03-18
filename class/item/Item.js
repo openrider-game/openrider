@@ -99,6 +99,11 @@ export default class Item extends GameObject {
     onAdd() {
         this.grid.totalObjects.set(this.id, this);
     }
+
+    static createInstance(itemCode, track) {
+        let pos = new Vector(parseInt(itemCode[1], 32), parseInt(itemCode[2], 32));
+        return new this(pos, track);
+    }
 }
 
 Item.id = 0;

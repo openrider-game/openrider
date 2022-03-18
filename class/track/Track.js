@@ -53,8 +53,8 @@ export default class Track {
         this.cache = new Grid(CACHE_CELL_SIZE, RenderCell);
         this.foregroundCache = new Grid(CACHE_CELL_SIZE, RenderCell);
 
-        this.checkpoints = new Map();
         this.targets = new Map();
+        this.reachables = new Map();
 
         this.toolCollection = new ToolCollection();
         this.paused = false;

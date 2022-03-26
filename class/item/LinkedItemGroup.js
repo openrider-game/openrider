@@ -1,10 +1,9 @@
 import Vector from "../numeric/Vector.js";
 import Item from "./Item.js";
 import LinkedItem from "./LinkedItem.js";
-import ReachableItem from "./ReachableItem.js";
 
-export default class LinkedItemGroup extends ReachableItem {
-    static get itemClass() { return ReachableItem; }
+export default class LinkedItemGroup extends LinkedItem {
+    static get itemClass() { return LinkedItem; }
     static get code() { return this.itemClass.code; }
     static get itemCount() { return 2; }
     static get argumentCount() { return 2; }
@@ -32,7 +31,8 @@ export default class LinkedItemGroup extends ReachableItem {
     toString() {
         let string = this.constructor.code;
         for (let instance of this.instances) {
-            string += instance.toString().substring(1);
+            instance.recorded = true;
+            string += instance.toString(true).substring(1);
         }
         return string;
     }

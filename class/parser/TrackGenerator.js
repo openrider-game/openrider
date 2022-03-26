@@ -66,7 +66,9 @@ export default class TrackGenerator {
         let gridObjects = Array.from(this.track.grid.totalObjects.values());
         for (; this.objectData.index < l; this.objectData.index++) {
             let object = gridObjects[this.objectData.index];
-            this.objectData.code += `${object.toString()},`;
+            if (!object.recorded) {
+                this.objectData.code += `${object.toString()},`;
+            }
         }
 
         if (this.objectData.index >= this.track.grid.totalObjects.size) {

@@ -14,7 +14,7 @@ export default class LinkedItem extends ReachableItem {
         if (fromGroup) {
             super.addToTrack();
         } else {
-            this.group.addToTrack(true);
+            this.group.addToTrack();
         }
     }
 
@@ -22,7 +22,7 @@ export default class LinkedItem extends ReachableItem {
         if (fromGroup) {
             super.removeFromTrack();
         } else {
-            this.group.removeFromTrack(true);
+            this.group.removeFromTrack();
         }
     }
 
@@ -35,5 +35,13 @@ export default class LinkedItem extends ReachableItem {
 
         this.linkedItem = other;
         super.onTouch(part);
+    }
+
+    toString(fromGroup) {
+        if (fromGroup) {
+            return super.toString();
+        } else {
+            return this.group.toString();
+        }
     }
 }

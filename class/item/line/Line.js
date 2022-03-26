@@ -20,15 +20,13 @@ export default class Line extends Item {
         this.len = this.vector.getLength();
         /** @type {boolean} */
         this.touched = false;
-        /** @type {boolean} */
-        this.recorded = false;
     }
 
     /**
      *
      * @param {Entity} part
      */
-    touch(part) { }
+    touch(part) {}
 
     /**
      *
@@ -93,5 +91,5 @@ export default class Line extends Item {
         ctx.stroke();
     }
 
-    render(ctx) { }
+    render(ctx) {}
 }

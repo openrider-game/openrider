@@ -19,6 +19,9 @@ export default class Item extends GameObject {
         /** @type {Vector} */
         this.endPos = pos;
 
+        /** @type {boolean} */
+        this.recorded = false;
+
         this.grid = null;
         this.cache = null;
     }
@@ -83,6 +86,7 @@ export default class Item extends GameObject {
     }
 
     toString() {
+        this.recorded = true;
         return this.constructor.code + ' ' + this.pos.toString();
     }
 

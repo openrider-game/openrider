@@ -4,9 +4,9 @@ import Boost from "../item/directional/Boost.js";
 import Checkpoint from "../item/reachable/Checkpoint.js";
 import Gravity from "../item/directional/Gravity.js";
 import Target from "../item/reachable/Target.js";
-import TeleporterGroup from "../item/linked/TeleporterGroup.js";
+import Teleporter from "../item/linked/Teleporter.js";
 
 export const
-    ITEM_LIST = [Bomb, SlowMo, Boost, Checkpoint, Gravity, Target, TeleporterGroup],
+    ITEM_LIST = [Bomb, SlowMo, Boost, Checkpoint, Gravity, Target, Teleporter],
     LINE = 'LINE',
     LINE_FOREGROUND = 'LINE_FOREGROUND';

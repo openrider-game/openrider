@@ -16,6 +16,22 @@ export default class PlayerRunner extends BikeRunner {
         this.track.event.keyboard.registerControl('Z', new Control(KeyCode.DOM_VK_Z, Keyboard.NONE, true));
     }
 
+    startFrom(snapshot) {
+        super.startFrom(snapshot);
+
+        this.targetsReached.forEach((target, targetId) => {
+            if (this.track.targets.has(targetId)) {
+                this.track.targets.get(targetId).reached = true;
+            }
+        });
+
+        this.reachablesReached.forEach((reachable, reachableId) => {
+            if (this.track.reachables.has(reachableId)) {
+                this.track.reachables.get(reachableId).reached = true;
+            }
+        });
+    }
+
     onHitTarget() {
         if (this.targetsReached.size >= this.track.targets.size) {
             let ghostString = GhostParser.generate(this);

@@ -12,12 +12,15 @@ import Track from "../track/Track.js";
 
 export default class TrackState extends GameState {
     onEnter() {
-        let isRace = this.track.id !== null;
+        let isRace = this.track.id && this.track.id.length;
         let leftToolbar = new UIToolbar(this.ui, this.track, isRace ? LEFT_TOOLBAR_VIEWING : LEFT_TOOLBAR_EDITING);
         let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
         this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
-        this.ui.uiElements.push(leftToolbar, rightToolbar);
+        this.ui.uiElements.push(leftToolbar);
+        if (!isRace) {
+            this.ui.uiElements.push(rightToolbar);
+        }
 
         if (!isRace) {
             let importButton = new UIButton(this.ui, this.track, 10, 10, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
@@ -230,6 +233,9 @@ export default class TrackState extends GameState {
             ctx.strokeStyle = '#000';
             for (let object of cell.objects) {
                 object.render(ctx);
+                if (this.track.debug) {
+                    object.renderDebug(ctx);
+                }
             }
         }
     }

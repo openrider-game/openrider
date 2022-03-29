@@ -2,11 +2,7 @@ import Vector from "../numeric/Vector.js";
 import Item from "./Item.js";
 import LinkedItem from "./LinkedItem.js";
 
-export default class LinkedItemGroup extends LinkedItem {
-    static get itemClass() { return LinkedItem; }
-    static get code() { return this.itemClass.code; }
-    static get itemCount() { return 2; }
-    static get argumentCount() { return 2; }
+export default class LinkedItemGroup extends Item {
 
     constructor(pos, track) {
         super(pos, track);
@@ -28,8 +24,8 @@ export default class LinkedItemGroup extends LinkedItem {
         }
     }
 
-    toString() {
-        let string = this.constructor.code;
+    toString(code) {
+        let string = code;
         for (let instance of this.instances) {
             instance.recorded = true;
             string += instance.toString(true).substring(1);
@@ -37,17 +33,24 @@ export default class LinkedItemGroup extends LinkedItem {
         return string;
     }
 
-    static createInstance(itemCode, track) {
+    /**
+     * 
+     * @param {Array<String>} itemCode 
+     * @param {Track} track 
+     * @param {*} itemClass
+     * @returns 
+     */
+    static createInstance(itemCode, track, itemClass) {
         let itemGroup = new this(new Vector(), track);
 
-        for (let itemCount = 0; itemCount < this.itemCount; itemCount++) {
+        for (let itemIndex = 0; itemIndex < itemClass.itemCount; itemIndex++) {
             let itemCodeArguments = [itemCode[0]];
-            for (let argumentCount = 1; argumentCount < this.argumentCount + 1; argumentCount++) {
-                itemCodeArguments.push(itemCode[itemCount * this.argumentCount + argumentCount]);
+            for (let argumentIndex = 1; argumentIndex < itemClass.argumentCount + 1; argumentIndex++) {
+                itemCodeArguments.push(itemCode[itemIndex * itemClass.argumentCount + argumentIndex]);
             }
 
             /** @type {LinkedItem} */
-            let instance = this.itemClass.createInstance(itemCodeArguments, track);
+            let instance = itemClass.createInstance(itemCodeArguments, track, true);
             instance.group = itemGroup;
 
             itemGroup.instances.push(instance);

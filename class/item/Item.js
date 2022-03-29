@@ -39,6 +39,7 @@ export default class Item extends GameObject {
     render(ctx) {
         let pos = this.pos.toPixel(this.track);
 
+        ctx.save();
         ctx.fillStyle = this.constructor.color;
         ctx.lineWidth = Math.max(2 * this.track.zoomFactor, 0.5);
         ctx.beginPath();
@@ -46,6 +47,19 @@ export default class Item extends GameObject {
         ctx.arc(pos.x, pos.y, 7 * this.track.zoomFactor, 0, 2 * Math.PI, true);
         ctx.fill();
         ctx.stroke();
+
+        ctx.restore();
+    }
+
+    renderDebug(ctx) {
+        let pos = this.pos.toPixel(this.track);
+
+        ctx.save();
+        ctx.font = `bold ${Math.min(15 * this.track.zoomFactor, 15)}px Ubuntu`;
+        ctx.fillStyle = '#000';
+        let idMetrics = ctx.measureText(this.id);
+        ctx.fillText(this.id, pos.x - idMetrics.width / 2, pos.y - 15 * this.track.zoomFactor);
+        ctx.restore();
     }
 
     /**

@@ -77,18 +77,6 @@ export default class BikeRunner extends GameObject {
             this.track.time = snapshot.time;
         }
 
-        this.targetsReached.forEach((target, targetId) => {
-            if (this.track.targets.has(targetId)) {
-                this.track.targets.get(targetId).reached = true;
-            }
-        });
-
-        this.reachablesReached.forEach((reachable, reachableId) => {
-            if (this.track.reachables.has(reachableId)) {
-                this.track.reachables.get(reachableId).reached = true;
-            }
-        });
-
         this.instance = bike.clone();
 
         this.track.toolManager.active = false;

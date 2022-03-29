@@ -7,13 +7,15 @@ export default class Teleporter extends LinkedItem {
     static get code() { return 'W'; }
 
     onReach(part) {
-        if (this.linkedItem) {
+        if (this.linkedItem && !part.bike.runner.reachablesReached.has(this.id)) {
             let distance = this.pos.sub(this.linkedItem.pos);
             part.bike.points.forEach(point => {
                 point.pos.selfAdd(distance);
                 point.oldPos.selfAdd(distance);
-                this.track.camera.set(this.track.focalPoint.pos);
             });
+            if (this.track.focalPoint != null && this.track.focalPoint == part.bike.hitbox) {
+                this.track.camera.set(this.track.focalPoint.pos);
+            }
         }
 
         super.onReach(part);

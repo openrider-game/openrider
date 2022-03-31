@@ -39,7 +39,9 @@ export default class ReachableItem extends Item {
             if (!(part.bike.runner instanceof GhostRunner)) {
                 this.reached = true;
             }
-            this.onReach(part);
+            if (!part.bike.runner.actionQueue.has(this.id)) {
+                this.onReach(part);
+            }
         }
     }
 
@@ -49,7 +51,7 @@ export default class ReachableItem extends Item {
      */
     onReach(part) {
         if (!part.bike.runner.reachablesReached.has(this.id)) {
-            part.bike.runner.actionQueue.push(this);
+            part.bike.runner.actionQueue.set(this.id, this);
         }
     }
 

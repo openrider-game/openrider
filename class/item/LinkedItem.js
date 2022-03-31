@@ -40,15 +40,6 @@ export default class LinkedItem extends ReachableItem {
         super.onTouch(part);
     }
 
-    // We have to immediately register the reachables as reached because linked items
-    // might trigger onReach on multiple of their links in the same physics update
-    // (like teleporters)
-    onReach(part) {
-        if (!part.bike.runner.reachablesReached.has(this.id)) {
-            part.bike.runner.hitReachable(this);
-        }
-    }
-
     toString(fromGroup) {
         if (fromGroup) {
             return super.toString();

@@ -31,7 +31,8 @@ export default class BikeRunner extends GameObject {
         this.rightPressed = false;
         this.turnPressed = false;
 
-        this.actionQueue = new Array();
+        /** @type {Map<number, ReachableItem>} */
+        this.actionQueue = new Map();
 
         this.dead = false;
         this.deadObject = null;
@@ -176,7 +177,7 @@ export default class BikeRunner extends GameObject {
     }
 
     processActionQueue() {
-        for (let action of this.actionQueue) {
+        this.actionQueue.forEach((action) => {
             if (action instanceof Checkpoint) {
                 this.hitCheckpoint(action);
             } else if (action instanceof Target) {
@@ -184,7 +185,7 @@ export default class BikeRunner extends GameObject {
             } else if (action instanceof ReachableItem) {
                 this.hitReachable(action);
             }
-        }
+        });
     }
 
     updateControls() {
@@ -199,9 +200,9 @@ export default class BikeRunner extends GameObject {
         // We have to let all the parts process their fixedUpdate before we try to save
         // Otherwise, we get faulty values in the bike clone, since some of them are 1 cycle behind/ahead
         // Thus, the Checkpoints and Targets get added in the action queue instead of being processed directly
-        if (this.actionQueue.length) {
+        if (this.actionQueue.size) {
             this.processActionQueue();
-            this.actionQueue = new Array();
+            this.actionQueue = new Map();
         }
 
         if (this.instance instanceof Bike) {

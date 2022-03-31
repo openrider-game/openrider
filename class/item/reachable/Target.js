@@ -13,7 +13,7 @@ export default class Target extends ReachableItem {
      */
     onReach(part) {
         if (!part.bike.runner.targetsReached.has(this.id)) {
-            part.bike.runner.actionQueue.push(this);
+            part.bike.runner.actionQueue.set(this.id, this);
         }
     }
 

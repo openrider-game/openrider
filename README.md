@@ -10,7 +10,7 @@
 - Hat ❔ (could be a good idea for scalability)
 - Powerups
     - Zero gravity 🚧
-    - Teleport ❌
+    - Teleport ✅
     - Invincibility ❌
     - No steer ❌
     - Engine off ❌

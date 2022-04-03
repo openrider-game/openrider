@@ -52,6 +52,8 @@ export default class BikeRunner extends GameObject {
         this.dead = false;
         this.deadObject = null;
 
+        this.actionQueue = new Map();
+
         let bike = this.initialBike;
         this.targetsReached = new Map();
         this.reachablesReached = new Map();

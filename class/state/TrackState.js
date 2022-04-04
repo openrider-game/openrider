@@ -186,26 +186,10 @@ export default class TrackState extends GameState {
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // collision checks & hitboxes
-        for (let bikePart of this.track.playerRunner.instance.points) {
-            let x = Math.floor(bikePart.pos.x / this.track.grid.cellSize - 0.5);
-            let y = Math.floor(bikePart.pos.y / this.track.grid.cellSize - 0.5);
-
-            let cellX = Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + x * this.track.grid.cellSize * this.track.zoomFactor);
-            let cellY = Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + y * this.track.grid.cellSize * this.track.zoomFactor);
-
-            ctx.fillStyle = '#ff000005';
-            ctx.fillRect(cellX, cellY, this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor);
-            ctx.fillRect(cellX, cellY + this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor);
-            ctx.fillRect(cellX + this.track.grid.cellSize * this.track.zoomFactor, cellY, this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor);
-            ctx.fillRect(cellX + this.track.grid.cellSize * this.track.zoomFactor, cellY + this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor, this.track.grid.cellSize * this.track.zoomFactor);
-
-            let bikePos = bikePart.displayPos.toPixel(this.track);
-            ctx.fillStyle = '#00ff0055';
-            ctx.beginPath();
-            ctx.arc(bikePos.x, bikePos.y, bikePart.size * this.track.zoomFactor, 0, 2 * Math.PI, true);
-            ctx.fill();
-        }
+        this.track.ghostRunners.forEach((runner) => {
+            runner.renderDebug(ctx);
+        });
+        this.track.playerRunner.renderDebug(ctx);
 
         ctx.restore();
     }

@@ -266,4 +266,38 @@ export default class BikeRunner extends GameObject {
         }
     }
 
+    renderDebug(ctx) {
+        let points = [];
+        if (this.instance instanceof Bike) {
+            points = points.concat(this.instance.points);
+        }
+        if (this.deadObject instanceof Entity) {
+            points = points.concat(this.deadObject.points);
+        }
+
+        // collision checks & hitboxes
+        for (let point of points) {
+            if (point.touch) {
+                let x = Math.floor(point.pos.x / this.track.grid.cellSize - 0.5);
+                let y = Math.floor(point.pos.y / this.track.grid.cellSize - 0.5);
+
+                let gridZoom = this.track.grid.cellSize * this.track.zoomFactor;
+
+                let cellX = Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + x * gridZoom);
+                let cellY = Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + y * gridZoom);
+
+                ctx.fillStyle = '#ff000005';
+                ctx.fillRect(cellX, cellY, gridZoom, gridZoom);
+                ctx.fillRect(cellX, cellY + gridZoom, gridZoom, gridZoom);
+                ctx.fillRect(cellX + gridZoom, cellY, gridZoom, gridZoom);
+                ctx.fillRect(cellX + gridZoom, cellY + gridZoom, gridZoom, gridZoom);
+
+                let bikePos = point.displayPos.toPixel(this.track);
+                ctx.fillStyle = '#00ff0055';
+                ctx.beginPath();
+                ctx.arc(bikePos.x, bikePos.y, point.size * this.track.zoomFactor, 0, 2 * Math.PI, true);
+                ctx.fill();
+            }
+        }
+    }
 }

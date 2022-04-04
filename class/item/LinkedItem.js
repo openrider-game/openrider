@@ -48,6 +48,23 @@ export default class LinkedItem extends ReachableItem {
         }
     }
 
+    /**
+     * 
+     * @param {CanvasRenderingContext2D} ctx 
+     */
+    renderDebug(ctx) {
+        ctx.save();
+        ctx.strokeStyle = '#f00';
+        let pos = this.pos.toPixel(this.track);
+        ctx.moveTo(pos.x, pos.y);
+        this.group.instances.filter(obj => obj !== this).forEach(other => {
+            let pos = other.pos.toPixel(this.track);
+            ctx.lineTo(pos.x, pos.y);
+        });
+        ctx.stroke();
+        ctx.restore();
+    }
+
     static createInstance(itemCode, track, fromGroup) {
         if (fromGroup) {
             return super.createInstance(itemCode, track);

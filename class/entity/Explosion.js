@@ -8,7 +8,7 @@ export default class Explosion extends Entity {
         super(pos, vel);
         this.track = track;
         this.speedValue = 30 + 20 * Math.random();
-        this.pieces = [
+        this.points = [
             new Shard(bike, pos, vel, this),
             new Shard(bike, pos, vel, this),
             new Shard(bike, pos, vel, this),
@@ -22,13 +22,13 @@ export default class Explosion extends Entity {
     }
 
     fixedUpdate() {
-        for (let piece of this.pieces) {
+        for (let piece of this.points) {
             piece.fixedUpdate();
         }
     }
 
     update(progress, delta) {
-        for (let piece of this.pieces) {
+        for (let piece of this.points) {
             piece.update(progress, delta);
         }
     }
@@ -56,7 +56,7 @@ export default class Explosion extends Entity {
             ctx.fill();
         }
 
-        for (let piece of this.pieces) {
+        for (let piece of this.points) {
             piece.render(ctx);
         }
     }

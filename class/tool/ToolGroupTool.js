@@ -23,13 +23,32 @@ export default class ToolGroupTool extends Tool {
             let instanceUI = instance.getUI(uiManager, 0, align);
             instanceUI.originalX = 30;
             instanceUI.y = this.ui.y + 26 * this.instancesUI.length;
+
+            // This is really ugly but i can't think of a better way
+            // that doesn't involve making duplicate classes for every tool
             let run = instance.run;
             instance.run = () => {
                 this.ui.icon = instanceUI.icon;
+                this.currentInstance = instance;
                 run.bind(instance)();
+            };
+            let activate = instance.activate;
+            instance.activate = () => {
+                this.openOptions();
+                activate.bind(instance)();
+            };
+            let deactivate = instance.deactivate;
+            instance.deactivate = () => {
+                this.closeOptions();
+                deactivate.bind(instance)();
             };
 
             this.instancesUI.push(instanceUI);
+
+            if (!this.currentInstance) {
+                this.ui.icon = instanceUI.icon;
+                this.currentInstance = instance;
+            }
         }
 
         this.track.toolCollection.setTools(this.instances);
@@ -38,9 +57,7 @@ export default class ToolGroupTool extends Tool {
     }
 
     run() {
-        this.track.toolManager.setTool(this, false);
-        this.closeOptions();
-        this.openOptions();
+        this.track.toolManager.setTool(this.currentInstance);
     }
 
     createOptionsUI() {

@@ -60,37 +60,22 @@ export default class EraserTool extends Tool {
         let foregroundLineToggle = new UIToggleableButton(this.ui, this.track, x, 5, 300, 30, 'Foreground Line: inactive', 'Foreground Line: active', () => this.restrict.get('foregroundLayer').set('line', !this.restrict.get('foregroundLayer').get('line')), UIElement.ALIGN_HORIZONTAL_CENTER);
         foregroundLineToggle.active = true;
         foregroundLineToggle.label = foregroundLineToggle.activeLabel;
-        foregroundLineToggle.color = '#fff';
-        foregroundLineToggle.hoveredColor = '#eee';
-        foregroundLineToggle.focusedColor = '#ddd';
 
         let foregroundSceneryToggle = new UIToggleableButton(this.ui, this.track, x, 40, 300, 30, 'Foreground Scenery: inactive', 'Foreground Scenery: active', () => this.restrict.get('foregroundLayer').set('scenery', !this.restrict.get('foregroundLayer').get('scenery')), UIElement.ALIGN_HORIZONTAL_CENTER);
         foregroundSceneryToggle.active = true;
         foregroundSceneryToggle.label = foregroundSceneryToggle.activeLabel;
-        foregroundSceneryToggle.color = '#fff';
-        foregroundSceneryToggle.hoveredColor = '#eee';
-        foregroundSceneryToggle.focusedColor = '#ddd';
 
         let mainLineToggle = new UIToggleableButton(this.ui, this.track, x, 75, 300, 30, 'Main Line: inactive', 'Main Line: active', () => this.restrict.get('mainLayer').set('line', !this.restrict.get('mainLayer').get('line')), UIElement.ALIGN_HORIZONTAL_CENTER);
         mainLineToggle.active = true;
         mainLineToggle.label = mainLineToggle.activeLabel;
-        mainLineToggle.color = '#fff';
-        mainLineToggle.hoveredColor = '#eee';
-        mainLineToggle.focusedColor = '#ddd';
 
         let mainSceneryToggle = new UIToggleableButton(this.ui, this.track, x, 110, 300, 30, 'Main Scenery: inactive', 'Main Scenery: active', () => this.restrict.get('mainLayer').set('scenery', !this.restrict.get('mainLayer').get('scenery')), UIElement.ALIGN_HORIZONTAL_CENTER);
         mainSceneryToggle.active = true;
         mainSceneryToggle.label = mainSceneryToggle.activeLabel;
-        mainSceneryToggle.color = '#fff';
-        mainSceneryToggle.hoveredColor = '#eee';
-        mainSceneryToggle.focusedColor = '#ddd';
 
         let mainObjectToggle = new UIToggleableButton(this.ui, this.track, x, 145, 300, 30, 'Main Object: inactive', 'Main Object: active', () => this.restrict.get('mainLayer').set('object', !this.restrict.get('mainLayer').get('object')), UIElement.ALIGN_HORIZONTAL_CENTER);
         mainObjectToggle.active = true;
         mainObjectToggle.label = mainObjectToggle.activeLabel;
-        mainObjectToggle.color = '#fff';
-        mainObjectToggle.hoveredColor = '#eee';
-        mainObjectToggle.focusedColor = '#ddd';
 
         this.ui.optionsUI.items.push(foregroundLineToggle, foregroundSceneryToggle, mainLineToggle, mainSceneryToggle, mainObjectToggle);
     }

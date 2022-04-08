@@ -8,6 +8,7 @@ export default class ToolGroupTool extends Tool {
     constructor(track, classList) {
         super(track);
 
+        /** @type {Tool[]} */
         this.instances = new Array();
         for (let toolClass of classList) {
             this.instances.push(new toolClass(track));
@@ -19,30 +20,11 @@ export default class ToolGroupTool extends Tool {
 
         this.instancesUI = new Array();
         for (let instance of this.instances) {
+            instance.group = this;
             instance.registerControls();
             let instanceUI = instance.getUI(uiManager, 0, align);
             instanceUI.originalX = 30;
             instanceUI.y = this.ui.y + 26 * this.instancesUI.length;
-
-            // This is really ugly but i can't think of a better way
-            // that doesn't involve making duplicate classes for every tool
-            let run = instance.run;
-            instance.run = () => {
-                this.ui.icon = instanceUI.icon;
-                this.currentInstance = instance;
-                run.bind(instance)();
-            };
-            let activate = instance.activate;
-            instance.activate = () => {
-                this.openOptions();
-                activate.bind(instance)();
-            };
-            let deactivate = instance.deactivate;
-            instance.deactivate = () => {
-                this.closeOptions();
-                deactivate.bind(instance)();
-            };
-
             this.instancesUI.push(instanceUI);
 
             if (!this.currentInstance) {

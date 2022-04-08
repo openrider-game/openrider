@@ -19,6 +19,7 @@ export default class Tool extends GameObject {
         this.alwaysRender = false;
         this.ui = null;
         this.optionsOpen = false;
+        this.group = null;
     }
 
     registerControls() {
@@ -40,6 +41,10 @@ export default class Tool extends GameObject {
     }
 
     run() {
+        if (this.group) {
+            this.group.ui.icon = this.ui.icon;
+            this.group.currentInstance = this;
+        }
         this.track.toolManager.setTool(this);
     }
 
@@ -59,11 +64,17 @@ export default class Tool extends GameObject {
     }
 
     activate() {
+        if (this.group) {
+            this.group.openOptions();
+        }
         this.ui.uiManager.cursor = 'none';
         this.openOptions();
     }
 
     deactivate() {
+        if (this.group) {
+            this.group.closeOptions();
+        }
         this.closeOptions();
         this.mouseDown = false;
     }

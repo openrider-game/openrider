@@ -17,13 +17,15 @@ export default class BrushTool extends LineTool {
     }
 
     update(progress, delta) {
-        if (this.mouseDown || this.isHolding()) {
+        if (this.mouseDown || this.isHolding() && this.lastLine != null) {
             let startPos = this.isHolding() ? this.lastLine : this.track.lastClick;
 
             if (startPos.distanceTo(this.track.mousePos) >= this.size) {
                 this.addLine(startPos);
                 this.track.lastClick = this.lastLine.clone();
             }
+        } else if (this.lastLine == null) {
+            this.lastLine = this.track.mousePos.clone();
         }
 
         super.update(progress, delta);

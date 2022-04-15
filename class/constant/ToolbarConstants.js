@@ -23,9 +23,10 @@ import FocusGhostTool from "../tool/FocusGhostTool.js";
 import StartPositionTool from "../tool/StartPositionTool.js";
 import ItemGroupTool from "../tool/ItemGroupTool.js";
 import TogglDebugTool from "../tool/ToogleDebugTool.js";
+import TeleporterTool from "../tool/item/TeleporterTool.js";
 
 export const
     LEFT_TOOLBAR_VIEWING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool],
     LEFT_TOOLBAR_EDITING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool, EmptyTool, UndoTool, RedoTool],
     RIGHT_TOOLBAR = [SolidBrushTool, SceneryBrushTool, SolidLineTool, SceneryLineTool, EraserTool, GridSnapTool, EmptyTool, ItemGroupTool, EmptyTool, StartPositionTool, EmptyTool, TogglDebugTool],
-    ITEM_GROUP = [TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool];
+    ITEM_GROUP = [TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool, TeleporterTool];

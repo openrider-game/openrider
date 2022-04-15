@@ -12,11 +12,14 @@ export default class LineTool extends Tool {
     constructor(track) {
         super(track);
         this.foreground = false;
-        this.lastLine = new Vector();
+        this.lastLine = null;
     }
 
     onMouseDown(e) {
         if (this.isHolding()) {
+            if (this.lastLine == null) {
+                this.lastLine = this.track.mousePos.clone();
+            }
             this.addLine(this.lastLine);
         } else {
             this.mouseDown = true;
@@ -126,7 +129,10 @@ export default class LineTool extends Tool {
         ctx.strokeStyle = this.checkLineLength() ? '#00f' : '#f00';
         ctx.lineWidth = this.track.zoomFactor * 2;
 
-        let startPos = this.isHolding() ? this.lastLine : this.track.lastClick;
+        let startPos = this.track.lastClick;
+        if (this.isHolding()) {
+            startPos = this.lastLine == null ? this.track.mousePos : this.lastLine;
+        }
 
         LinePath.render(ctx, [
             [startPos.toPixel(this.track), mousePx]

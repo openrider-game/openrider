@@ -4,8 +4,8 @@ import LinkedItem from "./LinkedItem.js";
 
 export default class LinkedItemGroup extends Item {
 
-    constructor(pos, track) {
-        super(pos, track);
+    constructor(track) {
+        super(new Vector(), track);
         /** @type {Item[]} */
         this.instances = new Array();
     }
@@ -41,7 +41,7 @@ export default class LinkedItemGroup extends Item {
      * @returns 
      */
     static createInstance(itemCode, track, itemClass) {
-        let itemGroup = new this(new Vector(), track);
+        let itemGroup = new this(track);
 
         for (let itemIndex = 0; itemIndex < itemClass.itemCount; itemIndex++) {
             let itemCodeArguments = [itemCode[0]];

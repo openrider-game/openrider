@@ -16,6 +16,10 @@ export default class FocusGhostTool extends Tool {
     }
 
     run() {
+        if (this.track.focalPoint == null || this.track.focalPoint === this.track.playerRunner.instance.hitbox) {
+            this.currentGhostIndex = 0;
+        }
+
         if (this.track.ghostRunners.length) {
             this.currentGhostIndex = (this.currentGhostIndex + 1) % this.track.ghostRunners.length;
             this.track.focalPoint = this.track.ghostRunners[this.currentGhostIndex].instance.hitbox;

@@ -126,6 +126,8 @@ export default class TrackUploadState extends GameState {
 
         let helperText = 'Use your mouse to drag & fit an interesting part of your track in the thumbnail';
         let helperTextWidth = ctx.measureText(helperText).width;
+        ctx.fillStyle = '#fff';
+        ctx.fillRect((this.track.canvas.width - helperTextWidth) / 2 - 4, 6, helperTextWidth + 8, 18);
         ctx.fillStyle = '#000';
         ctx.fillText(helperText, (this.track.canvas.width - helperTextWidth) / 2, 20);
     }

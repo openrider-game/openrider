@@ -43,7 +43,7 @@ export default class BikePart extends Entity {
         clone.oldPos = this.oldPos.clone();
         clone.velocity = this.velocity.clone();
         clone.size = this.size;
-        clone.friction = this.motor;
+        clone.motor = this.motor;
         clone.driving = this.driving;
         return clone;
     }

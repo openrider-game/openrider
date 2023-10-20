@@ -1,9 +1,9 @@
 ## Missing features for CR/BHR parity
 
 - Track upload ✅
-- Load track by id ❌
-- Save and upload ghosts 🚧
-- Ghost leaderboard ❌
+- Load track by id ✅
+- Save and upload ghosts ✅
+- Ghost leaderboard 🚧
 
 ## Stuff that i want to/could add later
 

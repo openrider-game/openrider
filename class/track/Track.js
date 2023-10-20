@@ -70,6 +70,7 @@ export default class Track {
         this.undoManager = new UndoManager();
 
         this.debug = false;
+        this.fastRender = false;
     }
 
     isRace() {

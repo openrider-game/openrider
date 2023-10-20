@@ -8,7 +8,7 @@ export default class ToolGroupTool extends Tool {
     constructor(track, classList) {
         super(track);
 
-        /** @type {Tool[]} */
+        /** @type {Array<Tool>} */
         this.instances = new Array();
         for (let toolClass of classList) {
             this.instances.push(new toolClass(track));

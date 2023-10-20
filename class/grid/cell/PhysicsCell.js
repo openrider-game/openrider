@@ -38,7 +38,7 @@ export default class PhysicsCell extends Cell {
      *
      * @param {Vector} eraserPoint
      * @param {number} radius
-     * @returns []
+     * @returns {Array}
      */
     checkDelete(eraserPoint, radius, restrict) {
         let deleted = new Array();

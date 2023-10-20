@@ -12,7 +12,7 @@ export default class UIManager extends GameObject {
         /**
          * @type {Array<UIElement>}
          */
-        this.uiElements = [];
+        this.uiElements = new Array();
         this.cursor = 'none';
     }
 

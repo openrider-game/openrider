@@ -1,8 +1,10 @@
+import Vector from "./Vector.js";
+
 export default class LinePath {
     /**
      *
      * @param {CanvasRenderingContext2D} ctx
-     * @param {[[]]} steps
+     * @param {Array<Array<Vector>>} steps
      */
     static render(ctx, steps) {
         ctx.beginPath();

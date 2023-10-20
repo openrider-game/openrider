@@ -6,7 +6,7 @@ export default class LinkedItemGroup extends Item {
 
     constructor(track) {
         super(new Vector(), track);
-        /** @type {Item[]} */
+        /** @type {Array<Item>} */
         this.instances = new Array();
     }
 

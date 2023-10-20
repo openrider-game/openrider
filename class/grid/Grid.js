@@ -62,7 +62,7 @@ export default class Grid {
             let gridCoords = Grid.gridCoords(vec, this.cellSize);
             cells.push(this.cell(gridCoords.x, gridCoords.y));
             return cells;
-        }, []);
+        }, new Array());
     }
 
     /**
@@ -104,7 +104,7 @@ export default class Grid {
             return currentCache.get(key);
         }
 
-        currentCache.set(key, []);
+        currentCache.set(key, new Array());
 
         let currentLineCache = currentCache.get(key);
 

@@ -4,6 +4,7 @@ import ParserState from "../state/ParserState.js";
 import StateManager from "../state/StateManager.js";
 import TrackState from "../state/TrackState.js";
 import TrackUploadState from "../state/TrackUploadState.js";
+import RenderCellWorkerPool from "../thread/RenderCellWorkerPool.js";
 
 export default class Game {
     /**
@@ -12,6 +13,8 @@ export default class Game {
      * @param {{}} opt
      */
     constructor(canvas, opt) {
+        RenderCellWorkerPool.createWorkerPool();
+
         /** @type {StateManager} */
         this.stateManager = new StateManager(this, canvas, opt);
         this.stateManager.addState(ParserState, 'parser');

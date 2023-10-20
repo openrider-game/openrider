@@ -16,7 +16,7 @@ export default class ParserState extends GameState {
             let response = JSON.parse(request.responseText);
 
             if (response === false) {
-                alert("Track does not exist");
+                alert('Track does not exist');
                 return false;
             }
 

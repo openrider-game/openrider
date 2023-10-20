@@ -1,12 +1,12 @@
 import UICollection from "./base/UICollection.js";
 
 export default class UIToolbar extends UICollection {
-    constructor(uiManager, track, itemsClasses, rightSide) {
+    constructor(uiManager, track, itemsClasses, align) {
         super(uiManager, track);
-        this.addItems(itemsClasses, rightSide);
+        this.addItems(itemsClasses, align);
     }
 
-    addItems(itemClasses, rightSide) {
+    addItems(itemClasses, align) {
         let instances = new Array();
 
         for (let idx in itemClasses) {
@@ -14,7 +14,7 @@ export default class UIToolbar extends UICollection {
 
             item.registerControls();
 
-            this.items.push(item.getUI(this.uiManager, idx, rightSide));
+            this.items.push(item.getUI(this.uiManager, idx, align));
             instances.push(item);
         }
 

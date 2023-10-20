@@ -20,7 +20,7 @@ export default class TrackState extends GameState {
         this.ui.uiElements.push(leftToolbar);
 
         if (!this.track.isRace()) {
-            let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
+            let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, UIElement.ALIGN_RIGHT);
 
             let importButton = new UIButton(this.ui, this.track, 10, 10, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
             let exportButton = new UIButton(this.ui, this.track, 120, 10, 100, 26, 'Export track', () => this.handleExport(), UIElement.ALIGN_BOTTOM);

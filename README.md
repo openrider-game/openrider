@@ -161,8 +161,9 @@ Project Link: [https://github.com/tomiy/openrider](https://github.com/tomiy/open
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
+* [Polygon](https://github.com/Plygon) for the HUGE initial help and interpolation math
 * [Joel Huff](https://github.com/joelwhuff) for fixing physics (thanks!)
-* [Calculus](https://github.com/Calculamatrise)
+* [Calculus](https://github.com/Calculamatrise) for bug fixes
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

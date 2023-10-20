@@ -6,6 +6,7 @@ import Track from "../track/Track.js";
 import Line from "../item/line/Line.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
 import { MIN_ZOOM } from "../constant/TrackConstants.js";
+import RenderCellWorker from "../thread/RenderCellWorker.js";
 
 export default class TrackParser {
     /**
@@ -145,13 +146,13 @@ export default class TrackParser {
     processMainCache() {
         this.progressLabel = 'Main cache';
         this.length = this.track.cache.cells.size;
-        this.processCache(this.track.cache, this.processForegroundCache);
+        this.processCache(this.track.cache, 1, this.processForegroundCache);
     }
 
     processForegroundCache() {
         this.progressLabel = 'Foreground cache';
         this.length = this.track.foregroundCache.cells.size;
-        this.processCache(this.track.foregroundCache, this.finish);
+        this.processCache(this.track.foregroundCache, 0.5, this.finish);
     }
 
     finish() {
@@ -192,7 +193,7 @@ export default class TrackParser {
         }
     }
 
-    processCache(cache, next) {
+    processCache(cache, opacityFactor, next) {
         let l = Math.min(this.cacheIndex + 1, cache.cells.size);
         let cacheCells = Array.from(cache.cells.values());
 
@@ -200,7 +201,16 @@ export default class TrackParser {
             let cell = cacheCells[this.cacheIndex];
             if (cell.lines.length + cell.scenery.length > 500) {
                 for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
-                    cell.canvas.set(zoom, cell.renderCache(zoom, 1));
+                    let canvas;
+                    if ('OffscreenCanvas' in window) {
+                        canvas = document.createElement('canvas');
+                        let offscreenCanvas = canvas.transferControlToOffscreen();
+                        RenderCellWorker.renderCell(cell, zoom, opacityFactor, ...cell.createBuffers(), offscreenCanvas);
+                    } else {
+                        canvas = cell.renderCache(zoom, opacityFactor);
+                    }
+
+                    cell.canvas.set(zoom, canvas);
                 }
             }
         }

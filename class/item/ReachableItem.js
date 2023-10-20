@@ -21,6 +21,8 @@ export default class ReachableItem extends Item {
      */
     render(ctx) {
         let pos = this.pos.toPixel(this.track);
+
+        ctx.save();
         ctx.fillStyle = this.reached ? this.constructor.reachedColor : this.constructor.color;
         ctx.lineWidth = Math.max(2 * this.track.zoomFactor, 0.5);
         ctx.beginPath();
@@ -28,6 +30,8 @@ export default class ReachableItem extends Item {
         ctx.arc(pos.x, pos.y, 7 * this.track.zoomFactor, 0, 2 * Math.PI, true);
         ctx.fill();
         ctx.stroke();
+
+        ctx.restore();
     }
 
     /**

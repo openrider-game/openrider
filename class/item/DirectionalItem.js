@@ -23,10 +23,11 @@ export default class DirectionalItem extends Item {
      */
     render(ctx) {
         let pos = this.pos.toPixel(this.track);
+
+        ctx.save();
         ctx.fillStyle = this.constructor.color;
         ctx.lineWidth = Math.max(2 * this.track.zoomFactor, 0.5);
         ctx.beginPath();
-        ctx.save();
         ctx.translate(pos.x, pos.y);
         ctx.rotate(this.rotation * Math.PI / 180);
         ctx.moveTo(-7 * this.track.zoomFactor, -10 * this.track.zoomFactor);
@@ -35,6 +36,7 @@ export default class DirectionalItem extends Item {
         ctx.lineTo(-7 * this.track.zoomFactor, -10 * this.track.zoomFactor);
         ctx.fill();
         ctx.stroke();
+
         ctx.restore();
     }
 

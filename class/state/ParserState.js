@@ -40,7 +40,8 @@ export default class ParserState extends GameState {
         this.parser.currentStep();
 
         if (this.parser.caching) {
-            this.parser.progress = this.parser.cacheIndex;
+            this.parser.progress = this.parser.proxyIndex;
+            this.parser.length = this.parser.renderIndex;
         } else {
             this.parser.progress =
                 this.parser.solidLineData.index +
@@ -78,7 +79,7 @@ export default class ParserState extends GameState {
 
         let progressText = 'Parsing...';
         if (this.parser.caching) {
-            progressText = `Caching: ${this.parser.progressLabel} - ${Math.round(this.parser.progress / this.parser.length * 100)} %`;
+            progressText = `Caching: ${this.parser.progressLabel} - ${this.parser.progress} / ${this.parser.length} cells`;
         } else {
             progressText = `Parsing ${this.parser.progressLabel}: ${Math.round(this.parser.progress / this.parser.length * 100)} %`;
         }

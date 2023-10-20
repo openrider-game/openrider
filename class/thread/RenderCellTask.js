@@ -1,12 +1,15 @@
 import RenderCell from "../grid/cell/RenderCell.js";
+import WorkerTask from "./WorkerTask.js";
 
-export default class RenderCellTask {
+export default class RenderCellTask extends WorkerTask {
     /**
      *
      * @param {RenderCell} cell
      * @param {OffscreenCanvas} canvas
      */
     constructor(cell, zoom, opacityFactor, canvas, callback) {
+        super(callback);
+
         let [sceneryBuffer, lineBuffer] = this.createBuffers(cell);
 
         this.definition = {
@@ -21,8 +24,6 @@ export default class RenderCellTask {
         };
 
         this.transferables = [sceneryBuffer, lineBuffer, canvas];
-
-        this.callback = callback;
     }
 
     /**

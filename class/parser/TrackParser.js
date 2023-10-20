@@ -47,6 +47,9 @@ export default class TrackParser {
 
         this.caching = false;
         this.cacheIndex = 0;
+
+        this.renderIndex = 0;
+        this.proxyIndex = 0;
     }
 
     parseSolidLines() {
@@ -198,14 +201,20 @@ export default class TrackParser {
 
         for (; this.cacheIndex < l; this.cacheIndex++) {
             let cell = cacheCells[this.cacheIndex];
-            if (cell.lines.length + cell.scenery.length > 500) {
-                for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
-                    cell.canvas.set(zoom, cell.renderCache(zoom, opacityFactor, true));
+            for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
+                if (cell.lines.length + cell.scenery.length > 500) {
+                    cell.canvas.set(zoom, cell.renderCache(zoom, opacityFactor, true, () => { this.proxyIndex++ }));
+                } else {
+                    this.proxyIndex++;
                 }
+
+                this.renderIndex++;
             }
         }
 
-        if (this.cacheIndex >= cache.cells.size) {
+        if (this.cacheIndex >= cache.cells.size && this.proxyIndex >= this.renderIndex) {
+            this.proxyIndex = 0;
+            this.renderIndex = 0;
             this.cacheIndex = 0;
             this.currentStep = next;
         }

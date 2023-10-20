@@ -1,5 +1,5 @@
 import RenderCellTask from "../../thread/RenderCellTask.js";
-import RenderCellWorkerPool from "../../thread/RenderCellWorkerPool.js";
+import WorkerPool from "../../thread/WorkerPool.js";
 import Cell from "./Cell.js";
 
 export default class RenderCell extends Cell {
@@ -18,9 +18,9 @@ export default class RenderCell extends Cell {
      * @return {number} opacityFactor
      * @return {HTMLCanvasElement}
      */
-    getCanvas(zoom, opacityFactor, fastRender) {
+    getCanvas(zoom, opacityFactor, fastRender, callback) {
         if (!this.canvas.has(zoom)) {
-            this.canvas.set(zoom, this.renderCache(zoom, opacityFactor, fastRender));
+            this.canvas.set(zoom, this.renderCache(zoom, opacityFactor, fastRender, callback));
         }
 
         return this.canvas.get(zoom);
@@ -31,11 +31,11 @@ export default class RenderCell extends Cell {
      * @return {number} opacityFactor
      * @return {HTMLCanvasElement}
      */
-    renderCache(zoom, opacityFactor, fastRender) {
+    renderCache(zoom, opacityFactor, fastRender, callback) {
         let canvas = document.createElement('canvas');
         if (fastRender) {
             let offscreenCanvas = canvas.transferControlToOffscreen();
-            RenderCellWorkerPool.postTask(new RenderCellTask(this, zoom, opacityFactor, offscreenCanvas));
+            WorkerPool.postTask(new RenderCellTask(this, zoom, opacityFactor, offscreenCanvas, callback));
         } else {
             let context = canvas.getContext('2d');
 

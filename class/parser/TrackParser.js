@@ -6,7 +6,6 @@ import Track from "../track/Track.js";
 import Line from "../item/line/Line.js";
 import { BIKE_MAP } from "../constant/BikeConstants.js";
 import { MIN_ZOOM } from "../constant/TrackConstants.js";
-import RenderCellWorker from "../thread/RenderCellWorker.js";
 
 export default class TrackParser {
     /**

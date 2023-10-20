@@ -17,7 +17,7 @@ export default class StateManager extends GameObject {
         /** @type {Map<String, GameState>} */
         this.states = new Map();
         /** @type {Array<GameState>} */
-        this.stateStack = [];
+        this.stateStack = new Array();
     }
 
     push(name) {
@@ -28,7 +28,7 @@ export default class StateManager extends GameObject {
 
     pop() {
         if (this.stateStack.length) {
-            this.getCurrent().ui.uiElements = [];
+            this.getCurrent().ui.uiElements = new Array();
             this.getCurrent().onLeave();
             return this.stateStack.pop();
         }

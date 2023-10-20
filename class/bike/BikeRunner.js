@@ -273,7 +273,7 @@ export default class BikeRunner extends GameObject {
     }
 
     renderDebug(ctx) {
-        let points = [];
+        let points = new Array();
         if (this.instance instanceof Bike) {
             points = points.concat(this.instance.points);
         }

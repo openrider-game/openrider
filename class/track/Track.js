@@ -16,6 +16,7 @@ import ToolManager from "../tool/manager/ToolManager.js";
 import ToolCollection from "../tool/collection/ToolCollection.js";
 import PauseTool from "../tool/PauseTool.js";
 import EventManager from "../event/EventManager.js";
+import LinkedItem from "../item/LinkedItem.js";
 
 export default class Track {
     /**
@@ -152,6 +153,10 @@ export default class Track {
             for (let object of cell.objects) {
                 if (object instanceof ReachableItem) {
                     object.reached = false;
+
+                    if(object instanceof LinkedItem) {
+                        object.group.reached = false;
+                    }
                 }
             }
         });

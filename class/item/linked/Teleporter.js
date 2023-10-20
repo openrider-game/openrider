@@ -6,9 +6,9 @@ export default class Teleporter extends LinkedItem {
     static get reachedColor() { return '#faf'; }
     static get code() { return 'W'; }
 
-    onReach(part) {
-        if (this.linkedItem && !part.bike.runner.reachablesReached.has(this.id)) {
-            let distance = this.pos.sub(this.linkedItem.pos);
+    onReach(part, linkedItem) {
+        if (linkedItem && !part.bike.runner.reachablesReached.has(this.id)) {
+            let distance = linkedItem.pos.sub(this.pos);
             part.bike.points.forEach(point => {
                 point.pos.selfAdd(distance);
                 point.oldPos.selfAdd(distance);

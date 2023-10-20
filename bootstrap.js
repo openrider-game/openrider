@@ -43,7 +43,7 @@ function newGame(opt) {
 }
 
 function toggleGhost(ghostId) {
-    game.stateManager.track.toggleGhost(ghostId);
+    game.stateManager.getState('track').toggleGhost(ghostId);
 }
 
 export default {

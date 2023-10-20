@@ -14,40 +14,76 @@ export default class RenderCellWorker {
                 }
 
                 postText(message) {
-                    this.postMessage({msg: message});
+                    this.postMessage({ msg: message });
                 }
 
                 postCommand(command, args) {
-                    this.postMessage({cmd: command, args: args});
+                    this.postMessage({ cmd: command, args: args });
                 }
 
                 handleMessage(e) {
-                    if(e.data.cmd === undefined) {
+                    if (e.data.cmd === undefined) {
                         this.postText(`#${this.id} Unknown message: ${e.data}`);
                         return;
                     }
 
-                    switch(e.data.cmd) {
+                    switch (e.data.cmd) {
                         case 'setId':
                             this.id = e.data.id;
                             this.postText(`Worker #${this.id} allocated`);
                             break;
+                        case 'newTask':
+                            this.requestTask();
+                            break;
                         case 'startTask':
                             this.doTask(e.data);
+                            break;
+                        case 'noTask':
+                            this.noTask();
+                            break;
                         default:
                             this.postText(`#${this.id} Unknown command: ${e.data.cmd}`);
                     }
                 }
 
+                requestTask() {
+                    if (!this.pending) {
+                        this.pending = true;
+                        this.postCommand('requestTask');
+                    }
+                }
+
+                setBusy(busy) {
+                    this.postCommand(busy ? 'busy' : 'idle');
+
+                    if (!busy) {
+                        this.requestTask();
+                    }
+                }
+
                 doTask(data) {
-                    let cellSize = data.cellSize;
-                    let zoom = data.zoom;
-                    let opacityFactor = data.opacityFactor;
-                    let x = data.x;
-                    let y = data.y;
-                    let scenery = [...new Int32Array(data.sceneryBuffer)];
-                    let lines = [...new Int32Array(data.lineBuffer)];
-                    let canvas = data.canvas;
+                    this.pending = false;
+
+                    this.setBusy(true);
+                    this.renderCell(data.task);
+
+                    this.postMessage({ cmd: 'taskResult', id: data.id, result: true });
+                    this.setBusy(false);
+                }
+
+                noTask() {
+                    this.pending = false;
+                }
+
+                renderCell(task) {
+                    let cellSize = task.cellSize;
+                    let zoom = task.zoom;
+                    let opacityFactor = task.opacityFactor;
+                    let x = task.x;
+                    let y = task.y;
+                    let scenery = [...new Int32Array(task.sceneryBuffer)];
+                    let lines = [...new Int32Array(task.lineBuffer)];
+                    let canvas = task.canvas;
                     let context = canvas.getContext('2d');
 
                     let posX, posY, endPosX, endPosY;
@@ -91,55 +127,4 @@ export default class RenderCellWorker {
 
         return worker;
     }
-
-    /**
-     *
-     * @param {RenderCell} cell
-     * @param {OffscreenCanvas} canvas
-     */
-    static renderCell(cell, zoom, opacityFactor, canvas) {
-        let worker = RenderCellWorker.getNextWorker();
-        let [sceneryBuffer, lineBuffer] = RenderCellWorker.createBuffers(cell);
-
-        worker.postMessage({
-            cellSize: cell.size,
-            zoom: zoom,
-            opacityFactor: opacityFactor,
-            x: cell.x,
-            y: cell.y,
-            sceneryBuffer: sceneryBuffer,
-            lineBuffer: lineBuffer,
-            canvas: canvas
-        }, [sceneryBuffer, lineBuffer, canvas]);
-    }
-
-    static createBuffers(cell) {
-        let temp = new Array();
-
-        for(let scenery of cell.scenery) {
-            temp.push(scenery.pos.x, scenery.pos.y, scenery.endPos.x, scenery.endPos.y);
-        }
-        let sceneryByteArray = new Int32Array(temp);
-
-        temp = new Array();
-        for(let line of cell.lines) {
-            temp.push(...line.pos.toArray(), ...line.endPos.toArray());
-        }
-        let lineByteArray = new Int32Array(temp);
-
-        return [sceneryByteArray.buffer, lineByteArray.buffer];
-    }
-
-    static getNextWorker() {
-        if (!RenderCellWorker.pool[RenderCellWorker.current]) {
-            RenderCellWorker.pool[RenderCellWorker.current] = RenderCellWorker.createRenderCellWorker();
-        }
-
-        let worker = RenderCellWorker.pool[RenderCellWorker.current];
-        RenderCellWorker.current = (RenderCellWorker.current + 1) % (navigator.hardwareConcurrency - 1);
-        return worker;
-    }
 }
-
-RenderCellWorker.pool = [];
-RenderCellWorker.current = 0;

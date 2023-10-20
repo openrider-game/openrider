@@ -1,4 +1,5 @@
-import RenderCellWorker from "../../thread/RenderCellWorker.js";
+import RenderCellTask from "../../thread/RenderCellTask.js";
+import RenderCellWorkerPool from "../../thread/RenderCellWorkerPool.js";
 import Cell from "./Cell.js";
 
 export default class RenderCell extends Cell {
@@ -32,9 +33,9 @@ export default class RenderCell extends Cell {
      */
     renderCache(zoom, opacityFactor, fastRender) {
         let canvas = document.createElement('canvas');
-        if ('OffscreenCanvas' in window && fastRender) {
+        if (fastRender) {
             let offscreenCanvas = canvas.transferControlToOffscreen();
-            RenderCellWorker.renderCell(this, zoom, opacityFactor, offscreenCanvas);
+            RenderCellWorkerPool.postTask(new RenderCellTask(this, zoom, opacityFactor, offscreenCanvas));
         } else {
             let context = canvas.getContext('2d');
 

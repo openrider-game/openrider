@@ -39,7 +39,12 @@ export default class LinkedItemGroup extends ReachableItem {
         if (part.bike.runner instanceof GhostRunner || !this.reached) {
             if (!(part.bike.runner instanceof GhostRunner)) {
                 this.reached = true;
-                this.instances.forEach(instance => instance.reached = true);
+                this.instances.forEach(instance => {
+                    instance.reached = true;
+                    if (!part.bike.runner.reachablesReached.has(instance.id)) {
+                        part.bike.runner.actionQueue.set(instance.id, instance);
+                    }
+                });
             }
 
             this.onReach(part);

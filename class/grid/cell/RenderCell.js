@@ -56,6 +56,10 @@ export default class RenderCell extends Cell {
             for (let line of this.lines) {
                 line.renderCache(context, this.x * zoom - 1, this.y * zoom - 1, zoom);
             }
+
+            if(callback) {
+                callback();
+            }
         }
 
         return canvas;

@@ -26,7 +26,7 @@ export default class EventManager {
         this.getTrack().canvas.addEventListener('mousedown', e => this.onMouseDown(e));
         this.getTrack().canvas.addEventListener('mouseup', e => this.onMouseUp(e));
         this.getTrack().canvas.addEventListener('mousemove', e => this.onMouseMove(e));
-        this.getTrack().canvas.addEventListener('mousewheel', e => this.onScroll(e));
+        this.getTrack().canvas.addEventListener('wheel', e => this.onScroll(e));
 
         this.getTrack().canvas.addEventListener('mouseenter', e => this.onMouseEnter(e));
         this.getTrack().canvas.addEventListener('mouseout', e => this.onMouseOut(e));

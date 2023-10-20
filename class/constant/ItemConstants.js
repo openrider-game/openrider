@@ -9,4 +9,8 @@ import Teleporter from "../item/linked/Teleporter.js";
 export const
     ITEM_LIST = [Bomb, SlowMo, Boost, Checkpoint, Gravity, Target, Teleporter],
     LINE = 'LINE',
-    LINE_FOREGROUND = 'LINE_FOREGROUND';
+    LINE_FOREGROUND = 'LINE_FOREGROUND',
+    MODIFIERS = {
+        INVINCIBILITY: 1 << 0,
+        NO_STEER: 1 << 1
+    };

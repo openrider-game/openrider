@@ -7,6 +7,7 @@ import Track from "../track/Track.js";
 import Bike from "./instance/Bike.js";
 import Ragdoll from "../entity/Ragdoll.js";
 import ReachableItem from "../item/ReachableItem.js";
+import { MODIFIERS } from "../constant/ItemConstants.js";
 
 export default class BikeRunner extends GameObject {
     constructor(track, bikeClass) {
@@ -37,6 +38,8 @@ export default class BikeRunner extends GameObject {
 
         this.dead = false;
         this.deadObject = null;
+
+        this.modifiersMask = 0;
     }
 
     createBike() {
@@ -65,6 +68,8 @@ export default class BikeRunner extends GameObject {
         this.rightPressed = false;
         this.turnPressed = false;
 
+        this.modifiersMask = 0;
+
         this.track.time = 0;
 
         if (snapshot) {
@@ -78,6 +83,8 @@ export default class BikeRunner extends GameObject {
             this.rightPressed = snapshot.rightPressed;
             this.turnPressed = snapshot.turnPressed;
 
+            this.modifiersMask = snapshot.modifiersMask;
+
             this.track.time = snapshot.time;
         }
 
@@ -87,6 +94,10 @@ export default class BikeRunner extends GameObject {
     }
 
     die() {
+        if (this.modifiersMask & MODIFIERS.INVINCIBILITY) {
+            return false;
+        }
+
         this.dead = true;
 
         this.upPressed = false;
@@ -98,18 +109,22 @@ export default class BikeRunner extends GameObject {
         this.instance.hitbox.touch = false;
         this.instance.hitbox.drive = () => {};
         this.instance.backWheel.speedValue = 0;
+
+        return true;
     }
 
     crash() {
-        this.die();
-        this.deadObject = new Ragdoll(this.instance.getRider(), this.instance);
-        this.deadObject.setVelocity(this.instance.hitbox.velocity.clone(), this.instance.backWheel.velocity.clone());
+        if (this.die()) {
+            this.deadObject = new Ragdoll(this.instance.getRider(), this.instance);
+            this.deadObject.setVelocity(this.instance.hitbox.velocity.clone(), this.instance.backWheel.velocity.clone());
+        }
     }
 
     explode(pos, vel) {
-        this.die();
-        this.deadObject = new Explosion(pos, vel, this.instance.clone(), this.track.time, this.track);
-        this.instance = null;
+        if (this.die()) {
+            this.deadObject = new Explosion(pos, vel, this.instance.clone(), this.track.time, this.track);
+            this.instance = null;
+        }
     }
 
     /**
@@ -169,7 +184,8 @@ export default class BikeRunner extends GameObject {
             leftPressed: this.leftPressed,
             rightPressed: this.rightPressed,
             turnPressed: this.turnPressed,
-            bike: this.instance.clone()
+            bike: this.instance.clone(),
+            modifiersMask: this.modifiersMask
         };
 
         return snapshot;

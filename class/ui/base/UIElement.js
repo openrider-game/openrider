@@ -83,7 +83,7 @@ export default class UIElement extends GameObject {
     }
 }
 
-UIElement.ALIGN_RIGHT = 1;
-UIElement.ALIGN_BOTTOM = 2;
-UIElement.ALIGN_HORIZONTAL_CENTER = 4;
-UIElement.ALIGN_VERTICAL_CENTER = 8;
+UIElement.ALIGN_RIGHT = 1 << 0;
+UIElement.ALIGN_BOTTOM = 1 << 1;
+UIElement.ALIGN_HORIZONTAL_CENTER = 1 << 2;
+UIElement.ALIGN_VERTICAL_CENTER = 1 << 3;

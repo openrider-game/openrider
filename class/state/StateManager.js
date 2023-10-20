@@ -1,7 +1,6 @@
 import EventManager from "../event/EventManager.js";
 import GameObject from "../game/GameObject.js";
 import Track from "../track/Track.js";
-import UIManager from "../ui/manager/UIManager.js";
 import GameState from "./GameState.js";
 
 export default class StateManager extends GameObject {

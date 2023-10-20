@@ -16,14 +16,9 @@
         </div>
     </div>
     <script type="module">
-        import BHR from "./bootstrap.js";
+        import { GAME } from "./bootstrap.js";
 
-        let id = <?= $_GET['track'] ?? 0 ?>;
-        let params = {};
-        if (id) {
-            params.id = id;
-        }
-        BHR.game.ride(params);
+        GAME.newGame({<?= isset($_GET['track']) ? sprintf(' id: %s ', $_GET['track']) : '' ?>});
     </script>
 </body>
 

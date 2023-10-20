@@ -12,6 +12,7 @@ import Track from "../track/Track.js";
 import GhostParser from "../parser/GhostParser.js";
 import Requests from "../event/Requests.js";
 import GhostRunner from "../bike/GhostRunner.js";
+import { GHOSTDATA_URL, GHOSTUPLOAD_URL } from "../constant/RequestConstants.js";
 
 export default class TrackState extends GameState {
     onEnter() {
@@ -64,14 +65,15 @@ export default class TrackState extends GameState {
     }
 
     toggleGhost(ghostId) {
-        if(this.track.ghostRunners.has(ghostId)) {
+        if (this.track.ghostRunners.has(ghostId)) {
             this.track.ghostRunners.delete(ghostId);
+            this.track.updateFocalPoint();
         } else {
             let ghostString = ',,,,,,BMX,Ghost';
-            if(this.track.ghostCache.has(ghostId)) {
+            if (this.track.ghostCache.has(ghostId)) {
                 ghostString = this.track.ghostCache.get(ghostId);
             } else {
-                let request = Requests.getPostRequest('./ghostdata/', {
+                let request = Requests.getPostRequest(GHOSTDATA_URL, {
                     trackId: this.track.id,
                     id: ghostId
                 });
@@ -88,7 +90,7 @@ export default class TrackState extends GameState {
 
             this.track.ghostRunners = new Map([
                 ...this.track.ghostRunners.entries()
-            ].sort((a, b) => a.finalTime - b.finalTime));
+            ].sort((a, b) => a[1].finalTime - b[1].finalTime));
 
             this.track.playerRunner.reset();
             this.track.ghostRunners.forEach(runner => {
@@ -103,13 +105,17 @@ export default class TrackState extends GameState {
         if (confirm('Do you want to save this time?')) {
             let ghostString = GhostParser.generate(this.track.playerRunner);
 
-            let request = Requests.getPostRequest('./ghostupload/', {
+            let request = Requests.getPostRequest(GHOSTUPLOAD_URL, {
+                ghostString: ghostString,
                 trackId: this.track.id,
-                ghostString: ghostString
+                time: this.track.time
             });
-            let response = JSON.parse(request.responseText);
+            let response;
+            try {
+                response = JSON.parse(request.responseText);
 
-            if (typeof response === 'string') {
+                console.log(response.ID);
+            } catch (e) {
                 alert(`Your ghost was refused: ${response}`);
             }
         }
@@ -133,7 +139,7 @@ export default class TrackState extends GameState {
     }
 
     update(progress, delta) {
-        if(this.track.playerRunner.done) {
+        if (this.track.playerRunner.done) {
             this.track.playerRunner.done = false;
             this.saveGhost();
         }

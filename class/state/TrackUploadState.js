@@ -8,6 +8,7 @@ import UIButton from "../ui/UIButton.js";
 import UIElement from "../ui/base/UIElement.js";
 import FullscreenTool from "../tool/FullscreenTool.js";
 import Requests from "../event/Requests.js";
+import { TRACKUPLOAD_URL } from "../constant/RequestConstants.js";
 
 export default class TrackUploadState extends GameState {
     onEnter() {
@@ -47,18 +48,19 @@ export default class TrackUploadState extends GameState {
 
         let image = thumb.toDataURL('image/png');
 
-        let request = Requests.getPostRequest('./trackupload/', {
+        let request = Requests.getPostRequest(TRACKUPLOAD_URL, {
             trackCode: this.track.trackCode,
             thumbnail: image.replace('data:image/png;base64,', '')
         });
-        let response = JSON.parse(request.responseText);
+        let response;
+        try {
+            response = JSON.parse(request.responseText);
 
-        if (typeof response === 'string') {
+            location.href = `./tracks/${response.ID}/`;
+        } catch (e) {
             alert(`Your track was refused: ${response}`);
             return false;
         }
-
-        location.href = `./tracks/${response}/`;
     }
 
     fixedUpdate() {

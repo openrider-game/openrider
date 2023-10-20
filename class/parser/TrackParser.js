@@ -80,8 +80,7 @@ export default class TrackParser {
     }
 
     loopItems(itemMap) {
-        let toGo = this.stepSize;
-        let l = Math.min(this.itemData.index + toGo, this.itemData.code.length);
+        let l = Math.min(this.itemData.index + this.stepSize, this.itemData.code.length);
         for (; this.itemData.index < l; this.itemData.index++) {
             let itemCode = this.itemData.code[this.itemData.index].split(' ');
             if (itemCode.length > 2) {
@@ -161,8 +160,7 @@ export default class TrackParser {
     }
 
     parseLines(lineData, type, event, next) {
-        let toGo = this.stepSize;
-        let l = Math.min(lineData.index + toGo, lineData.code.length);
+        let l = Math.min(lineData.index + this.stepSize, lineData.code.length);
         for (; lineData.index < l; lineData.index++) {
             let lineCode = lineData.code[lineData.index].split(' ');
             if (lineCode.length > 3) {
@@ -195,15 +193,14 @@ export default class TrackParser {
     }
 
     processCache(cache, next) {
-        let toGo = 1;
-        let l = Math.min(this.cacheIndex + toGo, cache.cells.size);
+        let l = Math.min(this.cacheIndex + 1, cache.cells.size);
         let cacheCells = Array.from(cache.cells.values());
 
         for (; this.cacheIndex < l; this.cacheIndex++) {
             let cell = cacheCells[this.cacheIndex];
             if (cell.lines.length + cell.scenery.length > 500) {
                 for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
-                    cell.getCanvas(zoom, 1);
+                    cell.canvas.set(zoom, cell.renderCache(zoom, 1));
                 }
             }
         }

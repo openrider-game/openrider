@@ -1,5 +1,8 @@
-/upload/*
-/tracks/*
+/trackupload/*
+/ghostupload/*
+/trackdata/*
+/ghostdata/*
+.htaccess
 
 # Logs
 logs

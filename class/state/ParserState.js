@@ -1,13 +1,26 @@
 import GameState from "./GameState.js";
 import TrackParser from "../parser/TrackParser.js";
+import { TRACK_DEFAULT } from "../constant/TrackConstants.js";
+import Requests from "../event/Requests.js";
 
 export default class ParserState extends GameState {
     onEnter() {
-        this.getTrackParser();
-    }
+        let rawTrack = TRACK_DEFAULT;
 
-    async getTrackParser() {
-        let rawTrack = await this.track.fetchRawTrack();
+        if (!!this.track.id) {
+            let request = Requests.getPostRequest('./trackdata/', {
+                id: this.track.id
+            });
+
+            let response = JSON.parse(request.responseText);
+            rawTrack = response.CODE;
+        } else if (!!this.track.trackCode) {
+            rawTrack = this.track.trackCode;
+            this.track.id = null;
+        }
+
+        this.track.trackCode = null;
+
         this.parser = new TrackParser(this.track);
         this.parser.init(rawTrack);
     }

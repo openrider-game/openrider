@@ -2,7 +2,7 @@ import GhostRunner from "../bike/GhostRunner.js";
 import BMX from "../bike/instance/BMX.js";
 import PlayerRunner from "../bike/PlayerRunner.js";
 import { CACHE_CELL_SIZE, GRID_CELL_SIZE } from "../constant/GridConstants.js";
-import { MAX_LINE_LENGTH, MAX_ZOOM, MIN_LINE_LENGTH, MIN_ZOOM, TRACK_DEFAULT } from "../constant/TrackConstants.js";
+import { MAX_LINE_LENGTH, MAX_ZOOM, MIN_LINE_LENGTH, MIN_ZOOM } from "../constant/TrackConstants.js";
 import Entity from "../entity/Entity.js";
 import PhysicsCell from "../grid/cell/PhysicsCell.js";
 import RenderCell from "../grid/cell/RenderCell.js";
@@ -69,23 +69,8 @@ export default class Track {
         this.debug = false;
     }
 
-    async fetchRawTrack() {
-        let rawTrack = TRACK_DEFAULT;
-
-        if (!!this.id) {
-            // fetch track code from id
-        } else if (!!this.trackCode) {
-            rawTrack = this.trackCode;
-            this.id = null;
-        }
-
-        this.trackCode = null;
-
-        return rawTrack;
-    }
-
     isRace() {
-        return this.id && this.id.length;
+        return this.id && typeof this.id === 'number';
     }
 
     /**

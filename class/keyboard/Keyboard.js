@@ -66,6 +66,6 @@ export default class Keyboard {
 }
 
 Keyboard.NONE = 0;
-Keyboard.CTRL = 1;
-Keyboard.ALT = 2;
-Keyboard.SHIFT = 4;
+Keyboard.CTRL = 1 << 0;
+Keyboard.ALT = 1 << 1;
+Keyboard.SHIFT = 1 << 2;

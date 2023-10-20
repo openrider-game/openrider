@@ -2,17 +2,24 @@ import GameState from "./GameState.js";
 import TrackParser from "../parser/TrackParser.js";
 import { TRACK_DEFAULT } from "../constant/TrackConstants.js";
 import Requests from "../event/Requests.js";
+import { TRACKDATA_URL } from "../constant/RequestConstants.js";
 
 export default class ParserState extends GameState {
     onEnter() {
         let rawTrack = TRACK_DEFAULT;
 
         if (!!this.track.id) {
-            let request = Requests.getPostRequest('./trackdata/', {
+            let request = Requests.getPostRequest(TRACKDATA_URL, {
                 id: this.track.id
             });
 
             let response = JSON.parse(request.responseText);
+
+            if (response === false) {
+                alert("Track does not exist");
+                return false;
+            }
+
             rawTrack = response.CODE;
         } else if (!!this.track.trackCode) {
             rawTrack = this.track.trackCode;
@@ -28,6 +35,8 @@ export default class ParserState extends GameState {
     fixedUpdate() {}
 
     update(progress, delta) {
+        if (!this.parser) return;
+
         this.parser.currentStep();
 
         if (this.parser.caching) {
@@ -46,6 +55,19 @@ export default class ParserState extends GameState {
     }
 
     render(ctx) {
+        if (!this.parser) {
+            ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+
+            let unknownTrack = 'Track does not exist!';
+            let unknownTrackMetrics = ctx.measureText(unknownTrack);
+            let unknownTrackWidth = unknownTrackMetrics.width;
+            let unknownTrackHeight = unknownTrackMetrics.actualBoundingBoxAscent + unknownTrackMetrics.actualBoundingBoxDescent;
+            ctx.fillStyle = '#000';
+            ctx.fillText(unknownTrack, (this.track.canvas.width - unknownTrackWidth) / 2, (this.track.canvas.height + unknownTrackHeight) / 2);
+
+            return;
+        }
+
         let barY = this.track.canvas.height / 2 - 15;
         let barW = this.track.canvas.width - 200;
 

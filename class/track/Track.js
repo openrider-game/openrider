@@ -171,6 +171,10 @@ export default class Track {
             runner.restart();
         });
 
+        this.updateFocalPoint();
+    }
+
+    updateFocalPoint() {
         this.focalPoint = this.playerRunner.instance.hitbox;
         if (!this.playerRunner.snapshots.length && this.ghostRunners.size) {
             this.focalPoint = this.ghostRunners.get(Array.from(this.ghostRunners.keys())[0]).instance.hitbox;

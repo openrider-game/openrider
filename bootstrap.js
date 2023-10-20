@@ -46,9 +46,7 @@ function toggleGhost(ghostId) {
     game.stateManager.getState('track').toggleGhost(ghostId);
 }
 
-export default {
-    game: {
-        'ride': newGame,
-        'watchGhost': toggleGhost
-    }
+export const GAME = {
+    'newGame': newGame,
+    'toggleGhost': toggleGhost
 };

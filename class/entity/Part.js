@@ -2,7 +2,7 @@ import Bike from "../bike/instance/Bike.js";
 import Vector from "../numeric/Vector.js";
 import Entity from "./Entity.js";
 
-export default class BikePart extends Entity {
+export default class Part extends Entity {
     constructor(pos, bike) {
         super(pos);
 
@@ -37,7 +37,7 @@ export default class BikePart extends Entity {
         super.fixedUpdate();
     }
 
-    /** @returns {BikePart} */
+    /** @returns {Part} */
     clone() {
         let clone = new this.constructor(this.pos, this.bike);
         clone.oldPos = this.oldPos.clone();

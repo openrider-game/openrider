@@ -7,6 +7,7 @@ import CameraTool from "../tool/CameraTool.js";
 import UIButton from "../ui/UIButton.js";
 import UIElement from "../ui/base/UIElement.js";
 import FullscreenTool from "../tool/FullscreenTool.js";
+import Requests from "../event/Requests.js";
 
 export default class TrackUploadState extends GameState {
     onEnter() {
@@ -46,14 +47,10 @@ export default class TrackUploadState extends GameState {
 
         let image = thumb.toDataURL('image/png');
 
-        let request = new XMLHttpRequest();
-        request.open('POST', './upload/', false);
-        request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        request.send(
-            '&trackCode=' + encodeURIComponent(this.track.trackCode) +
-            '&thumbnail=' + encodeURIComponent(image.replace('data:image/png;base64,', ''))
-        );
-
+        let request = Requests.getPostRequest('./trackupload/', {
+            trackCode: this.track.trackCode,
+            thumbnail: image.replace('data:image/png;base64,', '')
+        });
         let response = JSON.parse(request.responseText);
 
         if (typeof response === 'string') {

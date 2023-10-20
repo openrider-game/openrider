@@ -13,11 +13,15 @@ import Track from "../track/Track.js";
 export default class TrackState extends GameState {
     onEnter() {
         let leftToolbar = new UIToolbar(this.ui, this.track, this.track.isRace() ? LEFT_TOOLBAR_VIEWING : LEFT_TOOLBAR_EDITING);
-        let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
+
         this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
+
         this.ui.uiElements.push(leftToolbar);
+
         if (!this.track.isRace()) {
+            let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
+
             let importButton = new UIButton(this.ui, this.track, 10, 10, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
             let exportButton = new UIButton(this.ui, this.track, 120, 10, 100, 26, 'Export track', () => this.handleExport(), UIElement.ALIGN_BOTTOM);
             let uploadButton = new UIButton(this.ui, this.track, 230, 10, 100, 26, 'Upload track', () => this.handleUpload(), UIElement.ALIGN_BOTTOM);
@@ -36,7 +40,7 @@ export default class TrackState extends GameState {
                 let reader = new FileReader();
                 reader.onload = () => {
                     this.track = new Track(this.track.canvas, { trackCode: reader.result }, this.manager.event);
-                    this.manager.getState('parser').getTrackParser();
+                    this.manager.getState('parser').onEnter();
                     this.manager.pop();
                 };
 

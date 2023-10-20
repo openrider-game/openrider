@@ -1,3 +1,4 @@
+import Requests from "../event/Requests.js";
 import Control from "../keyboard/Control.js";
 import Keyboard from "../keyboard/Keyboard.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
@@ -37,11 +38,10 @@ export default class PlayerRunner extends BikeRunner {
         if (promptSave && confirm('Do you want to save this time?')) {
             let ghostString = GhostParser.generate(this);
 
-            let request = new XMLHttpRequest();
-            request.open('POST', './ghost/', false);
-            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            request.send('&ghostString=' + encodeURIComponent(ghostString));
-
+            let request = Requests.getPostRequest('./ghostupload/', {
+                trackId: this.track.id,
+                ghostString: ghostString
+            });
             let response = JSON.parse(request.responseText);
 
             if (typeof response === 'string') {

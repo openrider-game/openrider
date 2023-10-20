@@ -17,7 +17,7 @@ export default class SwitchBikeTool extends Tool {
         this.track.playerRunner.reset();
         this.track.ghostRunners.forEach(runner => {
             runner.reset();
-        })
+        });
 
         this.track.restart();
 

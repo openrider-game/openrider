@@ -61,8 +61,10 @@ export default class Track {
         this.time = 0;
 
         this.playerRunner = new PlayerRunner(this, BMX);
-        /** @type {Array<GhostRunner>} */
-        this.ghostRunners = new Array();
+        /** @type {Map<number, GhostRunner>} */
+        this.ghostRunners = new Map();
+        /** @type {Map<number, string>} */
+        this.ghostCache = new Map();
 
         this.undoManager = new UndoManager();
 
@@ -170,10 +172,38 @@ export default class Track {
         });
 
         this.focalPoint = this.playerRunner.instance.hitbox;
-        if (!this.playerRunner.snapshots.length && this.ghostRunners.length) {
-            this.focalPoint = this.ghostRunners[0].instance.hitbox;
+        if (!this.playerRunner.snapshots.length && this.ghostRunners.size) {
+            this.focalPoint = this.ghostRunners.get(Array.from(this.ghostRunners.keys())[0]).instance.hitbox;
         }
 
         this.camera.set(this.focalPoint.displayPos);
+    }
+
+    toggleGhost(ghostId) {
+        if(this.ghostRunners.has(ghostId)) {
+            this.ghostRunners.delete(ghostId);
+        } else {
+            let ghostString = ',,,,,,BMX,Ghost';
+            if(this.ghostCache.has(ghostId)) {
+                ghostString = this.ghostCache.get(ghostId);
+            } else {
+                //TODO fetch ghost string
+
+                this.ghostCache.set(ghostId, ghostString);
+            }
+
+            let ghost = new GhostRunner(this, ghostString);
+            this.ghostRunners.set(ghostId, ghost);
+            ghost.createBike();
+
+            this.ghostRunners = new Map([...this.ghostRunners.entries()].sort((a, b) => a.finalTime - b.finalTime));
+
+            this.playerRunner.reset();
+            this.ghostRunners.forEach(runner => {
+                runner.reset();
+            });
+
+            this.restart();
+        }
     }
 }

@@ -113,8 +113,8 @@ export default class BikeRunner extends GameObject {
     }
 
     /**
-     * 
-     * @param {ReachableItem} reachable 
+     *
+     * @param {ReachableItem} reachable
      */
     hitReachable(reachable) {
         if (!this.reachablesReached.has(reachable.id)) {

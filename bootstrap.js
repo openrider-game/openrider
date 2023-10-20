@@ -6,6 +6,8 @@ if (!document.createElement('canvas').getContext) {
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.querySelector('[data-play=openrider]');
+/** @type {Game} */
+let game;
 
 window.addEventListener('resize', (e) => setCanvasSize());
 setCanvasSize();
@@ -35,13 +37,18 @@ function setContextProperties(ctx) {
  * @param {{}} opt
  */
 function newGame(opt) {
-    let game = new Game(canvas, opt);
+    game = new Game(canvas, opt);
     game.run();
     game.stateManager.push('parser');
 }
 
+function toggleGhost(ghostId) {
+    game.stateManager.track.toggleGhost(ghostId);
+}
+
 export default {
     game: {
-        'ride': newGame
+        'ride': newGame,
+        'watchGhost': toggleGhost
     }
 };

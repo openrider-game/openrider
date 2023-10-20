@@ -31,10 +31,10 @@ export default class TrackGenerator {
     }
 
     /**
-     * 
-     * @param {{}} lineData 
-     * @param {Map} gridTarget 
-     * @param {Function} nextStep 
+     *
+     * @param {{}} lineData
+     * @param {Map} gridTarget
+     * @param {Function} nextStep
      */
     generate(lineData, gridTarget, nextStep) {
         let toGo = this.stepSize;

@@ -34,11 +34,11 @@ export default class LinkedItemGroup extends Item {
     }
 
     /**
-     * 
-     * @param {Array<String>} itemCode 
-     * @param {Track} track 
+     *
+     * @param {Array<String>} itemCode
+     * @param {Track} track
      * @param {*} itemClass
-     * @returns 
+     * @returns
      */
     static createInstance(itemCode, track, itemClass) {
         let itemGroup = new this(track);

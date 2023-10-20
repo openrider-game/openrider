@@ -66,10 +66,10 @@ export default class Grid {
     }
 
     /**
-     * 
-     * @param {number} x 
-     * @param {number} y 
-     * @param {Function} action 
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {Function} action
      */
     cellBlockAction(x, y, action) {
         for (let [offsetX, offsetY] of CELL_BLOCK_ACTION_OFFSET_ORDER) {

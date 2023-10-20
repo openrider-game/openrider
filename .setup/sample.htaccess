@@ -1,0 +1,4 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteRule ^tracks/([0-9]*)/?$ ./index.php?track=$1

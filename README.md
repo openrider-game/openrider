@@ -65,7 +65,7 @@ To get a local copy up and running follow these steps.
 
 ### Prerequisites
 
-* NPM
+* NPM (optional)
 * XAMPP (or any way to get an apache php environment)
 * PostgreSQL
 
@@ -85,6 +85,7 @@ To get a local copy up and running follow these steps.
 5. Run the script in .setup\db\tables.sql to create the base table structure
 6. Move the file sample.htaccess to the top directory of the repo and rename it to .htaccess
 7. Optionally, you may move the .setup\db\ folder to place it anywhere you see fit, but if you do be sure to change the constants in class\constant\RequestConstants.js so that they still point to the correct URL
+8. Optionally, you may minify the js with vite, although this requires a bit of tinkering because vite cannot bundle php files out of the box. Some documentation on this step might be provided in the future once a satisfactory procedure is found
 8. The game is now playable at localhost[optional :port]/[optional url path]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

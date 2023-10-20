@@ -1,7 +1,5 @@
-import RenderCell from "../grid/cell/RenderCell.js";
-
-export default class RenderCellWorker {
-    static createRenderCellWorker() {
+export default class ExtendedWorker {
+    static createWorker() {
         let workerWorker = () => {
             class WorkerSlave {
                 constructor() {

@@ -54,14 +54,14 @@ export default class TrackUploadState extends GameState {
             '&thumbnail=' + encodeURIComponent(image.replace('data:image/png;base64,', ''))
         );
 
-        let trackId = JSON.parse(request.responseText);
+        let response = JSON.parse(request.responseText);
 
-        if (typeof trackId === 'string') {
-            alert(`Your track was refused: ${trackId}`);
+        if (typeof response === 'string') {
+            alert(`Your track was refused: ${response}`);
             return false;
         }
 
-        location.href = `./tracks/${trackId}/`;
+        location.href = `./tracks/${response}/`;
     }
 
     fixedUpdate() {

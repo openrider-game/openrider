@@ -53,4 +53,21 @@ export default class RenderCell extends Cell {
 
         return canvas;
     }
+
+    createBuffers() {
+        let temp = new Array();
+
+        for(let scenery of this.scenery) {
+            temp.push(scenery.pos.x, scenery.pos.y, scenery.endPos.x, scenery.endPos.y);
+        }
+        let sceneryByteArray = new Int32Array(temp);
+
+        temp = new Array();
+        for(let line of this.lines) {
+            temp.push(...line.pos.toArray(), ...line.endPos.toArray());
+        }
+        let lineByteArray = new Int32Array(temp);
+
+        return [sceneryByteArray.buffer, lineByteArray.buffer];
+    }
 }

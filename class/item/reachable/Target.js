@@ -1,4 +1,4 @@
-import BikePart from "../../entity/BikePart.js";
+import Part from "../../entity/Part.js";
 import ReachableItem from "../ReachableItem.js";
 
 export default class Target extends ReachableItem {
@@ -9,7 +9,7 @@ export default class Target extends ReachableItem {
 
     /**
      *
-     * @param {BikePart} part
+     * @param {Part} part
      */
     onReach(part) {
         if (!part.bike.runner.targetsReached.has(this.id)) {

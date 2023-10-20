@@ -20,9 +20,10 @@ export default class FocusGhostTool extends Tool {
             this.currentGhostIndex = 0;
         }
 
-        if (this.track.ghostRunners.length) {
-            this.currentGhostIndex = (this.currentGhostIndex + 1) % this.track.ghostRunners.length;
-            this.track.focalPoint = this.track.ghostRunners[this.currentGhostIndex].instance.hitbox;
+        if (this.track.ghostRunners.size) {
+            this.currentGhostIndex = (this.currentGhostIndex + 1) % this.track.ghostRunners.size;
+            let currentGhostKey = Array.from(this.track.ghostRunners.keys())[this.currentGhostIndex];
+            this.track.focalPoint = this.track.ghostRunners.get(currentGhostKey).instance.hitbox;
         }
     }
 }

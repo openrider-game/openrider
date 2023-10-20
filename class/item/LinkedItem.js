@@ -49,8 +49,8 @@ export default class LinkedItem extends ReachableItem {
     }
 
     /**
-     * 
-     * @param {CanvasRenderingContext2D} ctx 
+     *
+     * @param {CanvasRenderingContext2D} ctx
      */
     renderDebug(ctx) {
         ctx.save();

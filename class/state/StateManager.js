@@ -37,9 +37,9 @@ export default class StateManager extends GameObject {
     }
 
     /**
-     * 
-     * @param {GameState} stateClass 
-     * @param {String} name 
+     *
+     * @param {GameState} stateClass
+     * @param {String} name
      */
     addState(stateClass, name) {
         let state = new stateClass(this);

@@ -1,8 +1,10 @@
+import GhostRunner from "../bike/GhostRunner.js";
 import Vector from "../numeric/Vector.js";
 import Item from "./Item.js";
 import LinkedItem from "./LinkedItem.js";
+import ReachableItem from "./ReachableItem.js";
 
-export default class LinkedItemGroup extends Item {
+export default class LinkedItemGroup extends ReachableItem {
 
     constructor(track) {
         super(new Vector(), track);
@@ -31,6 +33,19 @@ export default class LinkedItemGroup extends Item {
             string += instance.toString(true).substring(1);
         }
         return string;
+    }
+
+    onTouch(part, touchedInstance) {
+        if (part.bike.runner instanceof GhostRunner || !this.reached) {
+            if (!(part.bike.runner instanceof GhostRunner)) {
+                this.reached = true;
+                this.instances.forEach(instance => instance.reached = true);
+            }
+
+            this.instances.filter(obj => obj !== touchedInstance).forEach(other => {
+                touchedInstance.onReach(part, other);
+            });
+        }
     }
 
     /**

@@ -9,8 +9,6 @@ export default class LinkedItem extends ReachableItem {
         super(pos, track);
         /** @type {LinkedItemGroup} */
         this.group = null;
-        /** @type {LinkedItem} */
-        this.linkedItem = null;
     }
 
     addToTrack(fromGroup) {
@@ -29,15 +27,8 @@ export default class LinkedItem extends ReachableItem {
         }
     }
 
-    onTouch(part, other) {
-        if (!other) {
-            this.group.instances.filter(obj => obj !== this).forEach(other => {
-                other.onTouch(part, this);
-            });
-        }
-
-        this.linkedItem = other;
-        super.onTouch(part);
+    onTouch(part) {
+        this.group.onTouch(part, this);
     }
 
     toString(fromGroup) {

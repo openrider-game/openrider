@@ -33,6 +33,7 @@ export default class BikeRunner extends GameObject {
 
         /** @type {Map<number, ReachableItem>} */
         this.actionQueue = new Map();
+        this.mustSave = false;
 
         this.dead = false;
         this.deadObject = null;
@@ -205,6 +206,11 @@ export default class BikeRunner extends GameObject {
         if (this.actionQueue.size) {
             this.processActionQueue();
             this.actionQueue = new Map();
+        }
+
+        if (this.mustSave) {
+            this.mustSave = false;
+            this.save();
         }
 
         if (this.instance instanceof Bike) {

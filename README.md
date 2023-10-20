@@ -2,7 +2,7 @@
 
 - Track upload ✅
 - Load track by id ❌
-- Save and upload ghosts ❌
+- Save and upload ghosts 🚧
 - Ghost leaderboard ❌
 
 ## Stuff that i want to/could add later

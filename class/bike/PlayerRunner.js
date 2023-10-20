@@ -40,9 +40,9 @@ export default class PlayerRunner extends BikeRunner {
     }
 
     onHitCheckpoint() {
-        this.save();
+        this.mustSave = true;
         this.track.ghostRunners.forEach((runner) => {
-            runner.save();
+            runner.mustSave = true;
         });
     }
 

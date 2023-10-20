@@ -44,7 +44,7 @@ export default class GhostRunner extends BikeRunner {
         let bikePos = this.instance.backWheel.displayPos
             .add(this.instance.frontWheel.displayPos)
             .add(this.instance.hitbox.displayPos)
-            .scale(1 / 3)
+            .recipScale(3)
             .toPixel(this.track);
 
         ctx.save();

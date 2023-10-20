@@ -1,4 +1,4 @@
-import BikePart from "./BikePart.js";
+import Part from "./Part.js";
 import Entity from "./Entity.js";
 import LinePath from "../numeric/LinePath.js";
 import Vector from "../numeric/Vector.js";
@@ -18,16 +18,16 @@ export default class Ragdoll extends Entity {
         this.track = bike.track;
 
         this.points = [
-            this.head = new BikePart(rider.head, bike),
-            this.hip = new BikePart(rider.hip, bike),
-            this.elbow = new BikePart(rider.elbow, bike),
-            this.shadowElbow = new BikePart(rider.shadowElbow, bike),
-            this.hand = new BikePart(rider.hand, bike),
-            this.shadowHand = new BikePart(rider.shadowHand, bike),
-            this.knee = new BikePart(rider.knee, bike),
-            this.shadowKnee = new BikePart(rider.shadowKnee, bike),
-            this.foot = new BikePart(rider.foot, bike),
-            this.shadowFoot = new BikePart(rider.shadowFoot, bike)
+            this.head = new Part(rider.head, bike),
+            this.hip = new Part(rider.hip, bike),
+            this.elbow = new Part(rider.elbow, bike),
+            this.shadowElbow = new Part(rider.shadowElbow, bike),
+            this.hand = new Part(rider.hand, bike),
+            this.shadowHand = new Part(rider.shadowHand, bike),
+            this.knee = new Part(rider.knee, bike),
+            this.shadowKnee = new Part(rider.shadowKnee, bike),
+            this.foot = new Part(rider.foot, bike),
+            this.shadowFoot = new Part(rider.shadowFoot, bike)
         ];
 
         this.inflexibleJoints = [

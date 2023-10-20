@@ -1,4 +1,4 @@
-import BikePart from "../../entity/BikePart.js";
+import Part from "../../entity/Part.js";
 import Wheel from "../../entity/Wheel.js";
 import Transform from "../../numeric/Transform.js";
 import Vector from "../../numeric/Vector.js";
@@ -31,8 +31,8 @@ export default class Bike {
         this.headGear = 'hat';
 
         this.rotationFactor = 0;
-
-        this.hitbox = new BikePart(new Vector(), this);
+        
+        this.hitbox = new Part(new Vector(), this);
         this.hitbox.drive = (point) => this.runner.crash();
         this.backWheel = new Wheel(new Vector(), this);
         this.frontWheel = new Wheel(new Vector(), this);

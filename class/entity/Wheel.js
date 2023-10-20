@@ -1,7 +1,7 @@
 import Vector from "../numeric/Vector.js";
-import BikePart from "./BikePart.js";
+import Part from "./Part.js";
 
-export default class Wheel extends BikePart {
+export default class Wheel extends Part {
     constructor(center, bike) {
         super(center, bike);
 

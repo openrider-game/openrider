@@ -1,5 +1,5 @@
 import Item from "./Item.js";
-import BikePart from "../entity/BikePart.js";
+import Part from "../entity/Part.js";
 import GhostRunner from "../bike/GhostRunner.js";
 
 export default class ReachableItem extends Item {
@@ -32,7 +32,7 @@ export default class ReachableItem extends Item {
 
     /**
      *
-     * @param {BikePart} part
+     * @param {Part} part
      */
     onTouch(part) {
         if (part.bike.runner instanceof GhostRunner || !this.reached) {
@@ -47,7 +47,7 @@ export default class ReachableItem extends Item {
 
     /**
      *
-     * @param {BikePart} part
+     * @param {Part} part
      */
     onReach(part) {
         if (!part.bike.runner.reachablesReached.has(this.id)) {

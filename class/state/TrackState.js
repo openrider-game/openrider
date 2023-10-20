@@ -12,13 +12,12 @@ import Track from "../track/Track.js";
 
 export default class TrackState extends GameState {
     onEnter() {
-        let isRace = this.track.id && this.track.id.length;
-        let leftToolbar = new UIToolbar(this.ui, this.track, isRace ? LEFT_TOOLBAR_VIEWING : LEFT_TOOLBAR_EDITING);
+        let leftToolbar = new UIToolbar(this.ui, this.track, this.track.isRace() ? LEFT_TOOLBAR_VIEWING : LEFT_TOOLBAR_EDITING);
         let rightToolbar = new UIToolbar(this.ui, this.track, RIGHT_TOOLBAR, true);
         this.track.toolManager.setTool(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.ui.uiElements.push(leftToolbar);
-        if (!isRace) {
+        if (!this.track.isRace()) {
             let importButton = new UIButton(this.ui, this.track, 10, 10, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
             let exportButton = new UIButton(this.ui, this.track, 120, 10, 100, 26, 'Export track', () => this.handleExport(), UIElement.ALIGN_BOTTOM);
             let uploadButton = new UIButton(this.ui, this.track, 230, 10, 100, 26, 'Upload track', () => this.handleUpload(), UIElement.ALIGN_BOTTOM);

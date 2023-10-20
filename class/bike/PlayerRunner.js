@@ -33,9 +33,20 @@ export default class PlayerRunner extends BikeRunner {
     }
 
     onHitTarget() {
-        if (this.targetsReached.size >= this.track.targets.size) {
+        let promptSave = this.targetsReached.size >= this.track.targets.size && this.track.isRace();
+        if (promptSave && confirm('Do you want to save this time?')) {
             let ghostString = GhostParser.generate(this);
-            console.log(ghostString);
+
+            let request = new XMLHttpRequest();
+            request.open('POST', './ghost/', false);
+            request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            request.send('&ghostString=' + encodeURIComponent(ghostString));
+
+            let response = JSON.parse(request.responseText);
+
+            if (typeof response === 'string') {
+                alert(`Your ghost was refused: ${response}`);
+            }
         }
     }
 

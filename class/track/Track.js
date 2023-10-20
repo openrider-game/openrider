@@ -84,6 +84,10 @@ export default class Track {
         return rawTrack;
     }
 
+    isRace() {
+        return this.id && this.id.length;
+    }
+
     /**
      * @param {Vector} point
      * @param {number} direction

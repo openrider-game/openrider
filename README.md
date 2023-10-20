@@ -14,7 +14,7 @@
     A port of a port of a port of FreeRider 
     <br />
     <br />
-    <a href="http://blog.tomiy.me/openrider/">View Demo</a>
+    <a href="https://tomiy.me/openrider/">View Demo</a>
     ·
     <a href="https://github.com/tomiy/openrider/issues">Report Bug</a>
     ·

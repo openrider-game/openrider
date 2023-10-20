@@ -1,3 +1,4 @@
+import { CELL_BLOCK_ACTION_OFFSET_ORDER } from "../constant/GridConstants.js";
 import Vector from "../numeric/Vector.js";
 import Cell from "./cell/Cell.js";
 
@@ -62,6 +63,18 @@ export default class Grid {
             cells.push(this.cell(gridCoords.x, gridCoords.y));
             return cells;
         }, []);
+    }
+
+    /**
+     * 
+     * @param {number} x 
+     * @param {number} y 
+     * @param {Function} action 
+     */
+    cellBlockAction(x, y, action) {
+        for (let [offsetX, offsetY] of CELL_BLOCK_ACTION_OFFSET_ORDER) {
+            action(this.cell(x + offsetX, y + offsetY));
+        }
     }
 
     static gridCoords(vec, cellSize) {

@@ -127,15 +127,8 @@ export default class Track {
         let x = Math.floor(part.pos.x / this.grid.cellSize - 0.5);
         let y = Math.floor(part.pos.y / this.grid.cellSize - 0.5);
 
-        this.grid.cell(x, y).untouch();
-        this.grid.cell(x, y + 1).untouch();
-        this.grid.cell(x + 1, y).untouch();
-        this.grid.cell(x + 1, y + 1).untouch();
-
-        this.grid.cell(x, y).touch(part);
-        this.grid.cell(x + 1, y).touch(part);
-        this.grid.cell(x + 1, y + 1).touch(part);
-        this.grid.cell(x, y + 1).touch(part);
+        this.grid.cellBlockAction(x, y, cell => cell.untouch());
+        this.grid.cellBlockAction(x, y, cell => cell.touch(part));
     }
 
     checkDelete(eraserPoint, radius, restrict) {
@@ -153,17 +146,11 @@ export default class Track {
         let foregroundLayerActive = [...foregroundLayerRestrict.values()].some(Boolean);
 
         if (mainLayerActive) {
-            checkCell(this.grid.cell(x, y), mainLayerRestrict);
-            checkCell(this.grid.cell(x, y + 1), mainLayerRestrict);
-            checkCell(this.grid.cell(x + 1, y), mainLayerRestrict);
-            checkCell(this.grid.cell(x + 1, y + 1), mainLayerRestrict);
+            this.grid.cellBlockAction(x, y, cell => checkCell(cell, mainLayerRestrict));
         }
 
         if (foregroundLayerActive) {
-            checkCell(this.foregroundGrid.cell(x, y), foregroundLayerRestrict);
-            checkCell(this.foregroundGrid.cell(x, y + 1), foregroundLayerRestrict);
-            checkCell(this.foregroundGrid.cell(x + 1, y), foregroundLayerRestrict);
-            checkCell(this.foregroundGrid.cell(x + 1, y + 1), foregroundLayerRestrict);
+            this.foregroundGrid.cellBlockAction(x, y, cell => checkCell(cell, foregroundLayerRestrict));
         }
 
         return deleted;

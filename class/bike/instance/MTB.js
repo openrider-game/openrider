@@ -3,6 +3,8 @@ import Track from "../../track/Track.js";
 import Bike from "./Bike.js";
 
 export default class MTB extends Bike {
+    static get bikeName() { return 'MTB'; }
+
     /**
      *
      * @param {Track} track

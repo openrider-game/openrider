@@ -9,7 +9,7 @@ export default class BikeRenderer {
      * @param {number} opacityFactor
      */
     static render(ctx, bike, opacityFactor) {
-        let renderer = RENDERER_MAP[bike.constructor.name];
+        let renderer = RENDERER_MAP[bike.constructor.bikeName];
 
         if (renderer != null) {
             renderer.render(ctx, bike, opacityFactor);

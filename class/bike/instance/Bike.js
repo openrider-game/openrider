@@ -7,6 +7,8 @@ import BikeRunner from "../BikeRunner.js";
 import Spring from "../physics/Spring.js";
 
 export default class Bike {
+    static get bikeName() { return 'Bike'; }
+
     /**
      *
      * @param {Track} track
@@ -53,7 +55,7 @@ export default class Bike {
         this.setBikeInitialState(track.origin);
     }
 
-    setBikeInitialState(startPos) { }
+    setBikeInitialState(startPos) {}
 
     updatePhysics() {
         if (this.runner.turnPressed) {

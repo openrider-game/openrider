@@ -99,7 +99,7 @@ export default class TrackGenerator {
     getCode() {
         return `${this.lineData.code}#${this.sceneryData.code}#${this.objectData.code}#` +
             `${this.foregroundLineData.code}#${this.foregroundSceneryData.code}#` +
-            `${this.track.playerRunner.bikeClass.name}#${this.track.origin.toString()}`;
+            `${this.track.playerRunner.bikeClass.bikeName}#${this.track.origin.toString()}`;
     }
 
     emptyData() {

@@ -178,32 +178,4 @@ export default class Track {
 
         this.camera.set(this.focalPoint.displayPos);
     }
-
-    toggleGhost(ghostId) {
-        if(this.ghostRunners.has(ghostId)) {
-            this.ghostRunners.delete(ghostId);
-        } else {
-            let ghostString = ',,,,,,BMX,Ghost';
-            if(this.ghostCache.has(ghostId)) {
-                ghostString = this.ghostCache.get(ghostId);
-            } else {
-                //TODO fetch ghost string
-
-                this.ghostCache.set(ghostId, ghostString);
-            }
-
-            let ghost = new GhostRunner(this, ghostString);
-            this.ghostRunners.set(ghostId, ghost);
-            ghost.createBike();
-
-            this.ghostRunners = new Map([...this.ghostRunners.entries()].sort((a, b) => a.finalTime - b.finalTime));
-
-            this.playerRunner.reset();
-            this.ghostRunners.forEach(runner => {
-                runner.reset();
-            });
-
-            this.restart();
-        }
-    }
 }

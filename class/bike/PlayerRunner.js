@@ -1,8 +1,6 @@
-import Requests from "../event/Requests.js";
 import Control from "../keyboard/Control.js";
 import Keyboard from "../keyboard/Keyboard.js";
 import * as KeyCode from "../keyboard/KeyCode.js";
-import GhostParser from "../parser/GhostParser.js";
 import BikeRunner from "./BikeRunner.js";
 import BikeRenderer from "./instance/renderer/BikeRenderer.js";
 
@@ -34,19 +32,8 @@ export default class PlayerRunner extends BikeRunner {
     }
 
     onHitTarget() {
-        let promptSave = this.targetsReached.size >= this.track.targets.size && this.track.isRace();
-        if (promptSave && confirm('Do you want to save this time?')) {
-            let ghostString = GhostParser.generate(this);
-
-            let request = Requests.getPostRequest('./ghostupload/', {
-                trackId: this.track.id,
-                ghostString: ghostString
-            });
-            let response = JSON.parse(request.responseText);
-
-            if (typeof response === 'string') {
-                alert(`Your ghost was refused: ${response}`);
-            }
+        if(this.targetsReached.size >= this.track.targets.size && this.track.isRace()) {
+            this.done = true;
         }
     }
 

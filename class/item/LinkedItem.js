@@ -53,6 +53,7 @@ export default class LinkedItem extends ReachableItem {
             ctx.lineTo(pos.x, pos.y);
         });
         ctx.stroke();
+
         ctx.restore();
     }
 

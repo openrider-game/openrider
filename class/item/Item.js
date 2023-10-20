@@ -59,6 +59,7 @@ export default class Item extends GameObject {
         ctx.fillStyle = '#000';
         let idMetrics = ctx.measureText(this.id);
         ctx.fillText(this.id, pos.x - idMetrics.width / 2, pos.y - 15 * this.track.zoomFactor);
+
         ctx.restore();
     }
 

@@ -17,9 +17,9 @@ export default class RenderCell extends Cell {
      * @return {number} opacityFactor
      * @return {HTMLCanvasElement}
      */
-    getCanvas(zoom, opacityFactor) {
+    getCanvas(zoom, opacityFactor, fastRender) {
         if (!this.canvas.has(zoom)) {
-            this.canvas.set(zoom, this.renderCache(zoom, opacityFactor));
+            this.canvas.set(zoom, this.renderCache(zoom, opacityFactor, fastRender));
         }
 
         return this.canvas.get(zoom);
@@ -30,9 +30,9 @@ export default class RenderCell extends Cell {
      * @return {number} opacityFactor
      * @return {HTMLCanvasElement}
      */
-    renderCache(zoom, opacityFactor) {
+    renderCache(zoom, opacityFactor, fastRender) {
         let canvas = document.createElement('canvas');
-        if ('OffscreenCanvas' in window) {
+        if ('OffscreenCanvas' in window && fastRender) {
             let offscreenCanvas = canvas.transferControlToOffscreen();
             RenderCellWorker.renderCell(this, zoom, opacityFactor, offscreenCanvas);
         } else {

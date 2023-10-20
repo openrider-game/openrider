@@ -35,7 +35,7 @@ export default class GhostParser {
             ghostKeys.push(keyArray.join(' '));
         });
 
-        ghostKeys.push(bikeRunner.track.time, bikeRunner.bikeClass.name);
+        ghostKeys.push(bikeRunner.track.time, bikeRunner.bikeClass.bikeName);
 
         return ghostKeys.join(',');
     }

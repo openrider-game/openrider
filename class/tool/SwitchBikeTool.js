@@ -12,7 +12,7 @@ export default class SwitchBikeTool extends Tool {
     static get icon() { return 'bike'; }
 
     run() {
-        this.track.playerRunner.bikeClass = SWITCH_MAP[this.track.playerRunner.bikeClass.name];
+        this.track.playerRunner.bikeClass = SWITCH_MAP[this.track.playerRunner.bikeClass.bikeName];
         this.track.playerRunner.createBike();
         this.track.playerRunner.reset();
         this.track.ghostRunners.forEach(runner => {

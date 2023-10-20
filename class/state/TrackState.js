@@ -19,15 +19,11 @@ export default class TrackState extends GameState {
         this.track.toolManager.setCamera(this.track.toolCollection.getByToolName(CameraTool.toolName));
         this.ui.uiElements.push(leftToolbar);
         if (!isRace) {
-            this.ui.uiElements.push(rightToolbar);
-        }
-
-        if (!isRace) {
             let importButton = new UIButton(this.ui, this.track, 10, 10, 100, 26, 'Import track', () => this.handleImport(), UIElement.ALIGN_BOTTOM);
             let exportButton = new UIButton(this.ui, this.track, 120, 10, 100, 26, 'Export track', () => this.handleExport(), UIElement.ALIGN_BOTTOM);
             let uploadButton = new UIButton(this.ui, this.track, 230, 10, 100, 26, 'Upload track', () => this.handleUpload(), UIElement.ALIGN_BOTTOM);
 
-            this.ui.uiElements.push(importButton, exportButton, uploadButton);
+            this.ui.uiElements.push(rightToolbar, importButton, exportButton, uploadButton);
         }
     }
 

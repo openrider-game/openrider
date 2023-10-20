@@ -17,7 +17,5 @@ export default class Teleporter extends LinkedItem {
                 this.track.camera.set(this.track.focalPoint.pos);
             }
         }
-
-        super.onReach(part);
     }
 }

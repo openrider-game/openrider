@@ -42,6 +42,7 @@ export default class LinkedItemGroup extends ReachableItem {
                 this.instances.forEach(instance => instance.reached = true);
             }
 
+            this.onReach(part);
             this.instances.filter(obj => obj !== touchedInstance).forEach(other => {
                 touchedInstance.onReach(part, other);
             });

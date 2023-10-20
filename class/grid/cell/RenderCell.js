@@ -1,3 +1,4 @@
+import RenderCellWorker from "../../thread/RenderCellWorker.js";
 import Cell from "./Cell.js";
 
 export default class RenderCell extends Cell {
@@ -31,43 +32,31 @@ export default class RenderCell extends Cell {
      */
     renderCache(zoom, opacityFactor) {
         let canvas = document.createElement('canvas');
-        let context = canvas.getContext('2d');
+        if ('OffscreenCanvas' in window) {
+            let offscreenCanvas = canvas.transferControlToOffscreen();
+            RenderCellWorker.renderCell(this, zoom, opacityFactor, offscreenCanvas);
+        } else {
+            let context = canvas.getContext('2d');
 
-        // bleed cells by 1px on each side to avoid thin lines
-        canvas.width = this.size * zoom + 2;
-        canvas.height = this.size * zoom + 2;
+            // bleed cells by 1px on each side to avoid thin lines
+            canvas.width = this.size * zoom + 2;
+            canvas.height = this.size * zoom + 2;
 
-        context.lineCap = 'round';
-        context.lineWidth = Math.max(2 * zoom, 0.5);
-        context.globalAlpha = opacityFactor;
+            context.lineCap = 'round';
+            context.lineWidth = Math.max(2 * zoom, 0.5);
+            context.globalAlpha = opacityFactor;
 
-        context.strokeStyle = '#aaa';
-        for (let scenery of this.scenery) {
-            scenery.renderCache(context, this.x * zoom - 1, this.y * zoom - 1, zoom);
-        }
+            context.strokeStyle = '#aaa';
+            for (let scenery of this.scenery) {
+                scenery.renderCache(context, this.x * zoom - 1, this.y * zoom - 1, zoom);
+            }
 
-        context.strokeStyle = '#000';
-        for (let line of this.lines) {
-            line.renderCache(context, this.x * zoom - 1, this.y * zoom - 1, zoom);
+            context.strokeStyle = '#000';
+            for (let line of this.lines) {
+                line.renderCache(context, this.x * zoom - 1, this.y * zoom - 1, zoom);
+            }
         }
 
         return canvas;
-    }
-
-    createBuffers() {
-        let temp = new Array();
-
-        for(let scenery of this.scenery) {
-            temp.push(scenery.pos.x, scenery.pos.y, scenery.endPos.x, scenery.endPos.y);
-        }
-        let sceneryByteArray = new Int32Array(temp);
-
-        temp = new Array();
-        for(let line of this.lines) {
-            temp.push(...line.pos.toArray(), ...line.endPos.toArray());
-        }
-        let lineByteArray = new Int32Array(temp);
-
-        return [sceneryByteArray.buffer, lineByteArray.buffer];
     }
 }

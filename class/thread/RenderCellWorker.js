@@ -58,8 +58,9 @@ export default class RenderCellWorker {
      * @param {RenderCell} cell
      * @param {OffscreenCanvas} canvas
      */
-    static renderCell(cell, zoom, opacityFactor, sceneryBuffer, lineBuffer, canvas) {
+    static renderCell(cell, zoom, opacityFactor, canvas) {
         let worker = RenderCellWorker.getNextWorker();
+        let [sceneryBuffer, lineBuffer] = RenderCellWorker.createBuffers(cell);
 
         worker.postMessage({
             cellSize: cell.size,
@@ -71,6 +72,23 @@ export default class RenderCellWorker {
             lineBuffer: lineBuffer,
             canvas: canvas
         }, [sceneryBuffer, lineBuffer, canvas]);
+    }
+
+    static createBuffers(cell) {
+        let temp = new Array();
+
+        for(let scenery of cell.scenery) {
+            temp.push(scenery.pos.x, scenery.pos.y, scenery.endPos.x, scenery.endPos.y);
+        }
+        let sceneryByteArray = new Int32Array(temp);
+
+        temp = new Array();
+        for(let line of cell.lines) {
+            temp.push(...line.pos.toArray(), ...line.endPos.toArray());
+        }
+        let lineByteArray = new Int32Array(temp);
+
+        return [sceneryByteArray.buffer, lineByteArray.buffer];
     }
 
     static getNextWorker() {

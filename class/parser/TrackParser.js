@@ -201,16 +201,7 @@ export default class TrackParser {
             let cell = cacheCells[this.cacheIndex];
             if (cell.lines.length + cell.scenery.length > 500) {
                 for (let zoom = MIN_ZOOM; zoom <= 1; zoom = Math.round((zoom + 0.2) * 100) / 100) {
-                    let canvas;
-                    if ('OffscreenCanvas' in window) {
-                        canvas = document.createElement('canvas');
-                        let offscreenCanvas = canvas.transferControlToOffscreen();
-                        RenderCellWorker.renderCell(cell, zoom, opacityFactor, ...cell.createBuffers(), offscreenCanvas);
-                    } else {
-                        canvas = cell.renderCache(zoom, opacityFactor);
-                    }
-
-                    cell.canvas.set(zoom, canvas);
+                    cell.canvas.set(zoom, cell.renderCache(zoom, opacityFactor));
                 }
             }
         }

@@ -3,7 +3,7 @@ import Teleporter from "../../item/linked/Teleporter.js";
 import Control from "../../keyboard/Control.js";
 import Keyboard from "../../keyboard/Keyboard.js";
 import * as KeyCode from "../../keyboard/KeyCode.js";
-import LinkedItemTool from "../LinkedItemTool.js";
+import LinkedItemTool from "./LinkedItemTool.js";
 
 export default class TeleporterTool extends LinkedItemTool {
     static get toolName() { return 'Teleporter'; }

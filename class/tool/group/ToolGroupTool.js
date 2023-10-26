@@ -1,4 +1,4 @@
-import Tool from "./Tool.js";
+import Tool from "../Tool.js";
 
 export default class ToolGroupTool extends Tool {
     /**

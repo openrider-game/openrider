@@ -1,4 +1,4 @@
-import Item from "./Item.js";
+import Item from "../Item.js";
 
 export default class SlowMo extends Item {
     static get itemName() { return 'Slow-Motion'; }

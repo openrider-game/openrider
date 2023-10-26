@@ -21,13 +21,17 @@ import GridSnapTool from "../tool/toggle/GridSnapTool.js";
 import SwitchBikeTool from "../tool/SwitchBikeTool.js";
 import FocusGhostTool from "../tool/FocusGhostTool.js";
 import StartPositionTool from "../tool/StartPositionTool.js";
-import ItemGroupTool from "../tool/ItemGroupTool.js";
+import ItemGroupTool from "../tool/group/ItemGroupTool.js";
 import ToggleDebugTool from "../tool/toggle/ToogleDebugTool.js";
 import TeleporterTool from "../tool/item/TeleporterTool.js";
 import ToggleFastRenderTool from "../tool/toggle/ToggleFastRenderTool.js";
+import ResetTool from "../tool/item/status/ResetTool.js";
+import InvincibilityTool from "../tool/item/status/InvincibilityTool.js";
+import StatusGroupTool from "../tool/group/StatusGroupTool.js";
 
 export const
     LEFT_TOOLBAR_VIEWING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool],
     LEFT_TOOLBAR_EDITING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool, EmptyTool, UndoTool, RedoTool],
-    RIGHT_TOOLBAR = [SolidBrushTool, SceneryBrushTool, SolidLineTool, SceneryLineTool, EraserTool, GridSnapTool, EmptyTool, ItemGroupTool, EmptyTool, StartPositionTool, EmptyTool, ToggleDebugTool, ToggleFastRenderTool],
-    ITEM_GROUP = [TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool, TeleporterTool];
+    RIGHT_TOOLBAR = [SolidBrushTool, SceneryBrushTool, SolidLineTool, SceneryLineTool, EraserTool, GridSnapTool, EmptyTool, ItemGroupTool, StatusGroupTool, EmptyTool, StartPositionTool, EmptyTool, ToggleDebugTool, ToggleFastRenderTool],
+    ITEM_GROUP = [TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool, TeleporterTool],
+    STATUS_GROUP = [ResetTool, InvincibilityTool];

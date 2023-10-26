@@ -1,5 +1,5 @@
 import { BOMB_IMAGE } from "../../constant/ToolConstants.js";
-import Bomb from "../../item/Bomb.js";
+import Bomb from "../../item/misc/Bomb.js";
 import ItemTool from "./ItemTool.js";
 import Control from "../../keyboard/Control.js";
 import * as KeyCode from "../../keyboard/KeyCode.js";

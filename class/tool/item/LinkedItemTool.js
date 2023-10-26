@@ -1,6 +1,6 @@
-import LinkedItem from "../item/LinkedItem.js";
-import LinkedItemGroup from "../item/LinkedItemGroup.js";
-import ItemTool from "./item/ItemTool.js";
+import LinkedItem from "../../item/LinkedItem.js";
+import LinkedItemGroup from "../../item/LinkedItemGroup.js";
+import ItemTool from "./ItemTool.js";
 
 export default class LinkedItemTool extends ItemTool {
     static get itemClass() { return LinkedItem; }

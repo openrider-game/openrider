@@ -1,5 +1,5 @@
 import { SLOWMO_IMAGE } from "../../constant/ToolConstants.js";
-import SlowMo from "../../item/SlowMo.js";
+import SlowMo from "../../item/misc/SlowMo.js";
 import ItemTool from "./ItemTool.js";
 import Keyboard from "../../keyboard/Keyboard.js";
 import Control from "../../keyboard/Control.js";

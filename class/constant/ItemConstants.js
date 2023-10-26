@@ -1,5 +1,5 @@
-import Bomb from "../item/Bomb.js";
-import SlowMo from "../item/SlowMo.js";
+import Bomb from "../item/misc/Bomb.js";
+import SlowMo from "../item/misc/SlowMo.js";
 import Boost from "../item/directional/Boost.js";
 import Checkpoint from "../item/reachable/Checkpoint.js";
 import Gravity from "../item/directional/Gravity.js";

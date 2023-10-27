@@ -54,7 +54,7 @@ export default class Tool extends GameObject {
         if (this.ui.optionsUI.items.length == 0) {
             this.createOptionsUI();
         }
-        this.ui.uiManager.uiElements.push(this.ui.optionsUI);
+        this.ui.uiManager.uiElements.unshift(this.ui.optionsUI);
         this.optionsOpen = true;
     }
 

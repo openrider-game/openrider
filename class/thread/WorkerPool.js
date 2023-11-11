@@ -36,24 +36,17 @@ export default class WorkerPool {
                 default:
                     console.log(`Unknown command: ${e.data.cmd}`, e.data);
             }
-        } else if (e.data.msg) {
-            console.log(`Message from #${i}: ${e.data.msg}`);
-        } else {
-            console.log(`Received from #${i}`, e.data);
         }
     }
 
     static provideTask(i) {
         if (WorkerPool.queue.length > 0) {
-            console.log(`#${i} requested a task`);
-
             let task = WorkerPool.queue.shift();
             WorkerPool.taskId++;
 
             WorkerPool.callbacks[WorkerPool.taskId] = task.callback;
             WorkerPool.postMessage(i, { cmd: 'startTask', id: WorkerPool.taskId, task: task.definition }, task.transferables);
         } else {
-            console.log(`#${i} no tasks available`);
             WorkerPool.postMessage(i, { cmd: 'noTask' });
         }
     }
@@ -68,8 +61,6 @@ export default class WorkerPool {
         if (WorkerPool.queue.length == 1) {
             WorkerPool.broadcastMessage({ cmd: 'newTask' });
         }
-
-        console.log(`Task queue: ${WorkerPool.queue.length}`);
     }
 
     static receiveResults(res, i) {

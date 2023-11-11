@@ -1,3 +1,4 @@
+import { MODIFIERS } from "../../../constant/ItemConstants.js";
 import LinePath from "../../../numeric/LinePath.js";
 import Transform from "../../../numeric/Transform.js";
 import Vector from "../../../numeric/Vector.js";
@@ -44,18 +45,30 @@ export default class BMXRenderer {
         let handlebarStem = bikeTransform.scale(0.82, 0.65);
         let handlebarGrips = bikeTransform.scale(0.78, 0.67);
 
+        ctx.save();
+
         ctx.strokeStyle = bike.color;
         ctx.globalAlpha = opacityFactor;
         ctx.lineWidth = wheelLineWidth * bike.track.zoomFactor;
 
         // ---------- wheels
         ctx.beginPath();
+
+        if(bike.runner.modifiersMask & MODIFIERS.SLIPPERY) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#5bf";
+        }
+
         // back wheel
         ctx.arc(backWheel.x, backWheel.y, wheelRadius, 0, 2 * Math.PI, true);
         // front wheel
         ctx.moveTo(frontWheel.x + wheelRadius, frontWheel.y);
         ctx.arc(frontWheel.x, frontWheel.y, wheelRadius, 0, 2 * Math.PI, true);
         ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "#000";
+
         // ---------- bike parts
         ctx.lineWidth = 3 * bike.track.zoomFactor;
         LinePath.render(ctx, [
@@ -74,6 +87,11 @@ export default class BMXRenderer {
 
         if (bike.runner.dead) {
             return;
+        }
+
+        if(bike.runner.modifiersMask & MODIFIERS.INVINCIBILITY) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#000";
         }
 
         let hitboxToWheelsMedianDistance = hitbox.sub(backWheel.add(wheelsDistance.scale(0.5)));
@@ -152,7 +170,6 @@ export default class BMXRenderer {
             [body, elbow, handlebarGrips]
         ]);
 
-        ctx.strokeStyle = '#000';
-        ctx.globalAlpha = 1;
+        ctx.restore();
     }
 }

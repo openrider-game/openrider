@@ -1,3 +1,4 @@
+import { MODIFIERS } from "../../../constant/ItemConstants.js";
 import LinePath from "../../../numeric/LinePath.js";
 import Transform from "../../../numeric/Transform.js";
 import Vector from "../../../numeric/Vector.js";
@@ -49,18 +50,29 @@ export default class MTBRenderer {
         let headset = hitboxTransform.scale(0.73, 0.77);
         let handlebarGrips = hitboxTransform.scale(0.7, 0.8);
 
+        ctx.save();
         ctx.strokeStyle = bike.color;
         ctx.globalAlpha = opacityFactor;
         ctx.lineWidth = wheelLineWidth * bike.track.zoomFactor;
 
         // ---------- wheels
         ctx.beginPath();
+
+        if(bike.runner.modifiersMask & MODIFIERS.SLIPPERY) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#5bf";
+        }
+
         // back wheel
         ctx.arc(backWheel.x, backWheel.y, wheelRadius, 0, 2 * Math.PI, true);
         // front wheel
         ctx.moveTo(frontWheel.x + wheelRadius, frontWheel.y);
         ctx.arc(frontWheel.x, frontWheel.y, wheelRadius, 0, 2 * Math.PI, true);
         ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "#000";
+
         // ---------- wheels axes
         ctx.fillStyle = bike.color;
         ctx.globalAlpha = 0.5 * opacityFactor;
@@ -100,6 +112,11 @@ export default class MTBRenderer {
 
         if (bike.runner.dead) {
             return;
+        }
+
+        if(bike.runner.modifiersMask & MODIFIERS.INVINCIBILITY) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "black";
         }
 
         let crossFrameSaddle = hitboxTransform.scale(0.3, 0.25);
@@ -179,7 +196,6 @@ export default class MTBRenderer {
             [body, elbow, hand]
         ]);
 
-        ctx.strokeStyle = '#000';
-        ctx.globalAlpha = 1;
+        ctx.restore();
     }
 }

@@ -1,5 +1,5 @@
 import Bomb from "../item/misc/Bomb.js";
-import SlowMo from "../item/misc/SlowMo.js";
+import SlowMo from "../item/status/SlowMo.js";
 import Boost from "../item/directional/Boost.js";
 import Checkpoint from "../item/reachable/Checkpoint.js";
 import Gravity from "../item/directional/Gravity.js";
@@ -12,5 +12,6 @@ export const
     LINE_FOREGROUND = 'LINE_FOREGROUND',
     MODIFIERS = {
         INVINCIBILITY: 1 << 0,
-        NO_STEER: 1 << 1
+        NO_STEER: 1 << 1,
+        SLIPPERY: 1 << 2
     };

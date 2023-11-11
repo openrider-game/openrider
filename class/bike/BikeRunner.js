@@ -269,7 +269,7 @@ export default class BikeRunner extends GameObject {
             this.instance.frontWheel.update(progress);
             this.instance.hitbox.update(progress);
             if (this.upPressed) {
-                this.instance.distance += this.instance.backWheel.rotationSpeed * delta / 100;
+                this.instance.distance += this.instance.backWheel.rotationSpeed / this.instance.speedValueScale * delta / 100;
             }
         }
 

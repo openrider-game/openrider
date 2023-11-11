@@ -7,6 +7,11 @@ export default class Reset extends StatusItem {
     static get code() { return 'R'; }
 
     onReach(part) {
+        part.bike.friction = 0.99;
+        part.bike.backWheel.motor = 0.3;
+        part.bike.frontWheel.motor = 0.3;
+        part.bike.speedValueScale = 1;
+        
         part.bike.runner.modifiersMask = 0;
     }
 }

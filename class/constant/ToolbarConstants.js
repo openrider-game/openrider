@@ -2,7 +2,7 @@ import CameraTool from "../tool/CameraTool.js";
 import EmptyTool from "../tool/EmptyTool.js";
 import BombTool from "../tool/item/BombTool.js";
 import CheckpointTool from "../tool/item/CheckpointTool.js";
-import SlowMoTool from "../tool/item/SlowMoTool.js";
+import SlowMoTool from "../tool/item/status/SlowMoTool.js";
 import TargetTool from "../tool/item/TargetTool.js";
 import BoostTool from "../tool/item/BoostTool.js";
 import GravityTool from "../tool/item/GravityTool.js";
@@ -28,10 +28,11 @@ import ToggleFastRenderTool from "../tool/toggle/ToggleFastRenderTool.js";
 import ResetTool from "../tool/item/status/ResetTool.js";
 import InvincibilityTool from "../tool/item/status/InvincibilityTool.js";
 import StatusGroupTool from "../tool/group/StatusGroupTool.js";
+import SlipperyTool from "../tool/item/status/SlipperyTool.js";
 
 export const
     LEFT_TOOLBAR_VIEWING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool],
     LEFT_TOOLBAR_EDITING = [PauseTool, RestartTool, CancelCheckpointTool, EmptyTool, SwitchBikeTool, FocusGhostTool, EmptyTool, CameraTool, FullscreenTool, EmptyTool, UndoTool, RedoTool],
     RIGHT_TOOLBAR = [SolidBrushTool, SceneryBrushTool, SolidLineTool, SceneryLineTool, EraserTool, GridSnapTool, EmptyTool, ItemGroupTool, StatusGroupTool, EmptyTool, StartPositionTool, EmptyTool, ToggleDebugTool, ToggleFastRenderTool],
     ITEM_GROUP = [TargetTool, CheckpointTool, BoostTool, GravityTool, BombTool, SlowMoTool, TeleporterTool],
-    STATUS_GROUP = [ResetTool, InvincibilityTool];
+    STATUS_GROUP = [ResetTool, InvincibilityTool, SlipperyTool];

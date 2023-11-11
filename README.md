@@ -123,7 +123,7 @@ __Many more improvements will be made in the future!__
   - Invincibility ✅
   - No steer ❌
   - Engine off ❌
-  - Slippery wheels ❌
+  - Slippery wheels ✅
   - Restore/reset bike state (for the above powerups) ✅
 
 See the [open issues](https://github.com/tomiy/openrider/issues) for a full list of proposed features (and known issues).

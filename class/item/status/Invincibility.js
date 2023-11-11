@@ -8,6 +8,6 @@ export default class Invincibility extends StatusItem {
     static get code() { return 'I'; }
 
     onReach(part) {
-        part.bike.runner.modifiersMask = MODIFIERS.INVINCIBILITY;
+        part.bike.runner.modifiersMask |= MODIFIERS.INVINCIBILITY;
     }
 }

@@ -28,6 +28,7 @@ export default class Bike {
         this.slowParity = 0;
 
         this.speedValueScale = 1;
+        this.steerValueScale = 1;
 
         this.color = '#000';
         this.headGear = 'hat';
@@ -64,7 +65,7 @@ export default class Bike {
             this.turn();
         }
         this.backWheel.speedValue += ((this.runner.upPressed * this.speedValueScale) - this.backWheel.speedValue) / 10;
-        let rotate = this.runner.leftPressed - this.runner.rightPressed;
+        let rotate = (this.runner.leftPressed - this.runner.rightPressed) * this.steerValueScale;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
         this.headToFront.lean(-rotate * 5 * this.direction, 5);
         this.frontToBack.rotate(rotate / this.rotationFactor);

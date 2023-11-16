@@ -1,0 +1,15 @@
+import { MODIFIERS } from "../../constant/ItemConstants.js";
+import StatusItem from "../StatusItem.js";
+
+export default class NoSteer extends StatusItem {
+    static get itemName() { return 'No Steer'; }
+    static get color() { return '#55f'; }
+    static get reachedColor() { return '#aaf'; }
+    static get code() { return 'N'; }
+
+    onReach(part) {
+        part.bike.steerValueScale = 0;
+
+        part.bike.runner.modifiersMask |= MODIFIERS.NO_STEER;
+    }
+}

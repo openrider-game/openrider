@@ -27,6 +27,7 @@ export default class Bike {
         this.slow = false;
         this.slowParity = 0;
 
+        this.engineValueScale = 1;
         this.speedValueScale = 1;
         this.steerValueScale = 1;
 
@@ -64,12 +65,12 @@ export default class Bike {
         if (this.runner.turnPressed) {
             this.turn();
         }
-        this.backWheel.speedValue += ((this.runner.upPressed * this.speedValueScale) - this.backWheel.speedValue) / 10;
+        this.backWheel.speedValue += ((this.runner.upPressed * this.speedValueScale * this.engineValueScale) - this.backWheel.speedValue) / 10;
         let rotate = (this.runner.leftPressed - this.runner.rightPressed) * this.steerValueScale;
         this.headToBack.lean(rotate * 5 * this.direction, 5);
         this.headToFront.lean(-rotate * 5 * this.direction, 5);
         this.frontToBack.rotate(rotate / this.rotationFactor);
-        if (!rotate && this.runner.upPressed) {
+        if (!rotate && this.runner.upPressed * this.engineValueScale) {
             this.headToBack.lean(-7, 5);
             this.headToFront.lean(7, 5);
         }

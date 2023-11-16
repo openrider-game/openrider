@@ -11,6 +11,7 @@ export default class Reset extends StatusItem {
         part.bike.backWheel.motor = 0.3;
         part.bike.frontWheel.motor = 0.3;
 
+        part.bike.engineValueScale = 1;
         part.bike.speedValueScale = 1;
         part.bike.steerValueScale = 1;
 

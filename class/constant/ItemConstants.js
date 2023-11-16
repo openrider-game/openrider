@@ -13,5 +13,6 @@ export const
     MODIFIERS = {
         INVINCIBILITY: 1 << 0,
         NO_STEER: 1 << 1,
-        SLIPPERY: 1 << 2
+        SLIPPERY: 1 << 2,
+        ENGINE_OFF: 1 << 3
     };

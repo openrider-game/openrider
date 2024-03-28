@@ -305,8 +305,8 @@ export default class BikeRunner extends GameObject {
 
                 let gridZoom = this.track.grid.cellSize * this.track.zoomFactor;
 
-                let cellX = Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + x * gridZoom);
-                let cellY = Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + y * gridZoom);
+                let cellX = Math.floor(this.track.viewport.width / 2 - this.track.camera.x * this.track.zoomFactor + x * gridZoom);
+                let cellY = Math.floor(this.track.viewport.height / 2 - this.track.camera.y * this.track.zoomFactor + y * gridZoom);
 
                 ctx.fillStyle = '#ff000005';
                 ctx.fillRect(cellX, cellY, gridZoom, gridZoom);

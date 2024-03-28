@@ -45,16 +45,16 @@ export default class UIElement extends GameObject {
 
     render(ctx) {
         if (this.align & UIElement.ALIGN_BOTTOM) {
-            this.y = this.track.canvas.height - this.height - this.originalY;
+            this.y = this.track.viewport.height - this.height - this.originalY;
         }
         if (this.align & UIElement.ALIGN_RIGHT) {
-            this.x = this.track.canvas.width - this.width - this.originalX;
+            this.x = this.track.viewport.width - this.width - this.originalX;
         }
         if (this.align & UIElement.ALIGN_HORIZONTAL_CENTER) {
-            this.x = (this.track.canvas.width - this.width) / 2;
+            this.x = (this.track.viewport.width - this.width) / 2;
         }
         if (this.align & UIElement.ALIGN_VERTICAL_CENTER) {
-            this.y = (this.track.canvas.height - this.height) / 2;
+            this.y = (this.track.viewport.height - this.height) / 2;
         }
     }
 

@@ -61,7 +61,7 @@ export default class StartPositionTool extends Tool {
     }
 
     createOptionsUI() {
-        let x = (this.track.canvas.width - 300) / 2;
+        let x = (this.track.viewport.width - 300) / 2;
         let resetPos = new UIButton(this.ui, this.track, x, 5, 300, 30, 'Reset start position (0,0)', () => this.setStartPosition(new Vector()));
         resetPos.color = '#fff';
         resetPos.hoveredColor = '#eee';

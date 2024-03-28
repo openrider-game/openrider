@@ -42,10 +42,10 @@ export default class GeneratorState extends GameState {
     }
 
     render(ctx) {
-        let barY = this.track.canvas.height / 2 - 15;
-        let barW = this.track.canvas.width - 200;
+        let barY = this.track.viewport.height / 2 - 15;
+        let barW = this.track.viewport.width - 200;
 
-        ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+        ctx.clearRect(0, 0, this.track.viewport.width, this.track.viewport.height);
 
         ctx.fillStyle = '#ccc';
         ctx.fillRect(100, barY, barW, 30);
@@ -59,6 +59,6 @@ export default class GeneratorState extends GameState {
         let progressTextWidth = progressTextMetrics.width;
         let progressTextHeight = progressTextMetrics.actualBoundingBoxAscent + progressTextMetrics.actualBoundingBoxDescent;
         ctx.fillStyle = '#000';
-        ctx.fillText(progressText, (this.track.canvas.width - progressTextWidth) / 2, (this.track.canvas.height + progressTextHeight) / 2);
+        ctx.fillText(progressText, (this.track.viewport.width - progressTextWidth) / 2, (this.track.viewport.height + progressTextHeight) / 2);
     }
 }

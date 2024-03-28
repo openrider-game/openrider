@@ -59,7 +59,7 @@ export default class UITool extends UIButton {
             let labelHeight = labelMetrics.actualBoundingBoxAscent + labelMetrics.actualBoundingBoxDescent;
 
             let rectX = this.x + this.width + 4;
-            if (this.x > this.track.canvas.width / 2) {
+            if (this.x > this.track.viewport.width / 2) {
                 rectX = this.x - 8 - labelWidth;
             }
             let textX = rectX + 2;

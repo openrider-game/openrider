@@ -19,7 +19,7 @@ export default class Vector {
      * @returns {Vector}
      */
     toPixel(track) {
-        return new Vector((this.x - track.camera.x) * track.zoomFactor + track.canvas.width / 2, (this.y - track.camera.y) * track.zoomFactor + track.canvas.height / 2);
+        return new Vector((this.x - track.camera.x) * track.zoomFactor + track.viewport.width / 2, (this.y - track.camera.y) * track.zoomFactor + track.viewport.height / 2);
     }
 
     /**
@@ -28,7 +28,7 @@ export default class Vector {
      * @returns {Vector}
      */
     normalizeToCanvas(track) {
-        return new Vector((this.x - track.canvas.width / 2) / track.zoomFactor + track.camera.x, (this.y - track.canvas.height / 2) / track.zoomFactor + track.camera.y);
+        return new Vector((this.x - track.viewport.width / 2) / track.zoomFactor + track.camera.x, (this.y - track.viewport.height / 2) / track.zoomFactor + track.camera.y);
     }
 
     /**

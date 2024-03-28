@@ -188,4 +188,11 @@ export default class Track {
 
         this.camera.set(this.focalPoint.displayPos);
     }
+
+    get viewport() {
+        return {
+            width: this.canvas.width / devicePixelRatio,
+            height: this.canvas.height / devicePixelRatio,
+        };
+    }
 }

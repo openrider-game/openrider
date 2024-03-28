@@ -55,7 +55,7 @@ export default class EraserTool extends Tool {
     }
 
     createOptionsUI() {
-        let x = (this.track.canvas.width - 300) / 2;
+        let x = (this.track.viewport.width - 300) / 2;
 
         let foregroundLineToggle = new UIToggleableButton(this.ui, this.track, x, 5, 300, 30, 'Foreground Line: inactive', 'Foreground Line: active', () => this.restrict.get('foregroundLayer').set('line', !this.restrict.get('foregroundLayer').get('line')), UIElement.ALIGN_HORIZONTAL_CENTER);
         foregroundLineToggle.active = true;

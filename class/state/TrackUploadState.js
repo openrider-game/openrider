@@ -38,7 +38,7 @@ export default class TrackUploadState extends GameState {
         this.render(this.track.canvas.getContext('2d'));
         thumb.getContext('2d').drawImage(
             this.track.canvas,
-            (this.track.canvas.width - 500) / 2, (this.track.canvas.height - 300) / 2,
+            (this.track.viewport.width - 500) / 2, (this.track.viewport.height - 300) / 2,
             500, 300,
             0, 0,
             500, 300
@@ -76,10 +76,10 @@ export default class TrackUploadState extends GameState {
      * @param {CanvasRenderingContext2D} ctx
      */
     render(ctx) {
-        ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+        ctx.clearRect(0, 0, this.track.viewport.width, this.track.viewport.height);
 
         let topLeft = new Vector(0, 0).normalizeToCanvas(this.track);
-        let bottomRight = new Vector(this.track.canvas.width, this.track.canvas.height).normalizeToCanvas(this.track);
+        let bottomRight = new Vector(this.track.viewport.width, this.track.viewport.height).normalizeToCanvas(this.track);
 
         let gridTopLeft = Grid.gridCoords(topLeft, this.track.cache.cellSize);
         let gridBottomRight = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
@@ -104,9 +104,9 @@ export default class TrackUploadState extends GameState {
         this.track.toolManager.render(ctx);
 
         if (!this.screenshotting) {
-            let x0 = (this.track.canvas.width - 250) / 2;
+            let x0 = (this.track.viewport.width - 250) / 2;
             let x1 = x0 + 250;
-            let y0 = (this.track.canvas.height - 150) / 2;
+            let y0 = (this.track.viewport.height - 150) / 2;
             let y1 = y0 + 150;
 
             ctx.save();
@@ -114,8 +114,8 @@ export default class TrackUploadState extends GameState {
             ctx.lineWidth = 1;
             ctx.strokeStyle = '#fff';
             ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(0, 0, this.track.canvas.width, y0);
-            ctx.fillRect(0, y1, this.track.canvas.width, y0);
+            ctx.fillRect(0, 0, this.track.viewport.width, y0);
+            ctx.fillRect(0, y1, this.track.viewport.width, y0);
             ctx.fillRect(0, y0, x0, 150);
             ctx.fillRect(x1, y0, x0, 150);
             ctx.strokeRect(x0, y0, 250, 150);
@@ -126,9 +126,9 @@ export default class TrackUploadState extends GameState {
         let helperText = 'Use your mouse to drag & fit an interesting part of your track in the thumbnail';
         let helperTextWidth = ctx.measureText(helperText).width;
         ctx.fillStyle = '#fff';
-        ctx.fillRect((this.track.canvas.width - helperTextWidth) / 2 - 4, 6, helperTextWidth + 8, 18);
+        ctx.fillRect((this.track.viewport.width - helperTextWidth) / 2 - 4, 6, helperTextWidth + 8, 18);
         ctx.fillStyle = '#000';
-        ctx.fillText(helperText, (this.track.canvas.width - helperTextWidth) / 2, 20);
+        ctx.fillText(helperText, (this.track.viewport.width - helperTextWidth) / 2, 20);
     }
 
     /**
@@ -147,8 +147,8 @@ export default class TrackUploadState extends GameState {
             let cell = cache.cell(x, y);
             ctx.drawImage(
                 cell.getCanvas(this.track.zoomFactor, opacityFactor, this.track.fastRender),
-                Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + cell.x * this.track.zoomFactor) - 1,
-                Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + cell.y * this.track.zoomFactor) - 1
+                Math.floor(this.track.viewport.width / 2 - this.track.camera.x * this.track.zoomFactor + cell.x * this.track.zoomFactor) - 1,
+                Math.floor(this.track.viewport.height / 2 - this.track.camera.y * this.track.zoomFactor + cell.y * this.track.zoomFactor) - 1
             );
 
             ctx.strokeStyle = '#000';

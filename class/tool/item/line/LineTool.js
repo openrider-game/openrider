@@ -70,7 +70,7 @@ export default class LineTool extends Tool {
     }
 
     createOptionsUI() {
-        let x = (this.track.canvas.width - 300) / 2;
+        let x = (this.track.viewport.width - 300) / 2;
         let foregroundToggle = new UIToggleableButton(this.ui, this.track, x, 5, 300, 30, 'Layer: Main', 'Layer: Foreground', () => this.foreground = !this.foreground, UIElement.ALIGN_HORIZONTAL_CENTER);
         foregroundToggle.color = '#fff';
         foregroundToggle.hoveredColor = '#eee';
@@ -86,13 +86,13 @@ export default class LineTool extends Tool {
 
             if (mousePx.x < 50) {
                 deltaVec.x = -deltaFactor;
-            } else if (mousePx.x > this.track.canvas.width - 50) {
+            } else if (mousePx.x > this.track.viewport.width - 50) {
                 deltaVec.x = deltaFactor;
             }
 
             if (mousePx.y < 50) {
                 deltaVec.y = -deltaFactor;
-            } else if (mousePx.y > this.track.canvas.height - 50) {
+            } else if (mousePx.y > this.track.viewport.height - 50) {
                 deltaVec.y = deltaFactor;
             }
 

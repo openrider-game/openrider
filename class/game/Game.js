@@ -24,6 +24,7 @@ export default class Game {
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = canvas.getContext('2d');
+        this.ctx.scale(devicePixelRatio, devicePixelRatio);
 
         /** @type {number} */
         this.lastTime = performance.now();

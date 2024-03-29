@@ -163,10 +163,10 @@ export default class TrackState extends GameState {
      * @param {CanvasRenderingContext2D} ctx
      */
     render(ctx) {
-        ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+        ctx.clearRect(0, 0, this.track.viewport.width, this.track.viewport.height);
 
         let topLeft = new Vector(0, 0).normalizeToCanvas(this.track);
-        let bottomRight = new Vector(this.track.canvas.width, this.track.canvas.height).normalizeToCanvas(this.track);
+        let bottomRight = new Vector(this.track.viewport.width, this.track.viewport.height).normalizeToCanvas(this.track);
 
         let cacheGridTopLeft = Grid.gridCoords(topLeft, this.track.cache.cellSize);
         let cacheGridBottomRight = Grid.gridCoords(bottomRight, this.track.cache.cellSize);
@@ -205,7 +205,7 @@ export default class TrackState extends GameState {
             let textMetrics = ctx.measureText(text);
 
             ctx.fillStyle = runner.instance.color;
-            ctx.fillText(text, this.track.canvas.width - 30 - textMetrics.width, 15 * (1 + index++));
+            ctx.fillText(text, this.track.viewport.width - 30 - textMetrics.width, 15 * (1 + index++));
         });
 
         if (this.track.debug) {
@@ -219,15 +219,15 @@ export default class TrackState extends GameState {
         // cache grid
         ctx.beginPath();
         for (let y = cacheGridTopLeft.y; y <= cacheGridBottomRight.y; y++) {
-            let gridLineY = Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + y * this.track.cache.cellSize * this.track.zoomFactor);
+            let gridLineY = Math.floor(this.track.viewport.height / 2 - this.track.camera.y * this.track.zoomFactor + y * this.track.cache.cellSize * this.track.zoomFactor);
             ctx.moveTo(0, gridLineY);
-            ctx.lineTo(this.track.canvas.width, gridLineY);
+            ctx.lineTo(this.track.viewport.width, gridLineY);
         }
 
         for (let x = cacheGridTopLeft.x; x <= cacheGridBottomRight.x; x++) {
-            let gridLineX = Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + x * this.track.cache.cellSize * this.track.zoomFactor);
+            let gridLineX = Math.floor(this.track.viewport.width / 2 - this.track.camera.x * this.track.zoomFactor + x * this.track.cache.cellSize * this.track.zoomFactor);
             ctx.moveTo(gridLineX, 0);
-            ctx.lineTo(gridLineX, this.track.canvas.height);
+            ctx.lineTo(gridLineX, this.track.viewport.height);
         }
 
         ctx.strokeStyle = '#0000ff55';
@@ -237,15 +237,15 @@ export default class TrackState extends GameState {
         // physics grid
         ctx.beginPath();
         for (let y = physicsGridTopLeft.y; y <= physicsGridBottomRight.y; y++) {
-            let gridLineY = Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + y * this.track.grid.cellSize * this.track.zoomFactor);
+            let gridLineY = Math.floor(this.track.viewport.height / 2 - this.track.camera.y * this.track.zoomFactor + y * this.track.grid.cellSize * this.track.zoomFactor);
             ctx.moveTo(0, gridLineY);
-            ctx.lineTo(this.track.canvas.width, gridLineY);
+            ctx.lineTo(this.track.viewport.width, gridLineY);
         }
 
         for (let x = physicsGridTopLeft.x; x <= physicsGridBottomRight.x; x++) {
-            let gridLineX = Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + x * this.track.grid.cellSize * this.track.zoomFactor);
+            let gridLineX = Math.floor(this.track.viewport.width / 2 - this.track.camera.x * this.track.zoomFactor + x * this.track.grid.cellSize * this.track.zoomFactor);
             ctx.moveTo(gridLineX, 0);
-            ctx.lineTo(gridLineX, this.track.canvas.height);
+            ctx.lineTo(gridLineX, this.track.viewport.height);
         }
 
         ctx.strokeStyle = '#0000ff22';
@@ -276,8 +276,8 @@ export default class TrackState extends GameState {
             let cell = cache.cell(x, y);
             ctx.drawImage(
                 cell.getCanvas(this.track.zoomFactor, opacityFactor, this.track.fastRender),
-                Math.floor(this.track.canvas.width / 2 - this.track.camera.x * this.track.zoomFactor + cell.x * this.track.zoomFactor) - 1,
-                Math.floor(this.track.canvas.height / 2 - this.track.camera.y * this.track.zoomFactor + cell.y * this.track.zoomFactor) - 1
+                Math.floor(this.track.viewport.width / 2 - this.track.camera.x * this.track.zoomFactor + cell.x * this.track.zoomFactor) - 1,
+                Math.floor(this.track.viewport.height / 2 - this.track.camera.y * this.track.zoomFactor + cell.y * this.track.zoomFactor) - 1
             );
 
             ctx.strokeStyle = '#000';

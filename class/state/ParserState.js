@@ -57,22 +57,22 @@ export default class ParserState extends GameState {
 
     render(ctx) {
         if (!this.parser) {
-            ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+            ctx.clearRect(0, 0, this.track.viewport.width, this.track.viewport.height);
 
             let unknownTrack = 'Track does not exist!';
             let unknownTrackMetrics = ctx.measureText(unknownTrack);
             let unknownTrackWidth = unknownTrackMetrics.width;
             let unknownTrackHeight = unknownTrackMetrics.actualBoundingBoxAscent + unknownTrackMetrics.actualBoundingBoxDescent;
             ctx.fillStyle = '#000';
-            ctx.fillText(unknownTrack, (this.track.canvas.width - unknownTrackWidth) / 2, (this.track.canvas.height + unknownTrackHeight) / 2);
+            ctx.fillText(unknownTrack, (this.track.viewport.width - unknownTrackWidth) / 2, (this.track.viewport.height + unknownTrackHeight) / 2);
 
             return;
         }
 
-        let barY = this.track.canvas.height / 2 - 15;
-        let barW = this.track.canvas.width - 200;
+        let barY = this.track.viewport.height / 2 - 15;
+        let barW = this.track.viewport.width - 200;
 
-        ctx.clearRect(0, 0, this.track.canvas.width, this.track.canvas.height);
+        ctx.clearRect(0, 0, this.track.viewport.width, this.track.viewport.height);
 
         ctx.fillStyle = '#ccc';
         ctx.fillRect(100, barY, barW, 30);
@@ -92,6 +92,6 @@ export default class ParserState extends GameState {
         let progressTextWidth = progressTextMetrics.width;
         let progressTextHeight = progressTextMetrics.actualBoundingBoxAscent + progressTextMetrics.actualBoundingBoxDescent;
         ctx.fillStyle = '#000';
-        ctx.fillText(progressText, (this.track.canvas.width - progressTextWidth) / 2, (this.track.canvas.height + progressTextHeight) / 2);
+        ctx.fillText(progressText, (this.track.viewport.width - progressTextWidth) / 2, (this.track.viewport.height + progressTextHeight) / 2);
     }
 }

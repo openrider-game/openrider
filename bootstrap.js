@@ -17,8 +17,10 @@ setCanvasSize();
  * Also reloads the context properties (mainly for fonts)
  */
 function setCanvasSize() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
+    canvas.style.width = canvas.parentElement.clientWidth + 'px';
+    canvas.style.height = canvas.parentElement.clientHeight + 'px';
+    canvas.width = canvas.parentElement.clientWidth * devicePixelRatio;
+    canvas.height = canvas.parentElement.clientHeight * devicePixelRatio;
 
     setContextProperties(canvas.getContext('2d'));
 }
